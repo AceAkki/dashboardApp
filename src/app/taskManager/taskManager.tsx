@@ -10,6 +10,15 @@ export default function taskManager() {
         <Text>
             Task Manager
         </Text>
+        <Text>
+          All
+        </Text>
+        <Text>
+          Priority 
+        </Text>
+        <Text>
+          Completed  
+        </Text>
       </View>
     </SafeAreaView>
   );
