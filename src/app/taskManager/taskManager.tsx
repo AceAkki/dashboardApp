@@ -1,15 +1,16 @@
-import { Text, View } from "react-native";
+import {Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import globalStyles from "@/style/globalStyles";
 
-export default function Index() {
+export default function taskManager() {
   return (
     <SafeAreaView>
       <View style={globalStyles.container}>
-        <Text>Edit src/app/index.tsx to edit this screen.</Text>
+        <Text>
+            Task Manager
+        </Text>
       </View>
     </SafeAreaView>
   );
 }
-

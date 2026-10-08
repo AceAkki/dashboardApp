@@ -1,5 +1,16 @@
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
-  return <Stack />;
+  return (
+    <Stack>
+      <Stack.Screen name="index" options={{ title: "Home" }} />
+      <Stack.Screen
+        name="taskManager"
+        options={{
+          title: "Task Manager",
+          headerBackButtonDisplayMode: "minimal",
+        }}
+      />
+    </Stack>
+  );
 }
