@@ -6,9 +6,9 @@ import homeStyles from "@/style/homeStyles";
 
 export default function Index() {
   return (
-    <SafeAreaView>
-      <View style={[globalStyles.container, {backgroundColor:colors.bg, paddingHorizontal:20, paddingTop:80}]}>
-        <Text>
+    <SafeAreaView style={globalStyles.containerFull}>
+      <View style={[globalStyles.container, {backgroundColor:colors.peach}]}>
+        <Text style={homeStyles.greet}>
           Good Morning, 
           <Text style={homeStyles.greetName}>
           User

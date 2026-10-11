@@ -31,6 +31,9 @@ export const font = {
 };
 
 const globalStyles = StyleSheet.create({
+  containerFull:{
+    flex:1
+  },
   container: {
     flex: 1,
     alignItems: "center",
