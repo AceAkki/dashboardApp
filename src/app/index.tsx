@@ -12,7 +12,6 @@ export default function Index() {
           Good Morning, 
           <Text style={homeStyles.greetName}>
           User
-
           </Text>
         </Text>
       </View>
