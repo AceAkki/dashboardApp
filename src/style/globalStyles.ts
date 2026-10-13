@@ -25,10 +25,10 @@ export const radius = { sm: 10, md: 16, lg: 20, pill: 999 };
 
 export const font = {
   regular: 'Inter-Regular',
+  italic:'Inter-Italic',
   medium: 'PlusJakartaSans_500Medium',
   semibold: 'PlusJakartaSans_600SemiBold',
-  bold: 'PlusJakartaSans_700Bold',
-  italic:'Inter-Italic'
+  bold: 'ArchivoBlack-Regular',
 };
 
 const globalStyles = StyleSheet.create({
