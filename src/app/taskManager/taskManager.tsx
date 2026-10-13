@@ -1,5 +1,6 @@
-import {Text, View } from "react-native";
+import {Text, View,  Image, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 
 import globalStyles from "@/style/globalStyles";
 
@@ -20,6 +21,7 @@ export default function taskManager() {
           Completed  
         </Text>
       </View>
+      
     </SafeAreaView>
   );
 }
