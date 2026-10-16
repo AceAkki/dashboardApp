@@ -15,14 +15,7 @@ export default function Index() {
           </Text>
         </Text>
       </View>
-      <View style={{ flexDirection: 'row',justifyContent:"space-between", paddingHorizontal:20, paddingVertical:10}}>
-        <Text>
-          Menu
-        </Text>
-        <Text>
-          User
-        </Text>
-      </View>
+     
     </SafeAreaView>
   );
 }
