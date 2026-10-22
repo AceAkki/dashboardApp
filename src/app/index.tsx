@@ -1,22 +1,12 @@
-import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import globalStyles, {colors} from "@/style/globalStyles";
-import homeStyles from "@/style/homeStyles";
+import globalStyles from "@/style/globalStyles";
+import BentoStructure from "../features/dashboard/BentoStructure";
 
 export default function Index() {
   return (
     <SafeAreaView style={globalStyles.containerFull}>
-      <View style={[globalStyles.container, {backgroundColor:colors.peach}]}>
-        <Text style={homeStyles.greet}>
-          Good Morning, 
-          <Text style={homeStyles.greetName}>
-          User
-          </Text>
-        </Text>
-      </View>
-     
+      <BentoStructure />
     </SafeAreaView>
   );
 }
-

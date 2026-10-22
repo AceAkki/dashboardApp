@@ -38,10 +38,15 @@
             "./assets/fonts/Oswald-Medium.ttf",
             "./assets/fonts/Oswald-Regular.ttf",
             "./assets/fonts/Oswald-SemiBold.ttf",
-            "./assets/fonts/ArchivoBlack-Regular.ttf"
+            "./assets/fonts/ArchivoBlack-Regular.ttf",
+             "./assets/fonts/JetBrainsMono-Regular.ttf",
+            "./assets/fonts/JetBrainsMono-Italic.ttf",
+            "./assets/fonts/FiraCode-Light.ttf",
+            "./assets/fonts/Inter-Regular.ttf"
           ]
         }
-      ]
+      ],
+        "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,

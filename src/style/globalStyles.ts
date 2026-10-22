@@ -1,39 +1,18 @@
 import { StyleSheet } from "react-native";
+//   npx expo install @react-native-async-storage/async-storage @react-native-community/datetimepicker @expo/vector-icons
+// npx expo install expo-clipboard @react-native-community/netinfo @react-native-async-storage/async-storage
+// npx expo install lottie-react-native @react-native-async-storage/async-storage @expo/vector-icons
+// npx expo install expo-location
+// npx expo install react-native-svg
 
-export const colors = {
-  bg: '#F6F6FC',
-  card: '#FFFFFF',
-  border: '#ECECF4',
-  text: '#14141F',
-  muted: '#7A7A8C',
-
-  primary: '#7C5CDB',
-  primarySoft: '#EEEAFB',
-
-  peach: '#FDF1E4',
-  orange: '#F5B04F',
-  mint: '#EAF6EC',
-  green: '#4CAF63',
-  greenSoft: '#BDE4C5',
-  blueSoft: '#EAEFFC',
-  blue: '#5B87E8',
-  yellowSoft: '#FDF3D4',
-  yellow: '#F8D56B',
-};
+// Set all headers, numbers, percentages, and CTAs ("EXECUTE", "HACK") to JetBrains Mono or Space Grotesk.
+// Keep Inter (or swap to Geist) for small labels and body text.
 
 export const radius = { sm: 10, md: 16, lg: 20, pill: 999 };
 
-export const font = {
-  regular: 'Inter-Regular',
-  italic:'Inter-Italic',
-  medium: 'PlusJakartaSans_500Medium',
-  semibold: 'PlusJakartaSans_600SemiBold',
-  bold: 'ArchivoBlack-Regular',
-};
-
 const globalStyles = StyleSheet.create({
-  containerFull:{
-    flex:1
+  containerFull: {
+    flex: 1,
   },
   container: {
     flex: 1,
