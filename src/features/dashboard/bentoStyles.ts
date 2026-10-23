@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
+import { Typography } from "@/constants/Typography";
 
 const bentoStyles = StyleSheet.create({
   root: { flex: 1, backgroundColor: Colors.background },
@@ -35,8 +36,8 @@ const bentoStyles = StyleSheet.create({
   avatarTxt: { color: Colors.textOnPrimary, fontWeight: "700", fontSize: 13 },
 
   greetWrap: { marginTop: 16 },
-  greet: { color: Colors.textPrimary, fontSize: 22, fontWeight: "700" },
-  greetSub: { color: Colors.textSecondary, fontSize: 13, fontWeight: "400" },
+  greet: { color: Colors.textPrimary, fontSize: 22, fontWeight: "700", fontFamily:Typography.primary },
+  greetSub: { color: Colors.textSecondary, fontSize: 20, fontWeight: "400", },
   synced: { color: Colors.textSecondary, fontSize: 11, marginTop: 4 },
   syncedDot: { color: Colors.success },
 

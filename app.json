@@ -41,8 +41,7 @@
             "./assets/fonts/ArchivoBlack-Regular.ttf",
              "./assets/fonts/JetBrainsMono-Regular.ttf",
             "./assets/fonts/JetBrainsMono-Italic.ttf",
-            "./assets/fonts/FiraCode-Light.ttf",
-            "./assets/fonts/Inter-Regular.ttf"
+            "./assets/fonts/FiraCode-Light.ttf"            
           ]
         }
       ],
