@@ -7,7 +7,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 //
 // const { text, play } = useCtosText("DISCOVER");
 // const { text } = useCtosText(temp);              // numbers work too
-//
+
+
 // Options:
 //   duration  ms for the whole reveal               (default 600)
 //   interval  ms between random flickers            (default 50)

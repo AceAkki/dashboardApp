@@ -1,27 +1,38 @@
 {
   "expo": {
-    "name": "dashboardApp",
-    "slug": "dashboardApp",
+    "name": "dashApp",
+    "slug": "dashApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "dashboardapp",
-    "userInterfaceStyle": "automatic",
+    "icon": "./assets/images/icon.png",
+    "scheme": "dashapp",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#090A0F",
+    "ios": {
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.aceakki.dashapp",
+      "supportsTablet": false
+    },
     "android": {
+      "package": "com.aceakki.dashapp",
       "adaptiveIcon": {
-        "backgroundColor": "#208AEF"
+        "backgroundColor": "#090A0F",
+        "foregroundImage": "./assets/images/android-icon-foreground.png",
+        "backgroundImage": "./assets/images/android-icon-background.png",
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.dashboardApp"
+      "predictiveBackGestureEnabled": false
     },
     "web": {
-      "output": "static"
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#090A0F",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
@@ -30,16 +41,25 @@
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/Inter-Regular.ttf",
-            "./assets/fonts/Inter-Italic.ttf",
-            "./assets/fonts/ArchivoBlack-Regular.ttf",
             "./assets/fonts/JetBrainsMono-Regular.ttf",
+            "./assets/fonts/JetBrainsMono-Medium.ttf",
+            "./assets/fonts/JetBrainsMono-Bold.ttf",
             "./assets/fonts/JetBrainsMono-Italic.ttf",
-            "./assets/fonts/FiraCode-Light.ttf"            
+            "./assets/fonts/FiraCode-Light.ttf",
+            "./assets/fonts/Inter18pt-Regular.ttf",
+            "./assets/fonts/Inter18pt-Medium.ttf",
+            "./assets/fonts/Inter18pt-SemiBold.ttf",
+            "./assets/fonts/Inter18pt-Bold.ttf"
           ]
         }
       ],
-        "@react-native-community/datetimepicker"
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "dashApp uses your location to show the weather where you are."
+        }
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,
