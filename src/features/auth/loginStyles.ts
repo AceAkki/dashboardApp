@@ -1,37 +1,25 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
+import { Typography } from "@/constants/Typography";
+import {
+  cardBase,
+  fieldBase,
+  primaryBtnBase,
+  text,
+} from "@/style/globalStyles";
 
-// login.css wasn't provided, so these are sensible defaults - adjust to match.
 const loginStyles = StyleSheet.create({
   loginSection: {
     flex: 1,
     justifyContent: "center",
     padding: 24,
   },
-  formWrap: {
-    gap: 16,
-    padding: 24,
-    borderRadius: 16,
-    backgroundColor: Colors.primary,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
+  formWrap: { ...cardBase, gap: 16, padding: 24 },
   formIcon: {
     alignItems: "center",
   },
-  loginTitle: {
-    fontSize: 28,
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  input: {
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderWidth: 2,
-    borderColor: Colors.border,
-    borderRadius: 10,
-    backgroundColor: "#fff",
-  },
+  loginTitle: { ...text.heading, fontSize: 28, textAlign: "center" },
+  input: { ...fieldBase },
   locationMainWrap: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -42,22 +30,15 @@ const loginStyles = StyleSheet.create({
     gap: 12,
   },
   errTxt: {
-    color: "#c62828",
+    fontFamily: Typography.secondary,
+    color: Colors.danger,
     marginTop: 4,
   },
   locationBtn: {
     padding: 8,
   },
-  submitBtn: {
-    alignItems: "center",
-    paddingVertical: 10,
-    borderRadius: 10,
-    backgroundColor: Colors.orange,
-  },
-  submitTxt: {
-    color: Colors.primary,
-    fontSize: 16,
-  },
+  submitBtn: { ...primaryBtnBase, paddingVertical: 10 },
+  submitTxt: { ...text.btn, fontSize: 16 },
 });
 
 export default loginStyles;

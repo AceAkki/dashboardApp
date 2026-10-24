@@ -1,58 +1,58 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
+import { Typography } from "@/constants/Typography";
+import {
+  cardBase,
+  chipActiveBase,
+  chipBase,
+  fieldBase,
+  fontSize,
+  insetBase,
+  primaryBtnBase,
+  radius,
+  text,
+} from "@/style/globalStyles";
 
 const favLinksStyles = StyleSheet.create({
   favLinks: {
+    ...cardBase,
     padding: 16,
     gap: 20,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 16,
-    backgroundColor: Colors.surface,
     flex: 1,
     justifyContent: "space-between",
   },
 
-  sectionLabel: {
-    color: Colors.textSecondary,
-    fontSize: 11,
-    fontWeight: "600",
-    letterSpacing: 0.5,
-    textTransform: "uppercase",
-    marginBottom: 8,
-  },
+  sectionLabel: { ...text.label, marginBottom: 8 },
 
   // search bar
   searchBar: {
+    ...fieldBase,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
     paddingLeft: 12,
     paddingRight: 6,
+    paddingVertical: 0,
     height: 48,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 14,
-    backgroundColor: Colors.secondarySoft,
+    borderRadius: radius.md,
   },
   searchBarFocused: {
     borderColor: Colors.primary,
   },
   searchInput: {
     flex: 1,
+    fontFamily: Typography.secondary,
     color: Colors.textPrimary,
-    fontSize: 15,
+    fontSize: fontSize.lg,
     paddingVertical: 0,
     width: "100%",
   },
   clearBtn: { padding: 4 },
   goBtn: {
+    ...primaryBtnBase,
     width: 25,
     height: 25,
-    borderRadius: 10,
-    backgroundColor: Colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 0,
   },
   goBtnDisabled: {
     backgroundColor: Colors.secondary,
@@ -62,23 +62,16 @@ const favLinksStyles = StyleSheet.create({
   // engine chips
   chipsList: { gap: 8, paddingRight: 8 },
   chip: {
+    ...chipBase,
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    paddingVertical: 6,
     paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 20,
-    backgroundColor: Colors.secondarySoft,
   },
-  chipSelected: {
-    borderColor: Colors.primary,
-    backgroundColor: Colors.primarySoft,
-  },
+  chipSelected: { ...chipActiveBase },
   chipPressed: { opacity: 0.7 },
-  chipTxt: { color: Colors.textSecondary, fontSize: 13 },
-  chipTxtSelected: { color: Colors.primary, fontWeight: "600" },
+  chipTxt: { ...text.small, fontSize: fontSize.md },
+  chipTxtSelected: { color: Colors.primary, fontFamily: Typography.secondary_semibold },
 
   // favicon with fallback
   icon: { width: 20, height: 20, borderRadius: 10 },
@@ -87,30 +80,23 @@ const favLinksStyles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: Colors.secondary,
   },
-  iconFallbackTxt: {
-    color: Colors.textPrimary,
-    fontSize: 10,
-    fontWeight: "700",
-  },
+  iconFallbackTxt: { ...text.body, fontFamily: Typography.secondary_bold, fontSize: fontSize.xs },
 
   // quick links
   quickRow: { gap: 8 },
   quickItem: {
+    ...insetBase,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: radius.sm,
     flex: 1,
     alignItems: "center",
     gap: 6,
     padding: 10,
     width: 100,
-    borderRadius: 12,
-    backgroundColor: Colors.secondarySoft,
-    borderWidth: 1,
-    borderColor: Colors.border,
   },
-  quickItemPressed: {
-    borderColor: Colors.primary,
-    backgroundColor: Colors.primarySoft,
-  },
-  quickTxt: { color: Colors.textSecondary, fontSize: 11 },
+  quickItemPressed: { ...chipActiveBase },
+  quickTxt: { ...text.small },
 });
 
 export default favLinksStyles;

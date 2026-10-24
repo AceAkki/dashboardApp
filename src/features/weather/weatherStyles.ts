@@ -1,32 +1,30 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
-
-const card = {
-  backgroundColor: Colors.surface,
-  borderWidth: 1,
-  borderColor: Colors.border,
-  borderRadius: 16,
-} as const;
+import { Typography } from "@/constants/Typography";
+import {
+  cardBase,
+  cardHeadBase,
+  fontSize,
+  primaryBtnBase,
+  screenBase,
+  text,
+} from "@/style/globalStyles";
 
 const weatherStyles = StyleSheet.create({
   // screen
-  cardHead: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  cardTitle: { color: Colors.textPrimary, fontSize: 13, fontWeight: "700" },
-  screen: { flex: 1, backgroundColor: Colors.background },
+  cardHead: { ...cardHeadBase },
+  cardTitle: { ...text.cardTitle },
+  screen: { ...screenBase },
   scroll: { padding: 16, gap: 16 },
-  sectionTitle: { color: Colors.textPrimary, fontSize: 26, fontWeight: "700" },
-  sectionPara: { color: Colors.textSecondary, fontSize: 13, marginTop: 4 },
+  sectionTitle: { ...text.heading },
+  sectionPara: { ...text.small, fontSize: fontSize.md, marginTop: 4 },
   sectionSubTitle: {
-    color: Colors.textPrimary,
+    ...text.body,
+    fontFamily: Typography.primary_medium,
     fontSize: 17,
-    fontWeight: "600",
     marginBottom: 8,
   },
-  expiry: { color: Colors.textMuted, fontSize: 11, textAlign: "center" },
+  expiry: { ...text.muted, textAlign: "center" },
 
   // loading / error
   center: {
@@ -36,18 +34,13 @@ const weatherStyles = StyleSheet.create({
     padding: 24,
     gap: 12,
   },
-  centerTxt: { color: Colors.textSecondary, textAlign: "center" },
-  retryBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 18,
-    borderRadius: 10,
-    backgroundColor: Colors.primary,
-  },
-  retryTxt: { color: Colors.textOnPrimary, fontWeight: "600" },
+  centerTxt: { ...text.small, fontSize: fontSize.lg, textAlign: "center" },
+  retryBtn: { ...primaryBtnBase, paddingHorizontal: 18 },
+  retryTxt: { ...text.btn, fontSize: 14 },
 
   // WeatherCard
-  weatherCard: { ...card, padding: 16 },
-  weatherDate: { color: Colors.textSecondary, fontSize: 16, fontWeight: "300" },
+  weatherCard: { ...cardBase, padding: 16 },
+  weatherDate: { ...text.small, fontSize: 16 },
   weatherRow: { flexDirection: "row" },
   weatherTemp: {
     flexDirection: "column-reverse",
@@ -56,62 +49,60 @@ const weatherStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  temp: { color: Colors.textPrimary, fontSize: 56, fontWeight: "300" },
+  temp: { ...text.body, fontFamily: Typography.numbers, fontSize: fontSize.display },
   aqiRow: { marginTop: 10 },
-  aqiTxt: { color: Colors.textPrimary, fontSize: 14 },
-  aqiBold: { fontWeight: "700" },
+  aqiTxt: { ...text.body, fontSize: 14 },
+  aqiBold: { fontFamily: Typography.secondary_bold },
 
   // WeatherTile
   tileWrap: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
   tile: {
-    ...card,
+    ...cardBase,
     width: "48%",
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 14,
     gap: 4,
   },
-  tileTxt: { color: Colors.textPrimary, fontSize: 15 },
-  tileLabel: { color: Colors.textMuted, fontSize: 10 },
+  tileTxt: { ...text.body, fontSize: 15 },
+  tileLabel: { ...text.muted, fontSize: fontSize.xs },
 
   // Hourly
   hourWrap: {
-    ...card,
+    ...cardBase,
     width: 92,
     height: 150,
-    padding: 12,
     alignItems: "center",
     justifyContent: "space-between",
   },
   hourLabel: {
-    color: Colors.textSecondary,
-    fontSize: 13,
-    fontWeight: "300",
+    ...text.small,
+    fontSize: fontSize.md,
     textAlign: "center",
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
     paddingBottom: 4,
   },
   hourTemp: {
-    color: Colors.textPrimary,
+    ...text.body,
+    fontFamily: Typography.primary_medium,
     fontSize: 15,
-    fontWeight: "600",
     textAlign: "center",
     marginTop: 4,
   },
 
   // Daily
-  dailyWrap: { ...card, width: 220, padding: 14, gap: 12 },
+  dailyWrap: { ...cardBase, width: 220, padding: 14, gap: 12 },
   dailyTop: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  dailyDate: { color: Colors.textSecondary, fontSize: 18 },
-  dailyTemp: { color: Colors.textPrimary, fontSize: 28, fontWeight: "600" },
+  dailyDate: { ...text.small, fontSize: 18 },
+  dailyTemp: { ...text.body, fontFamily: Typography.primary_medium, fontSize: 28 },
   dailySunWrap: { flexDirection: "row", justifyContent: "space-between" },
   dailySun: { flexDirection: "row", alignItems: "center", gap: 4 },
-  dailySunTxt: { color: Colors.textSecondary, fontSize: 13 },
+  dailySunTxt: { ...text.small, fontSize: fontSize.md },
 });
 
 export default weatherStyles;

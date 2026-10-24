@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
+import { cardBase, fieldBase, radius } from "@/style/globalStyles";
 
 const editTaskFormStyles = StyleSheet.create({
   // overlay (replaces fixed full-screen blurred layer)
@@ -9,21 +10,8 @@ const editTaskFormStyles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
-  editTaskContent: {
-    width: "85%",
-    gap: 16,
-    padding: 16,
-    borderRadius: 16,
-    backgroundColor: Colors.primary,
-  },
-  taskEdit: {
-    paddingVertical: 6,
-    paddingHorizontal: 8,
-    backgroundColor: "#fff",
-    borderWidth: 2,
-    borderColor: Colors.border,
-    borderRadius: 10,
-  },
+  editTaskContent: { ...cardBase, width: "85%", gap: 16, padding: 16 },
+  taskEdit: { ...fieldBase },
   btnWrap: {
     flexDirection: "row",
     justifyContent: "center",
@@ -34,13 +22,13 @@ const editTaskFormStyles = StyleSheet.create({
     paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: Colors.border,
-    borderRadius: 10,
+    borderRadius: radius.sm,
   },
   confirmBtn: {
-    backgroundColor: "#4caf50",
+    backgroundColor: Colors.success,
   },
   cancelBtn: {
-    backgroundColor: "#e57373",
+    backgroundColor: Colors.danger,
   },
 });
 

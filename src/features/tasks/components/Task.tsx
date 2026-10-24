@@ -3,6 +3,7 @@ import { useShallow } from "zustand/shallow";
 import { Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import { Colors } from "@/constants/Colors";
 import { useTaskStore } from "../hooks/useTasksStore";
 import type { TaskType } from "../taskTypes";
 import OptionsPopup from "./OptionsPopup";
@@ -33,7 +34,7 @@ const Task = ({ taskTxt }: TaskType) => {
           setTaskID(taskID === taskTxt.id ? null : taskTxt.id);
         }}
       >
-        <Ionicons name="options-outline" size={24} color="#333" />
+        <Ionicons name="options-outline" size={24} color={Colors.textSecondary} />
       </Pressable>
       {isOpen && (
         <OptionsPopup

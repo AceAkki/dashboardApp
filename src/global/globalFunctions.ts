@@ -6,6 +6,22 @@ import { useRouter } from "expo-router";
 
 import { userKey } from "./storageKeys";
 
+export const fetchData = async (apiURL:string) => {
+  try {
+    const res = await fetch(
+      `${apiURL}`,
+    );
+    if (!res.ok) {
+      throw new Error(`API error ${res.status}`);
+    }
+    return (await res.json());
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+
 export async function writeClipboardText(text: string) {
   try {
     await Clipboard.setStringAsync(text);
@@ -45,7 +61,7 @@ export function useRequireAuth(loginRoute: string = "/login") {
 // Use state to switch between styles instead, e.g.
 //   style={[styles.box, active && styles.boxActive]}
 
-export const timeOfTheDayGreeting = () => {
+export const timeOfTheDayGreeting = (): string => {
   const currentHour = new Date().getHours();
   return currentHour < 12
     ? "¡Buenos Días"

@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native";
+import { Colors } from "@/constants/Colors";
+import { fontSize, text } from "@/style/globalStyles";
 
 const taskStyles = StyleSheet.create({
   taskWrap: {
@@ -9,9 +11,11 @@ const taskStyles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 8,
     borderBottomWidth: 1,
-    borderBottomColor: "#333",
+    borderBottomColor: Colors.border,
   },
   taskTxt: {
+    ...text.body,
+    fontSize: fontSize.lg,
     flex: 1,
     marginRight: 8,
   },

@@ -1,5 +1,6 @@
-import { FlatList, Pressable, Text } from "react-native";
+import { FlatList, Pressable } from "react-native";
 
+import CtosText from "@/components/CtosText";
 import { favLinks } from "../favLinksData";
 import type { SearchEnginesProps } from "../favLinkTypes";
 import favLinksStyles from "../favLinksStyles";
@@ -29,9 +30,16 @@ const SearchEngines = ({ selected, onSelect }: SearchEnginesProps) => (
           ]}
         >
           <LinkIcon uri={item.favicon} name={item.name} />
-          <Text style={[favLinksStyles.chipTxt, isSelected && favLinksStyles.chipTxtSelected]}>
+          <CtosText
+            autoPlay={false}
+            trigger={isSelected ? 1 : undefined}
+            style={[
+              favLinksStyles.chipTxt,
+              isSelected && favLinksStyles.chipTxtSelected,
+            ]}
+          >
             {item.name}
-          </Text>
+          </CtosText>
         </Pressable>
       );
     }}

@@ -12,6 +12,7 @@ import {
   type PomodoroMode,
 } from "@/features/pomodoro/hooks/pomodoroStore";
 import pomodoroStyles from "@/features/pomodoro/pomodoroStyles";
+import CtosText from "@/components/CtosText";
 
 const MODES: PomodoroMode[] = ["focus", "short", "long"];
 
@@ -64,7 +65,7 @@ export default function PomodoroScreen() {
           color={modeColor(mode)}
         >
           <Text style={pomodoroStyles.bigTime}>{label}</Text>
-          <Text style={pomodoroStyles.bigMode}>{MODE_LABEL[mode]}</Text>
+          <CtosText style={pomodoroStyles.bigMode}>{MODE_LABEL[mode]}</CtosText>
         </TimerRing>
       </View>
 
@@ -79,9 +80,9 @@ export default function PomodoroScreen() {
           />
         ))}
       </View>
-      <Text style={pomodoroStyles.sessionTxt}>
+      <CtosText style={pomodoroStyles.sessionTxt}>
         {completedSessions} sessions completed
-      </Text>
+      </CtosText>
 
       <View style={pomodoroStyles.bigControls}>
         <Pressable onPress={reset}>

@@ -1,11 +1,32 @@
 import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
-
 import { useUserStore } from "@/features/auth/useAuthStore";
 
+// new ------------------------
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { Typography } from "@/constants/Typography";
+// keep the splash screen up until fonts + saved user are ready (no flash of
+// system-font text, no flash of the login screen)
+SplashScreen.preventAutoHideAsync();
+// new end ------------------------
+
 export default function RootLayout() {
-  // android gradle setup done for dev build for android
   const isLoggedIn = useUserStore((state) => state.username.length > 0);
+
+  // new ------------------------
+  const [fontsLoaded, fontError] = useFonts({
+    [Typography.primary]: require("../../assets/fonts/JetBrainsMono-Regular.ttf"),
+    [Typography.primary_medium]: require("../../assets/fonts/JetBrainsMono-Medium.ttf"),
+    [Typography.primary_bold]: require("../../assets/fonts/JetBrainsMono-Bold.ttf"),
+    [Typography.primaryItalic]: require("../../assets/fonts/JetBrainsMono-Italic.ttf"),
+    [Typography.numbers]: require("../../assets/fonts/FiraCode-Light.ttf"),
+    [Typography.secondary]: require("../../assets/fonts/Inter18pt-Regular.ttf"),
+    [Typography.secondary_medium]: require("../../assets/fonts/Inter18pt-Medium.ttf"),
+    [Typography.secondary_semibold]: require("../../assets/fonts/Inter18pt-SemiBold.ttf"),
+    [Typography.secondary_bold]: require("../../assets/fonts/Inter18pt-Bold.ttf"),
+  });
+  // new end ------------------------
 
   // the persisted user loads asynchronously from AsyncStorage; wait for it so a
   // logged-in user doesn't flash the login screen
@@ -18,7 +39,18 @@ export default function RootLayout() {
     return unsub;
   }, []);
 
-  if (!hydrated) return null;
+  // if (!hydrated) return null;
+
+  // new ------------------------
+  const ready = hydrated && (fontsLoaded || !!fontError);
+
+  useEffect(() => {
+    if (fontError) console.warn("Font loading failed:", fontError);
+    if (ready) SplashScreen.hideAsync();
+  }, [ready, fontError]);
+
+  if (!ready) return null;
+  // new end ------------------------
 
   return (
     <Stack>
@@ -38,14 +70,14 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
-          name="weather"
+          name="Weather"
           options={{
             title: "Weather",
             headerShown: false,
           }}
         />
         <Stack.Screen
-          name="pomodoro"
+          name="Pomodoro"
           options={{
             title: "Pomodoro",
             headerShown: false,

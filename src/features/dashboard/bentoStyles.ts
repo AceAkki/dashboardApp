@@ -1,9 +1,19 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
+import {
+  cardBase,
+  cardHeadBase,
+  fontSize,
+  insetBase,
+  primaryBtnBase,
+  radius,
+  screenBase,
+  text,
+} from "@/style/globalStyles";
 
 const bentoStyles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: Colors.background },
+  root: { ...screenBase },
   scroll: { padding: 16, paddingBottom: 32, gap: 20 },
 
   // header
@@ -13,17 +23,14 @@ const bentoStyles = StyleSheet.create({
     justifyContent: "space-between",
   },
   locationPill: {
+    ...cardBase,
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
     paddingVertical: 6,
     paddingHorizontal: 10,
-    borderRadius: 16,
-    backgroundColor: Colors.surface,
-    borderWidth: 1,
-    borderColor: Colors.border,
   },
-  locationTxt: { color: Colors.textPrimary, fontSize: 12 },
+  locationTxt: { ...text.body, fontSize: 12 },
   headerRight: { flexDirection: "row", alignItems: "center", gap: 12 },
   avatar: {
     width: 28,
@@ -33,44 +40,26 @@ const bentoStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  avatarTxt: { color: Colors.textOnPrimary, fontWeight: "700", fontSize: 13 },
+  avatarTxt: { ...text.btn, fontFamily: Typography.primary_bold },
 
   greetWrap: { marginTop: 16 },
-  greet: { color: Colors.textPrimary, fontSize: 22, fontWeight: "700", fontFamily:Typography.primary },
-  greetSub: { color: Colors.textSecondary, fontSize: 20, fontWeight: "400", },
-  synced: { color: Colors.textSecondary, fontSize: 11, marginTop: 4 },
+  greet: { ...text.title },
+  greetSub: { ...text.small, fontSize: fontSize.md },
+  synced: { ...text.small, marginTop: 4 },
   syncedDot: { color: Colors.success },
 
   // sections
-  sectionLabel: {
-    color: Colors.textSecondary,
-    fontSize: 10,
-    letterSpacing: 0.4,
-    marginTop: 16,
-    marginBottom: 6,
-  },
+  sectionLabel: { ...text.label, marginTop: 16, marginBottom: 6 },
   row: { flexDirection: "row", gap: 10 },
-  card: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 14,
-    backgroundColor: Colors.surface,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    overflow: "hidden",
-  },
-  cardHead: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  cardTitle: { color: Colors.textPrimary, fontSize: 13, fontWeight: "700" },
-  small: { color: Colors.textSecondary, fontSize: 11 },
+  card: { ...cardBase, flex: 1 },
+  cardHead: { ...cardHeadBase },
+  cardTitle: { ...text.cardTitle },
+  small: { ...text.small },
 
   // section 1
   focusRow: { flexDirection: "row", alignItems: "center", gap: 12 },
   focusTxtWrap: { flex: 1, gap: 12 },
-  focusLabel: { color: Colors.textPrimary, fontWeight: "700", fontSize: 14 },
+  focusLabel: { ...text.cardTitle, fontSize: 14 },
   barChart: {
     flexDirection: "row",
     alignItems: "flex-end",
@@ -80,12 +69,7 @@ const bentoStyles = StyleSheet.create({
   bar: { width: 12, borderRadius: 3 },
 
   // weather
-  weatherTemp: {
-    color: Colors.textPrimary,
-    fontSize: 22,
-    fontWeight: "700",
-    marginTop: 4,
-  },
+  weatherTemp: { ...text.title, marginTop: 4 },
   sparkRow: {
     flexDirection: "row",
     alignItems: "flex-end",
@@ -103,16 +87,15 @@ const bentoStyles = StyleSheet.create({
 
   // fav links
   linkItem: {
+    ...insetBase,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
     paddingVertical: 6,
     paddingHorizontal: 8,
-    borderRadius: 8,
-    backgroundColor: Colors.secondarySoft,
     marginTop: 6,
   },
-  linkTxt: { color: Colors.textPrimary, fontSize: 12 },
+  linkTxt: { ...text.body, fontSize: 12 },
 
   // pomodoro
   timerWrap: { alignItems: "center", marginVertical: 12 },
@@ -125,7 +108,7 @@ const bentoStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  timerTxt: { color: Colors.textPrimary, fontSize: 26, fontWeight: "700" },
+  timerTxt: { ...text.heading },
   timerControls: {
     flexDirection: "row",
     justifyContent: "center",
@@ -133,48 +116,36 @@ const bentoStyles = StyleSheet.create({
     alignItems: "center",
   },
   playBtn: {
+    ...insetBase,
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.secondarySoft,
     alignItems: "center",
     justifyContent: "center",
   },
 
   // notes
-  noteLabel: { color: Colors.textSecondary, fontSize: 11, marginTop: 8 },
+  noteLabel: { ...text.small, marginTop: 8 },
   noteInput: {
+    ...insetBase,
+    fontFamily: Typography.secondary,
     color: Colors.textPrimary,
-    backgroundColor: Colors.secondarySoft,
-    borderRadius: 8,
     paddingVertical: 6,
     paddingHorizontal: 8,
     marginTop: 4,
     fontSize: 12,
   },
   noteBody: { minHeight: 70, textAlignVertical: "top" },
-  saveBtn: {
-    marginTop: 8,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: Colors.primary,
-    alignItems: "center",
-  },
-  saveTxt: { color: Colors.textOnPrimary, fontWeight: "600", fontSize: 13 },
+  saveBtn: { ...primaryBtnBase, marginTop: 8, borderRadius: radius.xs },
+  saveTxt: { ...text.btn },
 
   // news / link storage
-  newsItem: {
-    padding: 8,
-    borderRadius: 8,
-    backgroundColor: Colors.secondarySoft,
-    marginTop: 6,
-  },
-  newsTitle: { color: Colors.textPrimary, fontSize: 12, fontWeight: "600" },
-  newsSub: { color: Colors.textSecondary, fontSize: 10 },
+  newsItem: { ...insetBase, padding: 8, marginTop: 6 },
+  newsTitle: { ...text.body, fontFamily: Typography.secondary_semibold, fontSize: 12 },
+  newsSub: { ...text.caption },
   linkTile: {
+    ...insetBase,
     height: 64,
-    borderRadius: 8,
-    backgroundColor: Colors.secondarySoft,
     marginTop: 6,
     padding: 6,
     justifyContent: "flex-end",

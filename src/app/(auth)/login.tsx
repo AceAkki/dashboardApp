@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import globalStyles from "@/style/globalStyles";
 import { useUserStore } from "@/features/auth/useAuthStore";
 import loginStyles from "@/features/auth/loginStyles";
+import CtosText from "@/components/CtosText";
 
 const locationRegx = /-?\d+\.\d+/m;
 
@@ -34,7 +35,6 @@ export default function Login() {
     updateUser(name.trim(), Number(latitude), Number(longitude));
   };
 
-
   const grabLocation = async () => {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -60,7 +60,7 @@ export default function Login() {
           <View style={loginStyles.formIcon}>
             <Ionicons name="bulb-outline" size={32} />
           </View>
-          <Text style={loginStyles.loginTitle}>Login</Text>
+          <CtosText style={loginStyles.loginTitle}>Login</CtosText>
 
           <TextInput
             style={loginStyles.input}

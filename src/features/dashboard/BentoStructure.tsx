@@ -19,6 +19,7 @@ import PomodoroCard from "../pomodoro/components/PomodoroCard";
 import bentoStyles from "./bentoStyles";
 import WeatherCardContainer from "../weather/components/WeatherCardContainer";
 import FavLinks from "../favLinks/FavLinks";
+import CtosText from "@/components/CtosText";
 
 // stagger-in, replaces motion's container/item variants
 function FadeInItem({
@@ -127,9 +128,9 @@ const BentoStructure = () => {
               size={14}
               color={Colors.textPrimary}
             />
-            <Text style={bentoStyles.locationTxt}>
+            <CtosText style={bentoStyles.locationTxt}>
               {location.latitude.toFixed(2)}, {location.longitude.toFixed(2)}
-            </Text>
+            </CtosText>
           </View>
           <View style={bentoStyles.headerRight}>
             <Ionicons
@@ -147,9 +148,11 @@ const BentoStructure = () => {
 
         <View style={bentoStyles.greetWrap}>
           <Text style={bentoStyles.greet}>
-            {timeOfTheDayGreeting()} {username}!{" "}
+            <CtosText>{timeOfTheDayGreeting()}</CtosText>{" "}
+            <CtosText>{username}!</CtosText>{" "}
             <Text style={bentoStyles.greetSub}></Text>
           </Text>
+
           <Text style={bentoStyles.synced}>
             <Text style={bentoStyles.syncedDot}> ● </Text>Synced · Last Update:
             just now
@@ -161,13 +164,18 @@ const BentoStructure = () => {
             <View style={bentoStyles.focusRow}>
               <View style={bentoStyles.focusTxtWrap}>
                 <View>
-                  <Text style={bentoStyles.focusLabel}>Priority Tasks</Text>
+                  <CtosText style={bentoStyles.focusLabel}>
+                    Priority Tasks
+                  </CtosText>
                   <Text style={[bentoStyles.small, { color: Colors.danger }]}>
-                    {priority} Priority
+                    {priority}
+                    <CtosText> Priority</CtosText>
                   </Text>
                 </View>
                 <View>
-                  <Text style={bentoStyles.focusLabel}>Current Tasks</Text>
+                  <CtosText style={bentoStyles.focusLabel}>
+                    Current Tasks
+                  </CtosText>
                   <Text style={bentoStyles.small}>
                     <Text style={{ color: Colors.primary }}>
                       {current} in Progress

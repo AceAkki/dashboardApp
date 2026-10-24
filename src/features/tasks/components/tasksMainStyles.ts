@@ -1,28 +1,10 @@
 import { StyleSheet } from "react-native";
-import { Colors } from "@/constants/Colors";
+import { cardBase, text } from "@/style/globalStyles";
 
 const tasksMainStyles = StyleSheet.create({
-  tasksMainWrap: {
-    padding: 16,
-    height: 260,
-    backgroundColor: "rgba(255,255,255,0.6)",
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 16,
-    overflow: "hidden",
-  },
-  tasksMainTitle: {
-    fontSize: 19,
-    fontWeight: "700",
-    textAlign: "center",
-    color: Colors.border,
-    borderRadius: 5,
-  },
-  empty: {
-    textAlign: "center",
-    marginTop: 16,
-    opacity: 0.6,
-  },
+  tasksMainWrap: { ...cardBase, padding: 16, height: 260 },
+  tasksMainTitle: { ...text.cardTitle, fontSize: 19, textAlign: "center" },
+  empty: { ...text.small, textAlign: "center", marginTop: 16 },
 });
 
 export default tasksMainStyles;
