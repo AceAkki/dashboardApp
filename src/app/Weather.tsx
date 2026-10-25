@@ -15,6 +15,8 @@ import WeatherTile from "@/features/weather/components/WeatherTile";
 import useFetchWeatherData from "@/features/weather/hooks/useFetchWeatherData";
 import weatherStyles from "@/features/weather/weatherStyles";
 import type { WeatherData } from "@/features/weather/weatherType";
+import { SafeAreaView } from "react-native-safe-area-context";
+import globalStyles from "@/style/globalStyles";
 
 // keys that are shown elsewhere (card / hourly) and don't get a tile
 const hiddenKeys = ["time", "interval", "temperature_2m", "weather_code"];
@@ -25,20 +27,22 @@ const Weather = () => {
 
   if (!weatherData || !aqiData) {
     return (
-      <View style={[weatherStyles.screen, weatherStyles.center]}>
-        {loading ? (
-          <ActivityIndicator size="large" color={Colors.primary} />
-        ) : (
-          <>
-            <Text style={weatherStyles.centerTxt}>
-              {error ?? "Set your location to see the weather."}
-            </Text>
-            <Pressable style={weatherStyles.retryBtn} onPress={refetch}>
-              <Text style={weatherStyles.retryTxt}>Try again</Text>
-            </Pressable>
-          </>
-        )}
-      </View>
+      <SafeAreaView style={globalStyles.screen} edges={["top", "bottom"]}>
+        <View style={[weatherStyles.screen, weatherStyles.center]}>
+          {loading ? (
+            <ActivityIndicator size="large" color={Colors.primary} />
+          ) : (
+            <>
+              <Text style={weatherStyles.centerTxt}>
+                {error ?? "Set your location to see the weather."}
+              </Text>
+              <Pressable style={weatherStyles.retryBtn} onPress={refetch}>
+                <Text style={weatherStyles.retryTxt}>Try again</Text>
+              </Pressable>
+            </>
+          )}
+        </View>
+      </SafeAreaView>
     );
   }
 
