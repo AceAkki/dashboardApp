@@ -28,7 +28,7 @@ const WeatherCard = ({
           <Text style={weatherStyles.cardTitle}>Weather</Text>
           <Ionicons
             name="expand-outline"
-            size={14}
+            size={20}
             color={Colors.textSecondary}
           />
         </Pressable>
