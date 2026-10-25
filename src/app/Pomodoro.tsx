@@ -34,7 +34,7 @@ export default function PomodoroScreen() {
   const doneInCycle = completedSessions % SESSIONS_BEFORE_LONG;
 
   return (
-    <SafeAreaView style={pomodoroStyles.screen} edges={["bottom"]}>
+    <SafeAreaView style={pomodoroStyles.screen}  edges={["top", "bottom"]}>
       <View style={pomodoroStyles.modeTabs}>
         {MODES.map((m) => (
           <Pressable

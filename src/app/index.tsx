@@ -5,7 +5,7 @@ import BentoStructure from "../features/dashboard/BentoStructure";
 
 export default function Index() {
   return (
-    <SafeAreaView style={globalStyles.containerFull}>
+    <SafeAreaView style={globalStyles.screen} edges={["top", "bottom"]}>
       <BentoStructure />
     </SafeAreaView>
   );
