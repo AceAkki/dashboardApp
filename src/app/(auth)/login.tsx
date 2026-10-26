@@ -18,6 +18,7 @@ export default function Login() {
 
   // controlled inputs replace <Form>, FormData and the refs
   const [name, setName] = useState("");
+  const [userID, setUserID] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [errors, setErrors] = useState<Errors>({});
@@ -32,7 +33,7 @@ export default function Login() {
     if (!name.trim() || Object.keys(nextErrors).length > 0) return;
 
     // the root layout's guard switches to the app screens once username is set
-    updateUser(name.trim(), Number(latitude), Number(longitude));
+    updateUser(name.trim(), Number(latitude), Number(longitude), userID.trim());
   };
 
   const grabLocation = async () => {
@@ -68,6 +69,13 @@ export default function Login() {
             value={name}
             onChangeText={setName}
             autoCapitalize="words"
+          />
+
+          <TextInput
+            style={loginStyles.input}
+            placeholder="GitHub userID"
+            value={userID}
+            onChangeText={setUserID}
           />
 
           <View style={loginStyles.locationMainWrap}>

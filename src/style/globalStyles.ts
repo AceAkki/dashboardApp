@@ -25,6 +25,8 @@ export const fontSize = {
   lg: 15,
   xl: 22,
   xxl: 26,
+  xxxl: 30,
+  display_sml: 38,
   display: 56,
 };
 
@@ -104,14 +106,46 @@ export const chipActiveBase = {
 // TEXT
 // ─────────────────────────────────────────────────────────────────────────────
 export const text = {
-  display: { fontFamily: Typography.primary_bold, color: Colors.textPrimary, fontSize: fontSize.display },
-  heading: { fontFamily: Typography.primary_bold, color: Colors.textPrimary, fontSize: fontSize.xxl },
-  title: { fontFamily: Typography.primary_bold, color: Colors.textPrimary, fontSize: fontSize.xl },
-  cardTitle: { fontFamily: Typography.primary_bold, color: Colors.textPrimary, fontSize: fontSize.md },
-  body: { fontFamily: Typography.secondary, color: Colors.textPrimary, fontSize: fontSize.md },
-  small: { fontFamily: Typography.secondary, color: Colors.textSecondary, fontSize: fontSize.sm },
-  caption: { fontFamily: Typography.secondary, color: Colors.textSecondary, fontSize: fontSize.xs },
-  muted: { fontFamily: Typography.secondary, color: Colors.textMuted, fontSize: fontSize.sm },
+  display: {
+    fontFamily: Typography.primary_bold,
+    color: Colors.textPrimary,
+    fontSize: fontSize.display,
+  },
+  heading: {
+    fontFamily: Typography.primary_bold,
+    color: Colors.textPrimary,
+    fontSize: fontSize.xxl,
+  },
+  title: {
+    fontFamily: Typography.primary_bold,
+    color: Colors.textPrimary,
+    fontSize: fontSize.xl,
+  },
+  cardTitle: {
+    fontFamily: Typography.primary_bold,
+    color: Colors.textPrimary,
+    fontSize: fontSize.md,
+  },
+  body: {
+    fontFamily: Typography.secondary,
+    color: Colors.textPrimary,
+    fontSize: fontSize.md,
+  },
+  small: {
+    fontFamily: Typography.secondary,
+    color: Colors.textSecondary,
+    fontSize: fontSize.sm,
+  },
+  caption: {
+    fontFamily: Typography.secondary,
+    color: Colors.textSecondary,
+    fontSize: fontSize.xs,
+  },
+  muted: {
+    fontFamily: Typography.secondary,
+    color: Colors.textMuted,
+    fontSize: fontSize.sm,
+  },
   // UPPERCASE section label above a group of cards
   label: {
     fontFamily: Typography.secondary_semibold,
@@ -121,9 +155,17 @@ export const text = {
     textTransform: "uppercase",
   },
   // label on a primary button
-  btn: { fontFamily: Typography.primary_medium, color: Colors.textOnPrimary, fontSize: fontSize.md },
+  btn: {
+    fontFamily: Typography.primary_medium,
+    color: Colors.textOnPrimary,
+    fontSize: fontSize.md,
+  },
   // digits (timers, temperatures)
-  numbers: { fontFamily: Typography.numbers, color: Colors.textPrimary, fontSize: fontSize.md },
+  numbers: {
+    fontFamily: Typography.numbers,
+    color: Colors.textPrimary,
+    fontSize: fontSize.md,
+  },
 } as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -138,6 +180,12 @@ const globalStyles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  divider: {
+    padding: 1,
+    marginVertical: 10,
+    backgroundColor: Colors.secondary,
   },
 
   screen: screenBase,
@@ -158,7 +206,33 @@ const globalStyles = StyleSheet.create({
   textSmall: text.small,
   textCaption: text.caption,
   textMuted: text.muted,
+
+  scroll: { padding: 16, gap: 16 },
+
+  // section based
+  sectionTitle: { ...text.heading },
+  sectionPara: { ...text.small, fontSize: fontSize.md, marginTop: 4 },
+  sectionSubTitle: {
+    ...text.body,
+    fontFamily: Typography.primary_medium,
+    fontSize: 17,
+    marginBottom: 8,
+  },
   sectionLabel: text.label,
+
+  expiry: { ...text.muted, textAlign: "center" },
+
+  // loading / error
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+    gap: 12,
+  },
+  centerTxt: { ...text.small, fontSize: fontSize.lg, textAlign: "center" },
+  retryBtn: { ...primaryBtnBase, paddingHorizontal: 18 },
+  retryTxt: { ...text.btn, fontSize: 14 },
 });
 
 export default globalStyles;

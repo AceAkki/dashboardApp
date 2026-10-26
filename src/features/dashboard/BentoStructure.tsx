@@ -20,6 +20,7 @@ import bentoStyles from "./bentoStyles";
 import WeatherCardContainer from "../weather/components/WeatherCardContainer";
 import FavLinks from "../favLinks/FavLinks";
 import CtosText from "@/components/CtosText";
+import GitStats from "../gitStats/GitStats";
 
 // stagger-in, replaces motion's container/item variants
 function FadeInItem({
@@ -225,11 +226,15 @@ const BentoStructure = () => {
           <View>
             <FavLinks />
           </View>
-          <View>
-            <WeatherCardContainer />
-          </View>
+          <View></View>
+        </FadeInItem>
+
+        <FadeInItem index={2}>
           <View style={bentoStyles.row}>
-            <View></View>
+            <WeatherCardContainer />
+
+            <GitStats />
+
             {/* <View style={bentoStyles.card}>
               <CardHead title="FavLinks" />
               {["Figma", "Github", "Notion", "Canva"].map((l) => (
@@ -246,14 +251,14 @@ const BentoStructure = () => {
           </View>
         </FadeInItem>
 
-        <FadeInItem index={2}>
+        <FadeInItem index={3}>
           <View style={bentoStyles.row}>
             <PomodoroCard />
             <NotesCard />
           </View>
         </FadeInItem>
 
-        <FadeInItem index={3}>
+        <FadeInItem index={4}>
           <View style={bentoStyles.row}>
             <View style={bentoStyles.card}>
               <CardHead title="RenderNews" />

@@ -39,8 +39,8 @@ const weatherStyles = StyleSheet.create({
   retryTxt: { ...text.btn, fontSize: 14 },
 
   // WeatherCard
-  weatherCard: { ...cardBase, padding: 16 },
-  weatherDate: { ...text.small, fontSize: 16 },
+  weatherCard: { ...cardBase, padding: 16, flex: 1 },
+  weatherDate: { ...text.small, fontSize: 16, paddingVertical: 10 },
   weatherRow: { flexDirection: "row" },
   weatherTemp: {
     flexDirection: "column-reverse",
@@ -49,7 +49,11 @@ const weatherStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  temp: { ...text.body, fontFamily: Typography.numbers, fontSize: fontSize.display },
+  temp: {
+    ...text.body,
+    fontFamily: Typography.numbers,
+    fontSize: fontSize.display,
+  },
   aqiRow: { marginTop: 10 },
   aqiTxt: { ...text.body, fontSize: 14 },
   aqiBold: { fontFamily: Typography.secondary_bold },
@@ -99,7 +103,11 @@ const weatherStyles = StyleSheet.create({
     justifyContent: "space-between",
   },
   dailyDate: { ...text.small, fontSize: 18 },
-  dailyTemp: { ...text.body, fontFamily: Typography.primary_medium, fontSize: 28 },
+  dailyTemp: {
+    ...text.body,
+    fontFamily: Typography.primary_medium,
+    fontSize: 28,
+  },
   dailySunWrap: { flexDirection: "row", justifyContent: "space-between" },
   dailySun: { flexDirection: "row", alignItems: "center", gap: 4 },
   dailySunTxt: { ...text.small, fontSize: fontSize.md },

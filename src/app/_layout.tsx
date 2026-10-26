@@ -6,6 +6,7 @@ import { useUserStore } from "@/features/auth/useAuthStore";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { Typography } from "@/constants/Typography";
+import BootScreen from "@/components/BootScreen";
 // keep the splash screen up until fonts + saved user are ready (no flash of
 // system-font text, no flash of the login screen)
 SplashScreen.preventAutoHideAsync();
@@ -41,6 +42,9 @@ export default function RootLayout() {
 
   // if (!hydrated) return null;
 
+  // boot screen shows once per app launch, after the native splash hides
+  const [booted, setBooted] = useState(false);
+
   // new ------------------------
   const ready = hydrated && (fontsLoaded || !!fontError);
 
@@ -50,6 +54,7 @@ export default function RootLayout() {
   }, [ready, fontError]);
 
   if (!ready) return null;
+  if (!booted) return <BootScreen onDone={() => setBooted(true)} />;
   // new end ------------------------
 
   return (

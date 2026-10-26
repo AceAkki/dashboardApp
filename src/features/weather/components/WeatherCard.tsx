@@ -8,6 +8,7 @@ import { getAQILevel, toSentenceCase, USAQI } from "../utils/getAQI";
 import { formatFullDate } from "../utils/dateFormatter";
 import type { WeatherCardProps } from "../weatherType";
 import weatherStyles from "../weatherStyles";
+import { fontSize } from "@/style/globalStyles";
 
 const WeatherCard = ({
   current,
@@ -44,7 +45,12 @@ const WeatherCard = ({
           !isDashboard && weatherStyles.weatherRow,
         ]}
       >
-        <Text style={weatherStyles.temp}>
+        <Text
+          style={[
+            weatherStyles.temp,
+            isDashboard && { fontSize: fontSize.display_sml },
+          ]}
+        >
           {current.temperature_2m}
           {current_units.temperature_2m}
         </Text>

@@ -6,21 +6,29 @@ import { useRouter } from "expo-router";
 
 import { userKey } from "./storageKeys";
 
-export const fetchData = async (apiURL:string) => {
+export const fetchData = async (apiURL: string) => {
   try {
-    const res = await fetch(
-      `${apiURL}`,
-    );
+    const res = await fetch(`${apiURL}`);
     if (!res.ok) {
       throw new Error(`API error ${res.status}`);
     }
-    return (await res.json());
+    return await res.json();
   } catch (error) {
     console.log(error);
     return null;
   }
 };
 
+export const dateFormat = (dateString:string) => {
+  return new Date(dateString).toLocaleDateString(
+    undefined,
+    {
+      day: "numeric",
+      year: "numeric",
+      month: "long",
+    },
+  );
+}
 
 export async function writeClipboardText(text: string) {
   try {

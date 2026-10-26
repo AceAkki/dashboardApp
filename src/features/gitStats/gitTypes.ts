@@ -1,4 +1,4 @@
-export type GitUser = {
+export interface GitUser {
     login: string;
     id: number;
     node_id: string;
@@ -46,6 +46,7 @@ export interface GitRepository {
     url: string;
     created_at: string;
     updated_at: string;
+    pushed_at: string;
     language: string | null;
     stargazers_count: number;
     watchers_count: number;
@@ -54,3 +55,15 @@ export interface GitRepository {
     default_branch: string;
 }
 
+export type GitStats = GitUser & {
+    lastPushedRepo: GitRepository | null;
+    lastPushDate: string | null;
+};
+
+export interface GitStatRes {
+    data: GitStats | null;
+    loading: boolean;
+    error: string | null;
+    storageTime: number | null;
+    refetch: () => void;
+}
