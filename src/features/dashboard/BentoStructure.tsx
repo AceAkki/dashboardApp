@@ -20,8 +20,8 @@ import bentoStyles from "./bentoStyles";
 import WeatherCardContainer from "../weather/components/WeatherCardContainer";
 import FavLinks from "../favLinks/FavLinks";
 import CtosText from "@/components/CtosText";
+import CtosItem from "@/components/CtosItem";
 import GitStats from "../gitStats/GitStats";
-import globalStyles from "@/style/globalStyles";
 
 // stagger-in, replaces motion's container/item variants
 function FadeInItem({
@@ -161,7 +161,7 @@ const BentoStructure = () => {
           </Text>
         </View>
 
-        <FadeInItem index={0}>
+        <CtosItem index={0}>
           <View style={bentoStyles.card}>
             <View style={bentoStyles.focusRow}>
               <View style={bentoStyles.focusTxtWrap}>
@@ -228,16 +228,16 @@ const BentoStructure = () => {
               </Pressable>
             </View>
           </View>
-        </FadeInItem>
+        </CtosItem>
 
-        <FadeInItem index={1}>
+        <CtosItem index={1}>
           <View>
             <FavLinks />
           </View>
           <View></View>
-        </FadeInItem>
+        </CtosItem>
 
-        <FadeInItem index={2}>
+        <CtosItem index={2}>
           <View style={bentoStyles.row}>
             <WeatherCardContainer />
 
@@ -257,16 +257,16 @@ const BentoStructure = () => {
               ))}
             </View> */}
           </View>
-        </FadeInItem>
+        </CtosItem>
 
-        <FadeInItem index={3}>
+        <CtosItem index={3}>
           <View style={bentoStyles.row}>
             <PomodoroCard />
             <NotesCard />
           </View>
-        </FadeInItem>
+        </CtosItem>
 
-        <FadeInItem index={4}>
+        <CtosItem index={4}>
           <View style={bentoStyles.row}>
             <View style={bentoStyles.card}>
               <CardHead title="RenderNews" />
@@ -290,7 +290,7 @@ const BentoStructure = () => {
               ))}
             </View>
           </View>
-        </FadeInItem>
+        </CtosItem>
       </ScrollView>
     </View>
   );

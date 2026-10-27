@@ -47,7 +47,7 @@ const Daily = ({ daily, tempUnit }: DailyProps) => {
               <MaterialCommunityIcons
                 name="weather-sunset"
                 size={20}
-                color={Colors.warningSoft}
+                color={Colors.warning}
               />
               <Text style={weatherStyles.dailySunTxt}>
                 {formatTime(daily.sunset[i])}
