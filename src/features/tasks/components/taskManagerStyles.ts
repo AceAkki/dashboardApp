@@ -11,7 +11,6 @@ import {
 
 const taskManagerStyles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 16,
     gap: 16,
   },
@@ -22,7 +21,7 @@ const taskManagerStyles = StyleSheet.create({
   },
   tab: { ...chipBase },
   tabActive: { ...chipActiveBase },
-  tabTxt: { ...text.small, fontSize: fontSize.md },
+  tabTxt: { ...text.xl, fontSize: fontSize.md },
   tabTxtActive: { color: Colors.primary },
   tasksGridWrap: {
     flex: 1,

@@ -1,4 +1,4 @@
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View, useWindowDimensions } from "react-native";
 
 import Task from "./Task";
 import type { TasksMainProps } from "../taskTypes";
@@ -7,6 +7,8 @@ import tasksMainStyles from "./tasksMainStyles";
 // ScrollView (not FlatList) so it can sit inside the dashboard's ScrollView
 // without the "VirtualizedLists nested in ScrollView" warning.
 const TasksMain = ({ taskData, Type }: TasksMainProps) => {
+  const { height } = useWindowDimensions();
+
   if (!Array.isArray(taskData)) return null;
 
   const filterTasks =
@@ -15,9 +17,9 @@ const TasksMain = ({ taskData, Type }: TasksMainProps) => {
       : taskData.filter((task) => task.type[Type as keyof typeof task.type]);
 
   return (
-    <View style={tasksMainStyles.tasksMainWrap}>
+    <View style={[tasksMainStyles.tasksMainWrap, { height: height }]}>
       <Text style={tasksMainStyles.tasksMainTitle}>{Type} Tasks</Text>
-      <ScrollView nestedScrollEnabled>
+      <ScrollView nestedScrollEnabled style={{ height: height }}>
         {filterTasks.length === 0 ? (
           <Text style={tasksMainStyles.empty}>No tasks yet</Text>
         ) : (

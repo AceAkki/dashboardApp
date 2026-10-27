@@ -1,17 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { Typography } from "@/constants/Typography";
-import {
-  cardBase,
-  chipActiveBase,
-  chipBase,
-  fieldBase,
-  fontSize,
-  insetBase,
-  primaryBtnBase,
-  radius,
-  text,
-} from "@/style/globalStyles";
+import { cardBase, text } from "@/style/globalStyles";
 
 const gitStatsStyles = StyleSheet.create({
   cardBase: {
@@ -23,8 +12,6 @@ const gitStatsStyles = StyleSheet.create({
   },
 
   sectionLabel: { ...text.label, marginBottom: 8 },
-
-
 });
 
 export default gitStatsStyles;

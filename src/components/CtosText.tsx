@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { Text, type GestureResponderEvent, type TextProps } from "react-native";
 import { useCtosText } from "@/global/useCtosText";
+import { CtosRevealContext } from "@/components/ctosReveal";
 
 // <Text> that reveals itself with the CTOS scramble effect.
 // Drop-in replacement for Text: style, numberOfLines etc. all pass through.
@@ -9,6 +11,8 @@ import { useCtosText } from "@/global/useCtosText";
 //   <CtosText autoPlay={false} playOnPress>REFRESH</CtosText>   plays when pressed
 //   <CtosText autoPlay={false} trigger={flag ? 1 : undefined}>X</CtosText>
 //                                                          plays whenever trigger changes
+//
+// Inside a <CtosItem> it waits until the item has appeared before it plays.
 //
 // duration  ms for the reveal (default 600)
 // autoPlay  false = no animation on mount / text change
@@ -37,7 +41,12 @@ export default function CtosText({
   const value = (Array.isArray(children) ? children : [children])
     .filter((c) => c !== null && c !== undefined && c !== false)
     .join("");
-  const { text, play } = useCtosText(value, { duration, autoPlay, trigger });
+  const revealed = useContext(CtosRevealContext);
+  const { text, play } = useCtosText(value, {
+    duration,
+    autoPlay: autoPlay && revealed,
+    trigger: revealed ? trigger : undefined,
+  });
 
   const handlePress =
     playOnPress || onPress

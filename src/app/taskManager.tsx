@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { useCallback, useState } from "react";
+import { Pressable, Text, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useShallow } from "zustand/shallow";
+import { SceneMap, TabBar, TabView } from "react-native-tab-view";
 
+import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
 import taskManagerStyles from "@/features/tasks/components/taskManagerStyles";
 
@@ -14,6 +16,10 @@ import EditTaskForm from "@/features/tasks/components/EditTaskForm";
 
 const TABS = ["All", "Current", "Priority", "Completed"] as const;
 
+const routes = TABS.map((tab) => {
+  return { key: tab, title: tab };
+});
+
 export default function TaskManager() {
   const { tasks, updateTasks, isEditMode, taskID } = useTaskStore(
     useShallow((state) => ({
@@ -24,7 +30,19 @@ export default function TaskManager() {
     })),
   );
   const { taskInput, setTaskInput, submitTask } = useTaskMain(updateTasks);
-  const [activeTab, setActiveTab] = useState<(typeof TABS)[number]>("All");
+  const [index, setIndex] = useState(0);
+
+  const layout = useWindowDimensions();
+  // const [activeTab, setActiveTab] = useState<(typeof TABS)[number]>("All");
+
+  const renderScene = ({ route }) => {
+    let currentScene = TABS.find((Tab) => route.key === Tab);
+    return (
+      <View style={taskManagerStyles.tasksGridWrap}>
+        <TasksMain taskData={tasks} Type={route.key} />
+      </View>
+    );
+  };
 
   const editingTask = isEditMode ? tasks.find((t) => t.id === taskID) : null;
 
@@ -37,6 +55,7 @@ export default function TaskManager() {
           onSubmit={submitTask}
         />
 
+        {/*
         <View style={taskManagerStyles.tabs}>
           {TABS.map((tab) => (
             <Pressable
@@ -58,11 +77,33 @@ export default function TaskManager() {
             </Pressable>
           ))}
         </View>
-
-        <View style={taskManagerStyles.tasksGridWrap}>
-          <TasksMain taskData={tasks} Type={activeTab} />
-        </View>
+        */}
       </View>
+
+      <TabView
+        navigationState={{ index, routes }}
+        lazy
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+        commonOptions={{
+          labelStyle: taskManagerStyles.tab,
+        }}
+        renderTabBar={(props) => (
+          <TabBar
+            {...props}
+            style={[
+              taskManagerStyles.tabs,
+              {
+                backgroundColor: "transparent",
+              },
+            ]}
+            indicatorStyle={taskManagerStyles.tabTxtActive}
+            activeColor={Colors.primary}
+            inactiveColor={Colors.textPrimary}
+          />
+        )}
+      />
 
       {editingTask && (
         <EditTaskForm key={editingTask.id} taskObject={editingTask} />

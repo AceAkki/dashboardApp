@@ -47,81 +47,83 @@ const Weather = () => {
   }
 
   return (
-    <ScrollView
-      style={weatherStyles.screen}
-      contentContainerStyle={weatherStyles.scroll}
-      refreshControl={
-        <RefreshControl
-          refreshing={loading}
-          onRefresh={refetch}
-          tintColor={Colors.primary}
+    <SafeAreaView style={globalStyles.screen} edges={["top", "bottom"]}>
+      <ScrollView
+        style={weatherStyles.screen}
+        contentContainerStyle={weatherStyles.scroll}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={refetch}
+            tintColor={Colors.primary}
+          />
+        }
+      >
+        <View>
+          <Text style={weatherStyles.sectionTitle}>Weather</Text>
+          <Text style={weatherStyles.sectionPara}>
+            Check out the current weather and forecast for your location
+          </Text>
+        </View>
+
+        <WeatherCard
+          current={weatherData.current}
+          current_units={weatherData.current_units}
+          aqiCurrent={aqiData.current}
+          aqiCurrent_units={aqiData.current_units}
         />
-      }
-    >
-      <View>
-        <Text style={weatherStyles.sectionTitle}>Weather</Text>
-        <Text style={weatherStyles.sectionPara}>
-          Check out the current weather and forecast for your location
-        </Text>
-      </View>
 
-      <WeatherCard
-        current={weatherData.current}
-        current_units={weatherData.current_units}
-        aqiCurrent={aqiData.current}
-        aqiCurrent_units={aqiData.current_units}
-      />
+        <View style={weatherStyles.tileWrap}>
+          {Object.keys(weatherData.current)
+            .filter((key) => !hiddenKeys.includes(key))
+            .map((key) => (
+              <WeatherTile
+                key={key}
+                icon={key}
+                current={
+                  weatherData.current[
+                    key as keyof WeatherData["current"]
+                  ] as number
+                }
+                current_units={
+                  weatherData.current_units[
+                    key as keyof WeatherData["current_units"]
+                  ]
+                }
+              />
+            ))}
+        </View>
 
-      <View style={weatherStyles.tileWrap}>
-        {Object.keys(weatherData.current)
-          .filter((key) => !hiddenKeys.includes(key))
-          .map((key) => (
-            <WeatherTile
-              key={key}
-              icon={key}
-              current={
-                weatherData.current[
-                  key as keyof WeatherData["current"]
-                ] as number
-              }
-              current_units={
-                weatherData.current_units[
-                  key as keyof WeatherData["current_units"]
-                ]
-              }
-            />
-          ))}
-      </View>
+        <View>
+          <Text style={weatherStyles.sectionSubTitle}>Hourly Updates</Text>
+          <Hourly
+            hourly={weatherData.hourly}
+            tempUnit={weatherData.hourly_units.temperature_2m}
+            currentTime={weatherData.current.time}
+          />
+        </View>
 
-      <View>
-        <Text style={weatherStyles.sectionSubTitle}>Hourly Updates</Text>
-        <Hourly
-          hourly={weatherData.hourly}
-          tempUnit={weatherData.hourly_units.temperature_2m}
-          currentTime={weatherData.current.time}
-        />
-      </View>
+        <View>
+          <Text style={weatherStyles.sectionSubTitle}>Daily Updates</Text>
+          <Daily
+            daily={weatherData.daily}
+            tempUnit={weatherData.daily_units.temperature_2m_max}
+          />
+        </View>
 
-      <View>
-        <Text style={weatherStyles.sectionSubTitle}>Daily Updates</Text>
-        <Daily
-          daily={weatherData.daily}
-          tempUnit={weatherData.daily_units.temperature_2m_max}
-        />
-      </View>
-
-      {storageTime ? (
-        <Text style={weatherStyles.expiry}>
-          Expiry Time :{" "}
-          {new Date(storageTime).toLocaleString(undefined, {
-            day: "2-digit",
-            month: "short",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </Text>
-      ) : null}
-    </ScrollView>
+        {storageTime ? (
+          <Text style={weatherStyles.expiry}>
+            Expiry Time :{" "}
+            {new Date(storageTime).toLocaleString(undefined, {
+              day: "2-digit",
+              month: "short",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </Text>
+        ) : null}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

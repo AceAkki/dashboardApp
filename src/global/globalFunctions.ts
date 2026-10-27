@@ -19,16 +19,13 @@ export const fetchData = async (apiURL: string) => {
   }
 };
 
-export const dateFormat = (dateString:string) => {
-  return new Date(dateString).toLocaleDateString(
-    undefined,
-    {
-      day: "numeric",
-      year: "numeric",
-      month: "long",
-    },
-  );
-}
+export const dateFormat = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString("sv-SE", {
+    day: "numeric",
+    year: "numeric",
+    month: "2-digit",
+  });
+};
 
 export async function writeClipboardText(text: string) {
   try {

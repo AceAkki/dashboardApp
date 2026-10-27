@@ -1,18 +1,18 @@
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
-import { useGitStats } from "./hooks/useGitStats";
-import { Ionicons } from "@expo/vector-icons";
-import CtosText from "@/components/CtosText";
-import { dateFormat } from "@/global/globalFunctions";
+
+// styles
 import { Colors } from "@/constants/Colors";
-import gitStatsStyles from "./gitStatsStyles";
 import globalStyles from "@/style/globalStyles";
+import gitStatsStyles from "./gitStatsStyles";
+import { Ionicons } from "@expo/vector-icons";
+
+import CtosText from "@/components/CtosText";
+import { useGitStats } from "./hooks/useGitStats";
 import { openLink } from "../favLinks/utils/openLink";
+import { dateFormat } from "@/global/globalFunctions";
 
 const GitStats = () => {
   let { data, loading, error, storageTime, refetch } = useGitStats();
-  console.log(error);
-  console.log(loading);
-  console.log(data, "data");
 
   if (!data) {
     return (
@@ -33,9 +33,12 @@ const GitStats = () => {
     );
   }
 
-  console.log(data.lastPushDate, Date.now());
+  const needsUpdate =
+    data?.lastPushDate &&
+    new Date(data.lastPushDate).getDate() < new Date().getDate();
+
   return (
-    <View style={[gitStatsStyles.cardBase, { flex: 1 }]}>
+    <View style={gitStatsStyles.cardBase}>
       <Pressable
         style={globalStyles.cardHead}
         onPress={() => openLink(data.html_url, data.html_url)}
@@ -56,18 +59,27 @@ const GitStats = () => {
         <View style={globalStyles.divider}></View>
 
         <Text style={globalStyles.sectionLabel}>Repo Name</Text>
-        <CtosText style={globalStyles.sectionSubTitle}>
+        <CtosText style={[globalStyles.sectionSubTitle, { marginVertical: 5 }]}>
           {data.lastPushedRepo?.name}
         </CtosText>
 
         <Text style={globalStyles.sectionLabel}>Last Update</Text>
-        <CtosText style={globalStyles.sectionSubTitle}>
-          {data.lastPushDate}
+        <CtosText style={[globalStyles.sectionSubTitle, { marginVertical: 5 }]}>
+          {data?.lastPushDate &&
+            dateFormat(data?.lastPushDate).replace(/\/|\-/g, ".")}
         </CtosText>
 
         <Text style={globalStyles.sectionLabel}>Needs Update</Text>
-        <CtosText style={globalStyles.sectionSubTitle}>
-          {data?.lastPushDate ? dateFormat(data?.lastPushDate) }
+        <CtosText
+          style={[
+            globalStyles.sectionSubTitle,
+            { marginVertical: 5 },
+            needsUpdate
+              ? { backgroundColor: Colors.danger }
+              : { backgroundColor: Colors.primary },
+          ]}
+        >
+          {needsUpdate ? "true" : "false"}
         </CtosText>
       </View>
 
