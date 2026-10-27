@@ -58,7 +58,7 @@ export default function TaskManager() {
   const editingTask = isEditMode ? tasks.find((t) => t.id === taskID) : null;
 
   return (
-    <SafeAreaView style={globalStyles.containerFull}>
+    <SafeAreaView style={globalStyles.screen}>
       <View style={taskManagerStyles.container}>
         <TaskForm
           value={taskInput}

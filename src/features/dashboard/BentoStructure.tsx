@@ -21,6 +21,7 @@ import WeatherCardContainer from "../weather/components/WeatherCardContainer";
 import FavLinks from "../favLinks/FavLinks";
 import CtosText from "@/components/CtosText";
 import GitStats from "../gitStats/GitStats";
+import globalStyles from "@/style/globalStyles";
 
 // stagger-in, replaces motion's container/item variants
 function FadeInItem({
@@ -188,30 +189,37 @@ const BentoStructure = () => {
                   </Text>
                 </View>
               </View>
-              <View style={bentoStyles.barChart}>
-                <View
-                  style={[
-                    bentoStyles.bar,
-                    { height: barH(priority), backgroundColor: Colors.danger },
-                  ]}
-                />
-                <View
-                  style={[
-                    bentoStyles.bar,
-                    { height: barH(current), backgroundColor: Colors.primary },
-                  ]}
-                />
-                <View
-                  style={[
-                    bentoStyles.bar,
-                    {
-                      height: barH(completed),
-                      backgroundColor: Colors.success,
-                    },
-                  ]}
-                />
-              </View>
-              <Pressable onPress={() => router.push("/taskManager")}>
+              <Pressable onPress={() => router.push("/taskManager")} style={bentoStyles.focusRow}>
+                <View style={bentoStyles.barChart}>
+                  <View
+                    style={[
+                      bentoStyles.bar,
+                      {
+                        height: barH(priority),
+                        backgroundColor: Colors.danger,
+                      },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      bentoStyles.bar,
+                      {
+                        height: barH(current),
+                        backgroundColor: Colors.primary,
+                      },
+                    ]}
+                  />
+                  <View
+                    style={[
+                      bentoStyles.bar,
+                      {
+                        height: barH(completed),
+                        backgroundColor: Colors.success,
+                      },
+                    ]}
+                  />
+                </View>
+
                 <Ionicons
                   name="chevron-forward"
                   size={14}
