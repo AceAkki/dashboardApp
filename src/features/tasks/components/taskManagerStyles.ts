@@ -17,11 +17,12 @@ const taskManagerStyles = StyleSheet.create({
   title: { ...text.title },
   tabs: {
     flexDirection: "row",
-    gap: 8,
+    gap: 2,
+    marginHorizontal:5
   },
-  tab: { ...chipBase },
+  tab: { ...chipBase},
   tabActive: { ...chipActiveBase },
-  tabTxt: { ...text.xl, fontSize: fontSize.md },
+  tabTxt: { ...text.small, fontSize: fontSize.md },
   tabTxtActive: { color: Colors.primary },
   tasksGridWrap: {
     flex: 1,

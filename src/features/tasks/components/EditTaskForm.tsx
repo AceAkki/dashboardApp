@@ -12,6 +12,7 @@ import DateTimePicker, {
   type DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
+import { Colors } from "@/constants/Colors";
 import { useTaskStore } from "../hooks/useTasksStore";
 import type { TaskActionData } from "../taskTypes";
 import editStyles from "./editTaskFormStyles";
@@ -71,6 +72,7 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
             value={newTaskTxt}
             onChangeText={setNewTaskTxt}
             style={editStyles.taskEdit}
+            placeholderTextColor={Colors.textMuted}
           />
 
           {Platform.OS === "ios" ? (

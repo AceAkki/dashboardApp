@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 
+import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
 import { useUserStore } from "@/features/auth/useAuthStore";
 import loginStyles from "@/features/auth/loginStyles";
@@ -66,6 +67,7 @@ export default function Login() {
           <TextInput
             style={loginStyles.input}
             placeholder="Name"
+            placeholderTextColor={Colors.textMuted}
             value={name}
             onChangeText={setName}
             autoCapitalize="words"
@@ -74,6 +76,7 @@ export default function Login() {
           <TextInput
             style={loginStyles.input}
             placeholder="GitHub userID"
+            placeholderTextColor={Colors.textMuted}
             value={userID}
             onChangeText={setUserID}
           />
@@ -84,6 +87,7 @@ export default function Login() {
                 <TextInput
                   style={loginStyles.input}
                   placeholder="latitude"
+                  placeholderTextColor={Colors.textMuted}
                   value={latitude}
                   onChangeText={setLatitude}
                   keyboardType="numbers-and-punctuation"
@@ -96,6 +100,7 @@ export default function Login() {
                 <TextInput
                   style={loginStyles.input}
                   placeholder="longitude"
+                  placeholderTextColor={Colors.textMuted}
                   value={longitude}
                   onChangeText={setLongitude}
                   keyboardType="numbers-and-punctuation"

@@ -1,8 +1,12 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Pressable, Text, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useShallow } from "zustand/shallow";
-import { SceneMap, TabBar, TabView } from "react-native-tab-view";
+import {
+  TabBar,
+  TabView,
+  SceneRendererProps,
+} from "react-native-tab-view";
 
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
@@ -14,7 +18,12 @@ import TaskForm from "@/features/tasks/components/TaskForm";
 import TasksMain from "@/features/tasks/components/TasksMain";
 import EditTaskForm from "@/features/tasks/components/EditTaskForm";
 
-const TABS = ["All", "Current", "Priority", "Completed"] as const;
+const TABS = ["*/", "active", "urgent", "done"] as const;
+
+type RouteType = {
+  key: "*/" | "active" | "urgent" | "done";
+  title: string;
+};
 
 const routes = TABS.map((tab) => {
   return { key: tab, title: tab };
@@ -33,13 +42,15 @@ export default function TaskManager() {
   const [index, setIndex] = useState(0);
 
   const layout = useWindowDimensions();
-  // const [activeTab, setActiveTab] = useState<(typeof TABS)[number]>("All");
 
-  const renderScene = ({ route }) => {
-    let currentScene = TABS.find((Tab) => route.key === Tab);
+  const renderScene = ({
+    route,
+  }: SceneRendererProps & { route: RouteType }) => {
     return (
-      <View style={taskManagerStyles.tasksGridWrap}>
-        <TasksMain taskData={tasks} Type={route.key} />
+      <View style={taskManagerStyles.container}>
+        <View >
+          <TasksMain taskData={tasks} Type={route.key} />
+        </View>
       </View>
     );
   };
@@ -54,30 +65,6 @@ export default function TaskManager() {
           onChangeText={setTaskInput}
           onSubmit={submitTask}
         />
-
-        {/*
-        <View style={taskManagerStyles.tabs}>
-          {TABS.map((tab) => (
-            <Pressable
-              key={tab}
-              onPress={() => setActiveTab(tab)}
-              style={[
-                taskManagerStyles.tab,
-                activeTab === tab && taskManagerStyles.tabActive,
-              ]}
-            >
-              <Text
-                style={[
-                  taskManagerStyles.tabTxt,
-                  activeTab === tab && taskManagerStyles.tabTxtActive,
-                ]}
-              >
-                {tab}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-        */}
       </View>
 
       <TabView
@@ -98,7 +85,7 @@ export default function TaskManager() {
                 backgroundColor: "transparent",
               },
             ]}
-            indicatorStyle={taskManagerStyles.tabTxtActive}
+            indicatorStyle={{ backgroundColor: Colors.primary }}
             activeColor={Colors.primary}
             inactiveColor={Colors.textPrimary}
           />

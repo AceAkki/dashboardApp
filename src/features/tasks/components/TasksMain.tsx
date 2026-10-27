@@ -15,10 +15,10 @@ const TasksMain = ({ taskData, Type }: TasksMainProps) => {
     Type === "All"
       ? taskData
       : taskData.filter((task) => task.type[Type as keyof typeof task.type]);
-
+      
   return (
-    <View style={[tasksMainStyles.tasksMainWrap, { height: height }]}>
-      <Text style={tasksMainStyles.tasksMainTitle}>{Type} Tasks</Text>
+    <View style={[tasksMainStyles.tasksMainWrap, { height: (height - height / 3) }]}>
+      <Text style={tasksMainStyles.tasksMainTitle}>{Type} tasks</Text>
       <ScrollView nestedScrollEnabled style={{ height: height }}>
         {filterTasks.length === 0 ? (
           <Text style={tasksMainStyles.empty}>No tasks yet</Text>

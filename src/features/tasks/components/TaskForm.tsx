@@ -1,5 +1,5 @@
 import { Pressable, Text, TextInput, View } from "react-native";
-
+import { Colors } from "@/constants/Colors";
 import taskManagerStyles from "./taskManagerStyles";
 
 type TaskFormProps = {
@@ -14,6 +14,7 @@ const TaskForm = ({ value, onChangeText, onSubmit }: TaskFormProps) => {
       <TextInput
         style={taskManagerStyles.formInput}
         placeholder="Add a New Task"
+        placeholderTextColor={Colors.textMuted}
         value={value}
         onChangeText={onChangeText}
         onSubmitEditing={onSubmit}
