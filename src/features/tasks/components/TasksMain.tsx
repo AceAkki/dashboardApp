@@ -1,6 +1,7 @@
 import { ScrollView, Text, View, useWindowDimensions } from "react-native";
 
 import Task from "./Task";
+import { TABS } from "../taskTypeUtils";
 import type { TasksMainProps } from "../taskTypes";
 import tasksMainStyles from "./tasksMainStyles";
 
@@ -12,12 +13,14 @@ const TasksMain = ({ taskData, Type }: TasksMainProps) => {
   if (!Array.isArray(taskData)) return null;
 
   const filterTasks =
-    Type === "All"
+    Type === TABS[0]
       ? taskData
       : taskData.filter((task) => task.type[Type as keyof typeof task.type]);
-      
+
   return (
-    <View style={[tasksMainStyles.tasksMainWrap, { height: (height - height / 3) }]}>
+    <View
+      style={[tasksMainStyles.tasksMainWrap, { height: height - height / 3 }]}
+    >
       <Text style={tasksMainStyles.tasksMainTitle}>{Type} tasks</Text>
       <ScrollView nestedScrollEnabled style={{ height: height }}>
         {filterTasks.length === 0 ? (

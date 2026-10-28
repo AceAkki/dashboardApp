@@ -13,6 +13,9 @@ interface TaskStore {
   clearAllTasks: () => void;
   taskID: string | null;
   setTaskID: (id: string | null) => void;
+  taskPosition: { x: number | null; y: number | null };
+  setTaskPosition: ({ x, y }: { x: number; y: number }) => void;
+  setOpenTask: ({ id, x, y }: { id: string; x: number; y: number }) => void;
   isEditMode: boolean;
   toggleEditMode: () => void;
   editTask: ({ id, newTask }: { id: string; newTask: string }) => void;
@@ -54,6 +57,13 @@ export const useTaskStore = create<TaskStore>()(
       },
       taskID: null,
       setTaskID: (id) => set({ taskID: id }),
+      taskPosition: { x: null, y: null },
+      setTaskPosition: ({ x, y }) => set({ taskPosition: { x: x, y: y } }),
+      setOpenTask: ({ id, x, y }) =>
+        set(() => ({
+          taskID: id,
+          taskPosition: { x: x, y: y },
+        })),
       isEditMode: false,
       toggleEditMode: () =>
         set((state) => ({

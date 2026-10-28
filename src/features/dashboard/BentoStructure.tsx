@@ -114,9 +114,9 @@ const BentoStructure = () => {
     useShallow((s) => ({ username: s.username, location: s.location })),
   );
 
-  const priority = tasks.filter((t) => t.type.Priority).length;
-  const current = tasks.filter((t) => t.type.Current).length;
-  const completed = tasks.filter((t) => t.type.Completed).length;
+  const priority = tasks.filter((t) => t.type.urgent).length;
+  const current = tasks.filter((t) => t.type.active).length;
+  const completed = tasks.filter((t) => t.type.done).length;
   const maxCount = Math.max(priority, current, completed, 1);
   const barH = (n: number) => 8 + (n / maxCount) * 48;
 

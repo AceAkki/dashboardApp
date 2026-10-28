@@ -1,13 +1,10 @@
 import { useState } from "react";
+import { getTaskTypes } from "../taskTypeUtils";
 import type { TaskActionData, TaskActionDataSet } from "../taskTypes";
 
 const makeId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 
-/**
- * Replaces the react-router action flow: there is no <Form method="post">
- * in React Native, so the hook owns the input value and builds the task itself.
- */
 const useTaskMain = (setTasks: TaskActionDataSet) => {
   const [taskInput, setTaskInput] = useState("");
 
@@ -17,7 +14,7 @@ const useTaskMain = (setTasks: TaskActionDataSet) => {
     const newTask: TaskActionData = {
       id: makeId(),
       taskName: name,
-      type: { Current: true, Priority: false, Completed: false },
+      type: getTaskTypes(),
       remindTime: "",
     };
     setTasks(newTask);

@@ -1,9 +1,17 @@
 import { useShallow } from "zustand/shallow";
-import { Modal, Pressable, Text, View, useWindowDimensions } from "react-native";
+import {
+  Modal,
+  Pressable,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { useState } from "react";
 
+import { taskTypesArr } from "../taskTypeUtils";
 import useOptions from "../hooks/useOptions";
 import { useTaskStore } from "../hooks/useTasksStore";
+
 import type { optionPopupProps } from "../taskTypes";
 import optionsStyles from "./optionsStyles";
 
@@ -23,13 +31,15 @@ export default function OptionsPopup({
     })),
   );
 
-  const typesArr = ["Current", "Priority", "Completed"];
   const currentType = getCurrentType(taskObject.type);
-  const newArr = typesArr.filter((type) => type !== currentType);
+  const newArr = taskTypesArr.filter((type) => type !== currentType);
 
   // Popup's right edge sits at the tap point (same as the web calc(x - width)),
   // clamped so it never leaves the screen.
-  const left = Math.max(8, Math.min(position.x - popupWidth, screenWidth - popupWidth - 8));
+  const left = Math.max(
+    8,
+    Math.min(position.x - popupWidth, screenWidth - popupWidth - 8),
+  );
 
   const handleToggleEdit = () => {
     // keep taskID so the edit form knows which task; Task hides this popup
@@ -59,7 +69,12 @@ export default function OptionsPopup({
               onPress={handleToggleEdit}
             >
               {({ pressed }) => (
-                <Text style={[optionsStyles.optionTxt, pressed && optionsStyles.optionTxtPressed]}>
+                <Text
+                  style={[
+                    optionsStyles.optionTxt,
+                    pressed && optionsStyles.optionTxtPressed,
+                  ]}
+                >
                   Remind Me
                 </Text>
               )}
@@ -72,7 +87,12 @@ export default function OptionsPopup({
               onPress={handleToggleEdit}
             >
               {({ pressed }) => (
-                <Text style={[optionsStyles.optionTxt, pressed && optionsStyles.optionTxtPressed]}>
+                <Text
+                  style={[
+                    optionsStyles.optionTxt,
+                    pressed && optionsStyles.optionTxtPressed,
+                  ]}
+                >
                   Edit Task
                 </Text>
               )}
@@ -85,7 +105,12 @@ export default function OptionsPopup({
               onPress={() => deleteTask(taskObject.id)}
             >
               {({ pressed }) => (
-                <Text style={[optionsStyles.optionTxt, pressed && optionsStyles.optionTxtPressed]}>
+                <Text
+                  style={[
+                    optionsStyles.optionTxt,
+                    pressed && optionsStyles.optionTxtPressed,
+                  ]}
+                >
                   Delete Task
                 </Text>
               )}

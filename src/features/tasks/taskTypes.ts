@@ -6,10 +6,15 @@ export interface TaskActionData {
 }
 
 export interface TasksTypes {
-  Current: boolean;
-  Priority: boolean;
-  Completed: boolean;
+  active: boolean;
+  urgent: boolean;
+  done: boolean;
 }
+
+export type RouteType = {
+  key: "*/" | "active" | "urgent" | "done";
+  title: string;
+};
 
 export type TaskActionDataSet = (task: TaskActionData) => void;
 

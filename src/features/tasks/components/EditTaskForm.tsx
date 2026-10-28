@@ -13,9 +13,9 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 
 import { Colors } from "@/constants/Colors";
+import editStyles from "./editTaskFormStyles";
 import { useTaskStore } from "../hooks/useTasksStore";
 import type { TaskActionData } from "../taskTypes";
-import editStyles from "./editTaskFormStyles";
 
 const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
   const { editTask, toggleEditMode, editRemind } = useTaskStore(

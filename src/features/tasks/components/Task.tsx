@@ -1,48 +1,56 @@
-import { useState } from "react";
 import { useShallow } from "zustand/shallow";
 import { Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Colors } from "@/constants/Colors";
 import { useTaskStore } from "../hooks/useTasksStore";
-import type { TaskType } from "../taskTypes";
-import OptionsPopup from "./OptionsPopup";
+import { taskColors } from "../taskTypeUtils";
+import type { TaskType, TasksTypes } from "../taskTypes";
+import CtosText from "@/components/CtosText";
+
+import globalStyles from "@/style/globalStyles";
 import taskStyles from "./taskStyles";
 
 const Task = ({ taskTxt }: TaskType) => {
-  const { taskID, setTaskID, isEditMode } = useTaskStore(
+  const { setOpenTask } = useTaskStore(
     useShallow((state) => ({
-      taskID: state.taskID,
-      setTaskID: state.setTaskID,
-      isEditMode: state.isEditMode,
+      setOpenTask: state.setOpenTask,
     })),
   );
-
-  // Popup position is derived from the press, so it lives with the Task
-  // (replaces the --optionLeft / --optionTop CSS variables).
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const isOpen = taskID === taskTxt.id && !isEditMode;
+  const currentType = Object.keys(taskTxt.type).filter(
+    (typ) => taskTxt.type[typ as keyof TasksTypes],
+  )[0] as keyof typeof taskColors;
 
   return (
-    <View style={taskStyles.taskWrap}>
-      <Text style={taskStyles.taskTxt}>{taskTxt.taskName}</Text>
+    <View
+      style={[
+        taskStyles.taskWrap,
+        { borderLeftColor: taskColors[currentType], borderLeftWidth: 3 },
+      ]}
+    >
+      <View style={taskStyles.taskTxtWrap}>
+        <Text style={taskStyles.taskTxt}>{taskTxt.taskName}</Text>
+
+        <CtosText style={globalStyles.sectionLabel}>[{currentType}]</CtosText>
+      </View>
+
       <Pressable
         style={taskStyles.taskBtn}
         hitSlop={10}
         onPress={(e) => {
-          setPosition({ x: e.nativeEvent.pageX, y: e.nativeEvent.pageY });
-          setTaskID(taskID === taskTxt.id ? null : taskTxt.id);
+          setOpenTask({
+            id: taskTxt.id,
+            x: e.nativeEvent.pageX,
+            y: e.nativeEvent.pageY,
+          });
         }}
       >
-        <Ionicons name="options-outline" size={24} color={Colors.textSecondary} />
-      </Pressable>
-      {isOpen && (
-        <OptionsPopup
-          taskObject={taskTxt}
-          position={position}
-          onClose={() => setTaskID(null)}
+        <Ionicons
+          name="options-outline"
+          size={24}
+          color={Colors.textSecondary}
         />
-      )}
+      </Pressable>
     </View>
   );
 };

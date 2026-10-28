@@ -18,9 +18,9 @@ const taskManagerStyles = StyleSheet.create({
   tabs: {
     flexDirection: "row",
     gap: 2,
-    marginHorizontal:5
+    marginHorizontal: 5,
   },
-  tab: { ...chipBase},
+  tab: { ...chipBase },
   tabActive: { ...chipActiveBase },
   tabTxt: { ...text.small, fontSize: fontSize.md },
   tabTxtActive: { color: Colors.primary },
@@ -32,7 +32,7 @@ const taskManagerStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    marginBottom: 16,
+    marginTop: 16,
   },
   formInput: { ...fieldBase, flex: 1 },
   formBtn: { ...primaryBtnBase },

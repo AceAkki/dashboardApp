@@ -19,6 +19,9 @@ const taskStyles = StyleSheet.create({
     flex: 1,
     marginRight: 8,
   },
+  taskTxtWrap: {
+    gap: 5,
+  },
   taskBtn: {
     flexDirection: "row",
     alignItems: "baseline",
