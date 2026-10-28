@@ -7,7 +7,7 @@ import type { GitUser, GitRepository, GitStats } from "../gitTypes";
 // local key so the feature doesn't depend on a shared storageKeys file
 export const gitKey = "git-storage";
 
-interface GitStore {
+export interface GitStore {
   gitStatData: GitStats | null;
   /** ms timestamp after which the cache is stale */
   expiresAt: number | null;

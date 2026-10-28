@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { TaskActionData, MoveTaskProps } from "../taskTypes";
 import { tasksKey } from "@/global/storageKeys";
 
-interface TaskStore {
+export interface TaskStore {
   tasks: TaskActionData[];
   deleteTask: (id: string) => void;
   moveTask: ({ id, targetType, currentType }: MoveTaskProps) => void;

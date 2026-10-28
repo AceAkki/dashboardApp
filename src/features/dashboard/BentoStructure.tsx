@@ -140,11 +140,13 @@ const BentoStructure = () => {
               size={20}
               color={Colors.textPrimary}
             />
-            <View style={bentoStyles.avatar}>
-              <Text style={bentoStyles.avatarTxt}>
-                {username.charAt(0).toUpperCase() || "U"}
-              </Text>
-            </View>
+            <Pressable onPress={() => router.push("/UserProfile")}>
+              <View style={bentoStyles.avatar}>
+                <Text style={bentoStyles.avatarTxt}>
+                  {username.charAt(0).toUpperCase() || "U"}
+                </Text>
+              </View>
+            </Pressable>
           </View>
         </View>
 
@@ -189,7 +191,10 @@ const BentoStructure = () => {
                   </Text>
                 </View>
               </View>
-              <Pressable onPress={() => router.push("/taskManager")} style={bentoStyles.focusRow}>
+              <Pressable
+                onPress={() => router.push("/TaskManager")}
+                style={bentoStyles.focusRow}
+              >
                 <View style={bentoStyles.barChart}>
                   <View
                     style={[

@@ -7,7 +7,7 @@ import type { AQIData, LatLng, WeatherData } from "../weatherType";
 // local key so the feature doesn't depend on a shared storageKeys file
 export const weatherKey = "weather-storage";
 
-interface WeatherStore {
+export interface WeatherStore {
   weatherStoreData: WeatherData | null;
   aqiStoreData: AQIData | null;
   /** where the cached data was fetched for - refetch if the user's location changes */

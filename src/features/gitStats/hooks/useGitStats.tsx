@@ -6,7 +6,7 @@ import type { GitRepository, GitUser, GitStats, GitStatRes } from "../gitTypes";
 import { useUserStore } from "../../auth/useAuthStore";
 import { useGitStore } from "./useGitStore";
 
-const CACHE_MS = 1 * 60 * 60 * 1000;
+const CACHE_MS = 15 * 60 * 1000;
 
 export const useGitStats = (): GitStatRes => {
   const { userID } = useUserStore(useShallow((s) => ({ userID: s.userID })));

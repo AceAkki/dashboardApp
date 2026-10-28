@@ -73,7 +73,14 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
-          name="taskManager"
+          name="UserProfile"
+          options={{
+            title: "User Profile",
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="TaskManager"
           options={{
             title: "Task Manager",
             headerShown: false,
