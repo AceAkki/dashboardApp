@@ -35,8 +35,7 @@ export default function RootLayout() {
   });
   // new end ------------------------
 
-  // the persisted user loads asynchronously from AsyncStorage; wait for it so a
-  // logged-in user doesn't flash the login screen
+  // the persisted user loads asynchronously from AsyncStorage; wait for it so a logged-in user doesn't flash the login screen
   const [hydrated, setHydrated] = useState(useUserStore.persist.hasHydrated());
   useEffect(() => {
     const unsub = useUserStore.persist.onFinishHydration(() =>
