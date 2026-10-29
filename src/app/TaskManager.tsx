@@ -72,7 +72,7 @@ export default function TaskManager() {
 
   return (
     <CtosScreen nav>
-      <View style={taskManagerStyles.header}>
+      <View style={globalStyles.header}>
         <Text style={globalStyles.sectionLabel}>
           {"// CTOS · TASK_MANAGER"}
         </Text>
@@ -86,8 +86,6 @@ export default function TaskManager() {
           onSubmit={submitTask}
         />
       </View>
-
-      <View style={{ height: 14 }} />
 
       <TabView
         navigationState={{ index, routes }}

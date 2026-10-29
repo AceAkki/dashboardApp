@@ -12,7 +12,7 @@ import {
 const taskManagerStyles = StyleSheet.create({
   container: { padding: 16, gap: 16 },
   scene: { flex: 1, paddingHorizontal: 16, paddingBottom: 16 },
-  header: { paddingHorizontal: 16, paddingTop: 12 },
+
 
   // tabs: count over label, glowing underline on the active one
   tabsRow: {

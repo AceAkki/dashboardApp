@@ -33,7 +33,7 @@ export default function Feed() {
 
   return (
     <CtosScreen nav>
-      <View style={{ paddingHorizontal: 16, paddingTop: 12 }}>
+      <View style={globalStyles.header}>
         <Text style={globalStyles.sectionLabel}>{"// DEV FEED"}</Text>
         <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
           <CtosText style={globalStyles.textHeading}>Signal</CtosText>

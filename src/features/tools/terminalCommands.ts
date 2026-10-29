@@ -10,10 +10,11 @@ export const GO_ROUTES = {
   tasks: "/TaskManager",
   feed: "/Feed",
   tools: "/Tools",
+  me:"/UserProfile"
 } as const;
 
 export const HELP =
-  "add task <text> [--urgent|--done] · note <text> · timer start|pause|reset · go home|tasks|feed|tools";
+  `task <text> [--urgent|--done] ||\n note <text> ||\n timer start|pause|reset ||\n go home|tasks|feed|tools`;
 
 const makeId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -35,9 +36,9 @@ export function runCommand(
     case "help":
       return { ok: true, message: HELP };
 
-    case "add": {
+    case "task": {
       if (rest[0]?.toLowerCase() !== "task") {
-        return { ok: false, message: "USAGE: add task <text> [--urgent|--done]" };
+        return { ok: false, message: "USAGE: task <text> [--urgent|--done]" };
       }
       const words = rest.slice(1);
       const flag = words.find((w) => w.toLowerCase() in FLAG_INDEX);
@@ -72,7 +73,7 @@ export function runCommand(
     case "go": {
       const target = rest[0]?.toLowerCase() as keyof typeof GO_ROUTES | undefined;
       if (!target || !(target in GO_ROUTES)) {
-        return { ok: false, message: "USAGE: go home|tasks|feed|tools" };
+        return { ok: false, message: "USAGE: go home|tasks|feed|tools|me" };
       }
       navigate(GO_ROUTES[target]);
       return { ok: true, message: `OPENING ${target.toUpperCase()}` };

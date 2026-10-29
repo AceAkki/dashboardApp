@@ -252,6 +252,7 @@ const globalStyles = StyleSheet.create({
   field: fieldBase,
   primaryBtn: primaryBtnBase,
   primaryBtnTxt: text.btn,
+  dangerBtn:{...primaryBtnBase, backgroundColor:Colors.danger},
   chip: chipBase,
   chipActive: chipActiveBase,
 
@@ -267,6 +268,7 @@ const globalStyles = StyleSheet.create({
   scroll: { padding: 16, gap: 16 },
 
   // section based
+  header: { paddingHorizontal: 16, paddingTop: 12, marginBottom:14 },
   sectionTitle: { ...text.heading },
   sectionPara: { ...text.small, fontSize: fontSize.md, marginTop: 4 },
   sectionSubTitle: {
