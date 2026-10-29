@@ -36,7 +36,7 @@ export default function CtosNavBar() {
             accessibilityState={{ selected: active }}
             accessibilityLabel={item.label}
             onPress={() => {
-              if (!active) router.replace(item.path);
+              if (!active) router.push(item.path);
             }}
           >
             {active ? <View style={styles.activeLine} /> : null}

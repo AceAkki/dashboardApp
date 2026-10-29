@@ -32,7 +32,7 @@ export function TerminalPanel() {
           value={value}
           onChangeText={setValue}
           onSubmitEditing={submit}
-          placeholder="add task fix auth bug --urgent"
+          placeholder="task fix auth bug --urgent"
           placeholderTextColor={Colors.textMuted}
           autoCapitalize="none"
           autoCorrect={false}
