@@ -18,7 +18,12 @@ const loginStyles = StyleSheet.create({
   formIcon: {
     alignItems: "center",
   },
-  loginTitle: { ...text.heading, fontSize: 28, textAlign: "center" },
+  loginTitle: {
+    ...text.heading,
+    fontSize: 28,
+    letterSpacing: 4,
+    textAlign: "center",
+  },
   input: { ...fieldBase },
   locationMainWrap: {
     flexDirection: "row",
@@ -30,8 +35,9 @@ const loginStyles = StyleSheet.create({
     gap: 12,
   },
   errTxt: {
-    fontFamily: Typography.secondary,
+    fontFamily: Typography.primary,
     color: Colors.danger,
+    letterSpacing: 1,
     marginTop: 4,
   },
   locationBtn: {

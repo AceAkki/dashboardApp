@@ -1,4 +1,4 @@
-import { SafeAreaView } from "react-native-safe-area-context";
+import CtosScreen from "@/components/ctos/CtosScreen";
 import { useShallow } from "zustand/shallow";
 
 import globalStyles from "@/style/globalStyles";
@@ -21,7 +21,7 @@ const UserProfile = () => {
   const weatherInvalidate = useWeatherStore((state:WeatherStore) => state.invalidate)
   const tasksPurge = useTaskStore((state:TaskStore) => state.clearAllTasks)
   return (
-    <SafeAreaView style={globalStyles.screen}>
+    <CtosScreen style={globalStyles.screen}>
       <View>
         <Text style={globalStyles.cardTitle}>{username}</Text>
         <Text style={globalStyles.cardTitle}>
@@ -36,7 +36,7 @@ const UserProfile = () => {
           <Text style={globalStyles.primaryBtnTxt}>Log Out</Text>
         </Pressable>
       </View>
-    </SafeAreaView>
+    </CtosScreen>
   );
 };
 

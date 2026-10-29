@@ -6,7 +6,9 @@ import {
   chipActiveBase,
   chipBase,
   fontSize,
+  glowBase,
   insetBase,
+  radius,
   screenBase,
   text,
 } from "@/style/globalStyles";
@@ -30,13 +32,14 @@ const pomodoroStyles = StyleSheet.create({
     ...insetBase,
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: radius.xs,
+    borderColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",
   },
 
   // full screen
-  screen: { ...screenBase, padding: 16 },
+  screen: { ...screenBase, backgroundColor: "transparent", padding: 16 },
   modeTabs: {
     flexDirection: "row",
     gap: 8,
@@ -62,8 +65,9 @@ const pomodoroStyles = StyleSheet.create({
   bigPlayBtn: {
     width: 76,
     height: 76,
-    borderRadius: 38,
+    borderRadius: radius.xs,
     backgroundColor: Colors.primary,
+    ...glowBase,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -77,7 +81,7 @@ const pomodoroStyles = StyleSheet.create({
   sessionDot: {
     width: 12,
     height: 12,
-    borderRadius: 6,
+    borderRadius: radius.xs,
     borderWidth: 1,
     borderColor: Colors.border,
   },

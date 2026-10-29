@@ -5,6 +5,7 @@ import {
   cardBase,
   cardHeadBase,
   fontSize,
+  glowBase,
   insetBase,
   primaryBtnBase,
   radius,
@@ -13,7 +14,7 @@ import {
 } from "@/style/globalStyles";
 
 const bentoStyles = StyleSheet.create({
-  root: { ...screenBase },
+  root: { ...screenBase, backgroundColor: "transparent" },
   scroll: { padding: 16, paddingBottom: 32, gap: 20 },
 
   // header
@@ -35,14 +36,18 @@ const bentoStyles = StyleSheet.create({
   avatar: {
     width: 28,
     height: 28,
-    borderRadius: 14,
+    borderRadius: radius.xs,
     backgroundColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   avatarTxt: { ...text.btn, fontFamily: Typography.primary_bold },
 
-  greetWrap: { marginTop: 16 },
+  greetWrap: { marginTop: 4 },
+  counts: { flexDirection: "row", marginTop: 2 },
+  countCell: { flex: 1, gap: 2 },
+  countLabel: { ...text.caption },
+  segBar: { flexDirection: "row", height: 4, gap: 2, marginTop: 14 },
   greet: { ...text.title },
   greetSub: { ...text.small, fontSize: fontSize.md },
   synced: { ...text.small, marginTop: 4 },
@@ -66,7 +71,7 @@ const bentoStyles = StyleSheet.create({
     gap: 6,
     height: 56,
   },
-  bar: { width: 12, borderRadius: 3 },
+  bar: { width: 12, borderRadius: radius.xs },
 
   // weather
   weatherTemp: { ...text.title, marginTop: 4 },
@@ -77,7 +82,7 @@ const bentoStyles = StyleSheet.create({
     height: 28,
     marginTop: 8,
   },
-  sparkBar: { flex: 1, borderRadius: 2, backgroundColor: Colors.primarySoft },
+  sparkBar: { flex: 1, borderRadius: radius.xs, backgroundColor: Colors.primarySoft },
   hoursRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -102,9 +107,10 @@ const bentoStyles = StyleSheet.create({
   timerRing: {
     width: 110,
     height: 110,
-    borderRadius: 55,
-    borderWidth: 6,
+    borderRadius: 55, // the ring is a true circle
+    borderWidth: 3,
     borderColor: Colors.primary,
+    ...glowBase,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -119,7 +125,8 @@ const bentoStyles = StyleSheet.create({
     ...insetBase,
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: radius.xs,
+    borderColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -128,7 +135,7 @@ const bentoStyles = StyleSheet.create({
   noteLabel: { ...text.small, marginTop: 8 },
   noteInput: {
     ...insetBase,
-    fontFamily: Typography.secondary,
+    fontFamily: Typography.primary,
     color: Colors.textPrimary,
     paddingVertical: 6,
     paddingHorizontal: 8,

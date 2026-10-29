@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { cardBase, insetBase, text } from "@/style/globalStyles";
+import { cardBase, glowBase, insetBase, text } from "@/style/globalStyles";
 
 const optionsStyles = StyleSheet.create({
   // full-screen transparent layer that closes the popup when tapped outside
@@ -16,25 +16,22 @@ const optionsStyles = StyleSheet.create({
     alignItems: "flex-start",
     gap: 8,
     padding: 16,
-    borderTopRightRadius: 64,
-    // visible so the iOS shadow isn't clipped
+    // visible so the iOS glow isn't clipped
     overflow: "visible",
-    shadowColor: "#000",
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 0 },
+    borderTopColor: Colors.primary,
+    ...glowBase,
     elevation: 6,
   },
   optionBtn: {
     ...insetBase,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderRadius: 32,
+    alignSelf: "stretch",
   },
   optionBtnPressed: {
     backgroundColor: Colors.primary,
   },
-  optionTxt: { ...text.body },
+  optionTxt: { ...text.small, color: Colors.textPrimary, letterSpacing: 2 },
   optionTxtPressed: {
     color: Colors.textOnPrimary,
   },

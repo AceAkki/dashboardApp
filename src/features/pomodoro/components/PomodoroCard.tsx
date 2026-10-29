@@ -9,6 +9,7 @@ import { MODE_LABEL } from "../hooks/pomodoroStore";
 import pomodoroStyles from "../pomodoroStyles";
 import { modeColor } from "../modeColor";
 import CtosText from "@/components/CtosText";
+import Corners from "@/components/ctos/Corners";
 
 // Compact dashboard version;
 export default function PomodoroCard() {
@@ -22,7 +23,7 @@ export default function PomodoroCard() {
         style={pomodoroStyles.cardHead}
         onPress={() => router.push("/Pomodoro")}
       >
-        <CtosText style={pomodoroStyles.cardTitle}>Pomodoro Timer</CtosText>
+        <CtosText style={pomodoroStyles.cardTitle}>{"// Pomodoro Timer"}</CtosText>
         <Ionicons
           name="expand-outline"
           size={14}
@@ -64,6 +65,7 @@ export default function PomodoroCard() {
           />
         </Pressable>
       </View>
+      <Corners />
     </View>
   );
 }

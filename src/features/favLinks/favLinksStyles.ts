@@ -7,6 +7,7 @@ import {
   chipBase,
   fieldBase,
   fontSize,
+  glowBase,
   insetBase,
   primaryBtnBase,
   radius,
@@ -38,6 +39,7 @@ const favLinksStyles = StyleSheet.create({
   },
   searchBarFocused: {
     borderColor: Colors.primary,
+    ...glowBase,
   },
   searchInput: {
     flex: 1,
@@ -71,10 +73,10 @@ const favLinksStyles = StyleSheet.create({
   chipSelected: { ...chipActiveBase },
   chipPressed: { opacity: 0.7 },
   chipTxt: { ...text.small, fontSize: fontSize.md },
-  chipTxtSelected: { color: Colors.primary, fontFamily: Typography.secondary_semibold },
+  chipTxtSelected: { color: Colors.primary, fontFamily: Typography.primary_bold },
 
   // favicon with fallback
-  icon: { width: 20, height: 20, borderRadius: 10 },
+  icon: { width: 20, height: 20, borderRadius: radius.xs },
   iconFallback: {
     alignItems: "center",
     justifyContent: "center",

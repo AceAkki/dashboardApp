@@ -1,33 +1,33 @@
 export const Colors = {
   // 1. NEUTRALS (ctOS Dark UI Canvas & Tactical Wireframes)
-  background: "#090B10", // ctOS Deep Navy/Black Canvas
-  surface: "#10141D", // ctOS Surveillance Panel & Window Fill
-  border: "#1C2333", // Tactical Grid Line & HUD Border Outline
+  background: "#04080B", // ctOS Deep Navy/Black Canvas
+  surface: "#0A1318", // ctOS Surveillance Panel & Window Fill
+  border: "#12313A", // Tactical Grid Line & HUD Border Outline
 
   // Text Hierarchy
-  textPrimary: "#E2E8F0", // Clear White for Profiler Headers & Target Names
-  textSecondary: "#8E9BAE", // ctOS Metadata Gray (IP Address, Threat Level labels)
-  textMuted: "#475569", // Encrypted Stream & Inactive Logs
+  textPrimary: "#D7F6FB", // Clear White for Profiler Headers & Target Names
+  textSecondary: "#6C8F97", // ctOS Metadata Gray (IP Address, Threat Level labels)
+  textMuted: "#3B5A63", // Encrypted Stream & Inactive Logs
   textOnPrimary: "#000000", // Dark Text for High-Visibility Buttons
 
   // 2. BRAND & ACTIONS (DedSec Cyan & ctOS Interactive Signals)
-  primary: "#00F0FF", // DedSec / Profiler Glitch Cyan (Main Interactive Focus)
-  primaryHover: "#33F3FF", // Active Pulse / Hover Cyan
-  primarySoft: "#00F0FF1A", // Subtle Signal Glow Wash (10% Opacity)
+  primary: "#00E5FF", // DedSec / Profiler Glitch Cyan (Main Interactive Focus)
+  primaryHover: "#5CF0FF", // Active Pulse / Hover Cyan
+  primarySoft: "#00E5FF1F", // Subtle Signal Glow Wash (10% Opacity)
 
-  secondary: "#1E293B", // Tactical Gunmetal Gray for Secondary Controls
-  secondarySoft: "#131A26", // Sub-panel & Inactive Node Container
+  secondary: "#12313A", // Tactical Gunmetal Gray for Secondary Controls
+  secondarySoft: "#0B1C22", // Sub-panel & Inactive Node Container
 
   tertiary: "#FF0055", // DedSec Magenta/Pink (Glitch Effects & Rogue Nodes)
 
   // 3. SEMANTIC / FUNCTIONAL (ctOS Threat Engine & System Alerts)
-  success: "#00FF66", // Node Compromised / System Breach Success
+  success: "#3DFFA0", // Node Compromised / System Breach Success
   successSoft: "#00FF661A", // Authorized Access Glow
 
   warning: "#FFB800", // ctOS Search Zone / Suspicious Activity (Amber Yellow)
   warningSoft: "#FFB8001A", // Search Radius Overlay
 
-  danger: "#FF0000", // Threat Level High / CTOS Enforcer Alert (Vibrant Crimson)
+  danger: "#FF3B5C", // Threat Level High / CTOS Enforcer Alert (Vibrant Crimson)
   dangerSoft: "#FF00001A", // High Alert Zone Wash
 
   info: "#00A3FF", // Surveillance Feed & Data Stream Stream

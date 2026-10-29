@@ -15,7 +15,7 @@ import WeatherTile from "@/features/weather/components/WeatherTile";
 import useFetchWeatherData from "@/features/weather/hooks/useFetchWeatherData";
 import weatherStyles from "@/features/weather/weatherStyles";
 import type { WeatherData } from "@/features/weather/weatherType";
-import { SafeAreaView } from "react-native-safe-area-context";
+import CtosScreen from "@/components/ctos/CtosScreen";
 import globalStyles from "@/style/globalStyles";
 
 // keys that are shown elsewhere (card / hourly) and don't get a tile
@@ -27,7 +27,7 @@ const Weather = () => {
 
   if (!weatherData || !aqiData) {
     return (
-      <SafeAreaView style={globalStyles.screen} edges={["top", "bottom"]}>
+      <CtosScreen style={globalStyles.screen} edges={["top", "bottom"]}>
         <View style={[weatherStyles.screen, weatherStyles.center]}>
           {loading ? (
             <ActivityIndicator size="large" color={Colors.primary} />
@@ -42,12 +42,12 @@ const Weather = () => {
             </>
           )}
         </View>
-      </SafeAreaView>
+      </CtosScreen>
     );
   }
 
   return (
-    <SafeAreaView style={globalStyles.screen} edges={["top", "bottom"]}>
+    <CtosScreen style={globalStyles.screen} edges={["top", "bottom"]}>
       <ScrollView
         style={weatherStyles.screen}
         contentContainerStyle={weatherStyles.scroll}
@@ -123,7 +123,7 @@ const Weather = () => {
           </Text>
         ) : null}
       </ScrollView>
-    </SafeAreaView>
+    </CtosScreen>
   );
 };
 

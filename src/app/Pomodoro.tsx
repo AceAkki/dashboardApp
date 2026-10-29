@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import CtosScreen from "@/components/ctos/CtosScreen";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Colors } from "@/constants/Colors";
@@ -34,7 +34,7 @@ export default function PomodoroScreen() {
   const doneInCycle = completedSessions % SESSIONS_BEFORE_LONG;
 
   return (
-    <SafeAreaView style={pomodoroStyles.screen}  edges={["top", "bottom"]}>
+    <CtosScreen style={pomodoroStyles.screen}  edges={["top", "bottom"]}>
       <View style={pomodoroStyles.modeTabs}>
         {MODES.map((m) => (
           <Pressable
@@ -106,6 +106,6 @@ export default function PomodoroScreen() {
           />
         </Pressable>
       </View>
-    </SafeAreaView>
+    </CtosScreen>
   );
 }

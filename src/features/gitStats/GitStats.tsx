@@ -7,6 +7,7 @@ import gitStatsStyles from "./gitStatsStyles";
 import { Ionicons } from "@expo/vector-icons";
 
 import CtosText from "@/components/CtosText";
+import Corners from "@/components/ctos/Corners";
 import { useGitStats } from "./hooks/useGitStats";
 import { openLink } from "../favLinks/utils/openLink";
 import { dateFormat } from "@/global/globalFunctions";
@@ -17,6 +18,7 @@ const GitStats = () => {
   if (!data) {
     return (
       <View style={[globalStyles.card, globalStyles.center]}>
+        <Corners />
         {loading ? (
           <ActivityIndicator size="large" color={Colors.primary} />
         ) : (
@@ -44,7 +46,7 @@ const GitStats = () => {
         onPress={() => openLink(data.html_url, data.html_url)}
       >
         <View>
-          <CtosText style={globalStyles.cardTitle}>Git Stats</CtosText>
+          <CtosText style={globalStyles.cardTitle}>{"// Git Stats"}</CtosText>
         </View>
         <Ionicons
           name="expand-outline"
@@ -93,6 +95,7 @@ const GitStats = () => {
           })}
         </Text>
       ) : null}
+      <Corners />
     </View>
   );
 };

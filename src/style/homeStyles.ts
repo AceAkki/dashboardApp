@@ -1,18 +1,10 @@
 import { StyleSheet } from "react-native";
-import { colors, font } from "./globalStyles";
-
+import { Colors } from "@/constants/Colors";
+import { text } from "./globalStyles";
 
 const homeStyles = StyleSheet.create({
-  greet:{
-    fontSize:15,
-    color:colors.primary,
-    fontFamily:font.regular
-  },
-  greetName:{
-    fontSize:15,
-    color:colors.primary,
-    fontFamily:font.regular
-  }
+  greet: { ...text.small, color: Colors.primary },
+  greetName: { ...text.small, color: Colors.primary },
 });
 
 export default homeStyles;

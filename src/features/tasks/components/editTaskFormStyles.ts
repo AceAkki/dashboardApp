@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { cardBase, fieldBase, radius } from "@/style/globalStyles";
+import { cardBase, fieldBase, glowBase, radius } from "@/style/globalStyles";
 
 const editTaskFormStyles = StyleSheet.create({
   // overlay (replaces fixed full-screen blurred layer)
@@ -8,9 +8,16 @@ const editTaskFormStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,4,6,0.8)",
   },
-  editTaskContent: { ...cardBase, width: "85%", gap: 16, padding: 16 },
+  editTaskContent: {
+    ...cardBase,
+    ...glowBase,
+    overflow: "visible",
+    width: "85%",
+    gap: 16,
+    padding: 16,
+  },
   taskEdit: { ...fieldBase },
   btnWrap: {
     flexDirection: "row",

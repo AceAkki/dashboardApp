@@ -1,42 +1,61 @@
-import { useShallow } from "zustand/shallow";
 import { Pressable, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Colors } from "@/constants/Colors";
+import { text } from "@/style/globalStyles";
 import { useTaskStore } from "../hooks/useTasksStore";
-import { taskColors } from "../taskTypeUtils";
-import type { TaskType, TasksTypes } from "../taskTypes";
 import CtosText from "@/components/CtosText";
-
-import globalStyles from "@/style/globalStyles";
+import {
+  formatDue,
+  taskCode,
+  taskColors,
+  taskGlyphs,
+  taskKindOf,
+} from "../taskTypeUtils";
+import type { TaskType } from "../taskTypes";
 import taskStyles from "./taskStyles";
 
-const Task = ({ taskTxt }: TaskType) => {
-  const { setOpenTask } = useTaskStore(
-    useShallow((state) => ({
-      setOpenTask: state.setOpenTask,
-    })),
-  );
-  const currentType = Object.keys(taskTxt.type).filter(
-    (typ) => taskTxt.type[typ as keyof TasksTypes],
-  )[0] as keyof typeof taskColors;
+type Props = TaskType & {
+  /** show the "▲ URGENT" tag. Hide it in a tab that already says the type. */
+  showType?: boolean;
+};
+
+const Task = ({ taskTxt, showType = true }: Props) => {
+  const setOpenTask = useTaskStore((state) => state.setOpenTask);
+
+  const kind = taskKindOf(taskTxt.type);
+  const color = taskColors[kind];
+  const done = kind === "done";
+  const due = done ? null : formatDue(taskTxt.remindTime);
 
   return (
-    <View
-      style={[
-        taskStyles.taskWrap,
-        { borderLeftColor: taskColors[currentType], borderLeftWidth: 3 },
-      ]}
-    >
-      <View style={taskStyles.taskTxtWrap}>
-        <Text style={taskStyles.taskTxt}>{taskTxt.taskName}</Text>
+    <View style={[taskStyles.taskWrap, { borderLeftColor: color }]}>
+      <View style={taskStyles.taskBody}>
+        <View style={taskStyles.metaRow}>
+          <Text style={text.caption}>{taskCode(taskTxt.id)}</Text>
+          {showType ? (
+            <CtosText style={[taskStyles.typeTag, { color }]}>
+              {taskGlyphs[kind]} {kind}
+            </CtosText>
+          ) : null}
+        </View>
 
-        <CtosText style={globalStyles.sectionLabel}>[{currentType}]</CtosText>
+        <Text style={[taskStyles.taskTxt, done && taskStyles.taskTxtDone]}>
+          {taskTxt.taskName}
+        </Text>
+
+        {due ? (
+          <Text style={[text.caption, due.overdue && { color: Colors.danger }]}>
+            {due.label}
+          </Text>
+        ) : null}
       </View>
 
       <Pressable
         style={taskStyles.taskBtn}
         hitSlop={10}
+        accessibilityRole="button"
+        accessibilityLabel={`Options for ${taskTxt.taskName}`}
         onPress={(e) => {
           setOpenTask({
             id: taskTxt.id,
@@ -45,11 +64,7 @@ const Task = ({ taskTxt }: TaskType) => {
           });
         }}
       >
-        <Ionicons
-          name="options-outline"
-          size={24}
-          color={Colors.textSecondary}
-        />
+        <Ionicons name="options-outline" size={20} color={Colors.primary} />
       </Pressable>
     </View>
   );

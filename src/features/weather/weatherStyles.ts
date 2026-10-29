@@ -14,15 +14,14 @@ const weatherStyles = StyleSheet.create({
   // screen
   cardHead: { ...cardHeadBase },
   cardTitle: { ...text.cardTitle },
-  screen: { ...screenBase },
+  screen: { ...screenBase, backgroundColor: "transparent" },
   scroll: { padding: 16, gap: 16 },
   sectionTitle: { ...text.heading },
   sectionPara: { ...text.small, fontSize: fontSize.md, marginTop: 4 },
   sectionSubTitle: {
-    ...text.body,
-    fontFamily: Typography.primary_medium,
-    fontSize: 17,
-    marginBottom: 8,
+    ...text.label,
+    fontSize: fontSize.sm,
+    marginBottom: 10,
   },
   expiry: { ...text.muted, textAlign: "center" },
 

@@ -16,7 +16,25 @@ import { Typography } from "@/constants/Typography";
 // ─────────────────────────────────────────────────────────────────────────────
 // DESIGN TOKENS  - change a number here, it changes everywhere
 // ─────────────────────────────────────────────────────────────────────────────
-export const radius = { xs: 8, sm: 10, md: 16, lg: 20, pill: 999 };
+// ctOS panels are square. `pill` is only for true circles.
+export const radius = { xs: 0, sm: 0, md: 0, lg: 0, pill: 999 };
+
+// HUD colours: cyan at low opacity, for panel edges, dividers and glow
+export const hud = {
+  edge: Colors.primary + "80", // 50%
+  faint: Colors.primary + "33", // 20%
+  bracket: Colors.primary, // corner marks
+} as const;
+const hudEdge = hud.edge;
+const hudFaint = hud.faint;
+
+// soft cyan glow (iOS + web; Android cannot tint shadows)
+export const glowBase = {
+  shadowColor: Colors.primary,
+  shadowOpacity: 0.35,
+  shadowRadius: 10,
+  shadowOffset: { width: 0, height: 0 },
+} as const;
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 };
 export const fontSize = {
   xs: 10,
@@ -49,6 +67,12 @@ export const cardBase = {
   backgroundColor: Colors.surface,
   borderWidth: 1,
   borderColor: Colors.border,
+  borderTopWidth: 2, // HUD header line
+  borderTopColor: hudEdge,
+  shadowColor: Colors.primary,
+  shadowOpacity: 0.12,
+  shadowRadius: 12,
+  shadowOffset: { width: 0, height: 0 },
   overflow: "hidden",
 } as const;
 
@@ -63,17 +87,24 @@ export const cardHeadBase = {
 export const insetBase = {
   backgroundColor: Colors.secondarySoft,
   borderRadius: radius.xs,
+  borderWidth: 1,
+  borderColor: Colors.border,
+  borderLeftWidth: 2, // status-bar edge
+  borderLeftColor: hudEdge,
 } as const;
 
 // text inputs
 export const fieldBase = {
-  fontFamily: Typography.secondary,
+  fontFamily: Typography.primary, // terminal input
+  fontSize: fontSize.md,
   paddingVertical: spacing.sm,
   paddingHorizontal: 10,
   color: Colors.textPrimary,
   backgroundColor: Colors.secondarySoft,
   borderWidth: 1,
   borderColor: Colors.border,
+  borderLeftWidth: 2, // prompt marker
+  borderLeftColor: Colors.primary,
   borderRadius: radius.sm,
 } as const;
 
@@ -85,12 +116,13 @@ export const primaryBtnBase = {
   paddingHorizontal: spacing.lg,
   borderRadius: radius.sm,
   backgroundColor: Colors.primary,
+  ...glowBase,
 } as const;
 
-// pill used for tabs, filters and engine chips (+ its selected state)
+// square tag used for tabs, filters and engine chips (+ its selected state)
 export const chipBase = {
   paddingVertical: 6,
-  paddingHorizontal: 14,
+  paddingHorizontal: 12,
   borderRadius: radius.lg,
   borderWidth: 1,
   borderColor: Colors.border,
@@ -100,6 +132,7 @@ export const chipBase = {
 export const chipActiveBase = {
   backgroundColor: Colors.primarySoft,
   borderColor: Colors.primary,
+  ...glowBase,
 } as const;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -110,55 +143,78 @@ export const text = {
     fontFamily: Typography.primary_bold,
     color: Colors.textPrimary,
     fontSize: fontSize.display,
+    letterSpacing: 1,
   },
   heading: {
     fontFamily: Typography.primary_bold,
     color: Colors.textPrimary,
     fontSize: fontSize.xxl,
+    letterSpacing: 2,
+    textTransform: "uppercase",
   },
   title: {
     fontFamily: Typography.primary_bold,
     color: Colors.textPrimary,
     fontSize: fontSize.xl,
+    letterSpacing: 2,
+    textTransform: "uppercase",
   },
   cardTitle: {
     fontFamily: Typography.primary_bold,
     color: Colors.textPrimary,
     fontSize: fontSize.md,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
   },
   body: {
     fontFamily: Typography.secondary,
     color: Colors.textPrimary,
     fontSize: fontSize.md,
   },
+  // meta / readout text: mono, uppercase, spaced (tabs, chips, dates, hints)
   small: {
-    fontFamily: Typography.secondary,
+    fontFamily: Typography.primary,
     color: Colors.textSecondary,
     fontSize: fontSize.sm,
+    letterSpacing: 1,
+    textTransform: "uppercase",
   },
   caption: {
-    fontFamily: Typography.secondary,
+    fontFamily: Typography.primary,
     color: Colors.textSecondary,
     fontSize: fontSize.xs,
+    letterSpacing: 1.5,
+    textTransform: "uppercase",
   },
   muted: {
-    fontFamily: Typography.secondary,
+    fontFamily: Typography.primary,
     color: Colors.textMuted,
     fontSize: fontSize.sm,
+    letterSpacing: 1,
+    textTransform: "uppercase",
   },
   // UPPERCASE section label above a group of cards
   label: {
-    fontFamily: Typography.secondary_semibold,
-    color: Colors.textSecondary,
-    fontSize: fontSize.sm,
-    letterSpacing: 0.5,
+    fontFamily: Typography.primary_medium,
+    color: Colors.primary + "B3", // cyan at 70%
+    fontSize: fontSize.xs,
+    letterSpacing: 3,
     textTransform: "uppercase",
   },
   // label on a primary button
   btn: {
-    fontFamily: Typography.primary_medium,
+    fontFamily: Typography.primary_bold,
     color: Colors.textOnPrimary,
     fontSize: fontSize.md,
+    letterSpacing: 3,
+    textTransform: "uppercase",
+  },
+  // big numeric readout (counts, temperatures, timers)
+  readout: {
+    fontFamily: Typography.primary_medium,
+    color: Colors.textPrimary,
+    fontSize: fontSize.xxxl,
+    letterSpacing: 1,
   },
   // digits (timers, temperatures)
   numbers: {
@@ -183,9 +239,9 @@ const globalStyles = StyleSheet.create({
   },
 
   divider: {
-    padding: 1,
+    height: 1,
     marginVertical: 10,
-    backgroundColor: Colors.secondary,
+    backgroundColor: hudFaint,
   },
 
   screen: screenBase,
@@ -206,6 +262,7 @@ const globalStyles = StyleSheet.create({
   textSmall: text.small,
   textCaption: text.caption,
   textMuted: text.muted,
+  textReadout: text.readout,
 
   scroll: { padding: 16, gap: 16 },
 

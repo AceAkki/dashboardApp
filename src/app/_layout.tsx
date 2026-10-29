@@ -6,9 +6,10 @@ import { useUserStore } from "@/features/auth/useAuthStore";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { Typography } from "@/constants/Typography";
+import { Colors } from "@/constants/Colors";
 // import BootScreen from "@/components/BootScreen";
 
-// ctos baed -
+// ctos based -
 // import BootAnimation from "@/components/BootAnimation";
 import BootSequence from "@/components/BootSequence";
 
@@ -63,7 +64,12 @@ export default function RootLayout() {
   // new end ------------------------
 
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        animation: "fade",
+        contentStyle: { backgroundColor: Colors.background },
+      }}
+    >
       <Stack.Protected guard={isLoggedIn}>
         <Stack.Screen
           name="index"
@@ -90,6 +96,20 @@ export default function RootLayout() {
           name="Weather"
           options={{
             title: "Weather",
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Feed"
+          options={{
+            title: "Feed",
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Tools"
+          options={{
+            title: "Tools",
             headerShown: false,
           }}
         />

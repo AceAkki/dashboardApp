@@ -9,6 +9,7 @@ import { formatFullDate } from "../utils/dateFormatter";
 import type { WeatherCardProps } from "../weatherType";
 import weatherStyles from "../weatherStyles";
 import { fontSize } from "@/style/globalStyles";
+import Corners from "@/components/ctos/Corners";
 
 const WeatherCard = ({
   current,
@@ -26,7 +27,7 @@ const WeatherCard = ({
           style={weatherStyles.cardHead}
           onPress={() => router.push("/Weather")}
         >
-          <Text style={weatherStyles.cardTitle}>Weather</Text>
+          <Text style={weatherStyles.cardTitle}>{"// Weather"}</Text>
           <Ionicons
             name="expand-outline"
             size={20}
@@ -66,6 +67,7 @@ const WeatherCard = ({
           </Text>
         </Text>
       </View>
+      <Corners />
     </View>
   );
 };

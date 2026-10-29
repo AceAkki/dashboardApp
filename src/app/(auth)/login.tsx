@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Pressable, Text, TextInput, View, Alert } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import CtosScreen from "@/components/ctos/CtosScreen";
 import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -56,7 +56,7 @@ export default function Login() {
   };
 
   return (
-    <SafeAreaView style={globalStyles.containerFull}>
+    <CtosScreen style={globalStyles.containerFull}>
       <View style={loginStyles.loginSection}>
         <View style={loginStyles.formWrap}>
           <View style={loginStyles.formIcon}>
@@ -120,6 +120,6 @@ export default function Login() {
           </Pressable>
         </View>
       </View>
-    </SafeAreaView>
+    </CtosScreen>
   );
 }

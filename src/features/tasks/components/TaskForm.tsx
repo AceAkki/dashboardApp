@@ -13,14 +13,20 @@ const TaskForm = ({ value, onChangeText, onSubmit }: TaskFormProps) => {
     <View style={taskManagerStyles.form}>
       <TextInput
         style={taskManagerStyles.formInput}
-        placeholder="Add a New Task"
+        placeholder="> add a new task"
+        accessibilityLabel="New task"
         placeholderTextColor={Colors.textMuted}
         value={value}
         onChangeText={onChangeText}
         onSubmitEditing={onSubmit}
         returnKeyType="done"
       />
-      <Pressable style={taskManagerStyles.formBtn} onPress={onSubmit}>
+      <Pressable
+        style={taskManagerStyles.formBtn}
+        onPress={onSubmit}
+        accessibilityRole="button"
+        accessibilityLabel="Add task"
+      >
         <Text style={taskManagerStyles.formBtnTxt}>+</Text>
       </Pressable>
     </View>
