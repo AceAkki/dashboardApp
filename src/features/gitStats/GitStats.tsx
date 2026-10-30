@@ -90,6 +90,7 @@ const GitStats = () => {
           Expiry Time :{" "}
           {new Date(storageTime).toLocaleString(undefined, {
             day: "2-digit",
+            weekday:"long",
             hour: "2-digit",
             minute: "2-digit",
           })}
