@@ -7,10 +7,10 @@ import { useTaskStore } from "../hooks/useTasksStore";
 import CtosText from "@/components/CtosText";
 import {
   formatDue,
+  isFinished,
   taskCode,
-  taskColors,
-  taskGlyphs,
   taskKindOf,
+  taskMain,
 } from "../taskTypeUtils";
 import type { TaskType } from "../taskTypes";
 import taskStyles from "./taskStyles";
@@ -24,8 +24,8 @@ const Task = ({ taskTxt, showType = true }: Props) => {
   const setOpenTask = useTaskStore((state) => state.setOpenTask);
 
   const kind = taskKindOf(taskTxt.type);
-  const color = taskColors[kind];
-  const done = kind === "done";
+  const { taskColor: color, taskGlyph } = taskMain[kind];
+  const done = isFinished(kind);
   const due = done ? null : formatDue(taskTxt.remindTime);
 
   return (
@@ -35,7 +35,7 @@ const Task = ({ taskTxt, showType = true }: Props) => {
           <Text style={text.caption}>{taskCode(taskTxt.id)}</Text>
           {showType ? (
             <CtosText style={[taskStyles.typeTag, { color }]}>
-              {taskGlyphs[kind]} {kind}
+              {taskGlyph} {kind}
             </CtosText>
           ) : null}
         </View>

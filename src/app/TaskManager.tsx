@@ -17,10 +17,14 @@ import EditTaskForm from "@/features/tasks/components/EditTaskForm";
 
 import { useTaskStore } from "@/features/tasks/hooks/useTasksStore";
 import useTaskMain from "@/features/tasks/hooks/useTaskMain";
+import {
+  ALL_TAB,
+  TABS,
+  countTasks,
+  openCount,
+} from "@/features/tasks/taskTypeUtils";
 
 import type { RouteType, TaskActionData } from "@/features/tasks/taskTypes";
-
-import { TABS, taskKindOf } from "@/features/tasks/taskTypeUtils";
 
 const routes = TABS.map((tab) => {
   return { key: tab, title: tab };
@@ -43,17 +47,12 @@ export default function TaskManager() {
 
   const layout = useWindowDimensions();
 
+  const kindCounts = countTasks(tasks);
   const counts: Record<string, number> = {
-    "*/": tasks.length,
-    active: 0,
-    urgent: 0,
-    done: 0,
+    [ALL_TAB]: tasks.length,
+    ...kindCounts,
   };
-
-  tasks.forEach((t) => {
-    counts[taskKindOf(t.type)] += 1;
-  });
-  const open = counts.active + counts.urgent;
+  const open = openCount(kindCounts);
 
   const renderScene = ({
     route,

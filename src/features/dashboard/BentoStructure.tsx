@@ -7,15 +7,10 @@ import globalStyles from "@/style/globalStyles";
 import { useTaskStore } from "../tasks/hooks/useTasksStore";
 import { useUserStore } from "../auth/useAuthStore";
 import {
-  taskColors,
-  taskGlyphs,
-  taskKindOf,
-  type TaskKind,
-} from "../tasks/taskTypeUtils";
-import {
   timeOfTheDayGreeting,
   useOnlineStatus,
 } from "../../global/globalFunctions";
+import TaskSummary from "../tasks/components/TaskSummary";
 import PomodoroCard from "../pomodoro/components/PomodoroCard";
 import WeatherCardContainer from "../weather/components/WeatherCardContainer";
 import GitStats from "../gitStats/GitStats";
@@ -30,52 +25,6 @@ import CtosItem from "@/components/CtosItem";
 
 import { TerminalPanel } from "@/features/tools/components";
 import bentoStyles from "./bentoStyles";
-
-const KINDS: TaskKind[] = ["urgent", "active", "done"];
-
-// counts per task type, big readouts with a proportional bar underneath
-function TaskSummary() {
-  const router = useRouter();
-  const tasks = useTaskStore((state) => state.tasks);
-
-  const counts: Record<TaskKind, number> = { urgent: 0, active: 0, done: 0 };
-  tasks.forEach((t) => {
-    counts[taskKindOf(t.type)] += 1;
-  });
-
-  return (
-    <Panel
-      title="TASK QUEUE"
-      onPress={() => router.replace("/TaskManager")}
-      right={<Text style={bentoStyles.small}>OPEN ›</Text>}
-    >
-      <View style={bentoStyles.counts}>
-        {KINDS.map((k) => (
-          <View key={k} style={bentoStyles.countCell}>
-            <Text style={[globalStyles.textReadout, { color: taskColors[k] }]}>
-              {String(counts[k]).padStart(2, "0")}
-            </Text>
-            <Text style={bentoStyles.countLabel}>
-              {taskGlyphs[k]} {k}
-            </Text>
-          </View>
-        ))}
-      </View>
-      <View style={bentoStyles.segBar}>
-        {tasks.length === 0 ? (
-          <View style={{ flex: 1, backgroundColor: Colors.border }} />
-        ) : (
-          KINDS.filter((k) => counts[k] > 0).map((k) => (
-            <View
-              key={k}
-              style={{ flex: counts[k], backgroundColor: taskColors[k] }}
-            />
-          ))
-        )}
-      </View>
-    </Panel>
-  );
-}
 
 const BentoStructure = () => {
   const router = useRouter();

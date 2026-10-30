@@ -2,7 +2,7 @@ import { ScrollView, Text, View } from "react-native";
 
 import Corners from "@/components/ctos/Corners";
 import Task from "./Task";
-import { TABS } from "../taskTypeUtils";
+import { ALL_TAB } from "../taskTypeUtils";
 import type { TasksMainProps } from "../taskTypes";
 import tasksMainStyles from "./tasksMainStyles";
 
@@ -11,7 +11,7 @@ import tasksMainStyles from "./tasksMainStyles";
 const TasksMain = ({ taskData, Type }: TasksMainProps) => {
   if (!Array.isArray(taskData)) return null;
 
-  const isAll = Type === TABS[0];
+  const isAll = Type === ALL_TAB;
   const filterTasks = isAll
     ? taskData
     : taskData.filter((task) => task.type[Type as keyof typeof task.type]);

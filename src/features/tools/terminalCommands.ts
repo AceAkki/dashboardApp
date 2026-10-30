@@ -1,4 +1,10 @@
-import { getTaskTypes } from "@/features/tasks/taskTypeUtils";
+import {
+  DEFAULT_KIND,
+  TASK_FLAGS,
+  getTaskTypes,
+  kindFromFlag,
+  taskFlagOf,
+} from "@/features/tasks/taskTypeUtils";
 import { useTaskStore } from "@/features/tasks/hooks/useTasksStore";
 import { usePomodoroStore } from "@/features/pomodoro/hooks/pomodoroStore";
 import { useToolsStore } from "./useToolsStore";
@@ -10,17 +16,19 @@ export const GO_ROUTES = {
   tasks: "/TaskManager",
   feed: "/Feed",
   tools: "/Tools",
-  me:"/UserProfile"
+  me: "/UserProfile",
 } as const;
 
-export const HELP =
-  `task <text> [--urgent|--done] ||\n note <text> ||\n timer start|pause|reset ||\n go home|tasks|feed|tools`;
+// built from the task types, so renaming a type updates the help text too
+const TASK_USAGE = `task <text> [${TASK_FLAGS.join("|")}]`;
+
+// shown as the placeholder of the terminal input
+export const TASK_EXAMPLE = `task fix auth bug ${TASK_FLAGS.find((f) => f !== taskFlagOf(DEFAULT_KIND)) ?? ""}`.trim();
+
+export const HELP = `\n${TASK_USAGE} \nnote <text> \ntimer start|pause|reset \ngo home|tasks|feed|tools`;
 
 const makeId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
-
-// index into TABS: 1 = active, 2 = urgent, 3 = done
-const FLAG_INDEX: Record<string, number> = { "--urgent": 2, "--done": 3, "--active": 1 };
 
 // Runs one line typed into the terminal. `navigate` is passed in so this file stays free of React hooks.
 export function runCommand(
@@ -37,20 +45,26 @@ export function runCommand(
       return { ok: true, message: HELP };
 
     case "task": {
-      if (rest[0]?.toLowerCase() !== "task") {
-        return { ok: false, message: "USAGE: task <text> [--urgent|--done]" };
-      }
-      const words = rest.slice(1);
-      const flag = words.find((w) => w.toLowerCase() in FLAG_INDEX);
-      const name = words.filter((w) => w !== flag).join(" ").trim();
+      const task = rest.join(" ").trim();
+      if (!task)
+        return { ok: false, message: `USAGE: ${TASK_USAGE}` };
+      const flag = rest.find((w) => kindFromFlag(w));
+      const kind = (flag && kindFromFlag(flag)) || DEFAULT_KIND;
+      const name = rest
+        .filter((w) => w !== flag)
+        .join(" ")
+        .trim();
       if (!name) return { ok: false, message: "TASK NEEDS A NAME" };
       useTaskStore.getState().updateTasks({
         id: makeId(),
         taskName: name,
-        type: getTaskTypes(flag ? FLAG_INDEX[flag.toLowerCase()] : 1),
+        type: getTaskTypes(kind),
         remindTime: "",
       });
-      return { ok: true, message: `TASK ADDED · ${flag ? flag.slice(2).toUpperCase() : "ACTIVE"}` };
+      return {
+        ok: true,
+        message: `TASK ADDED · ${kind.toUpperCase()}`,
+      };
     }
 
     case "note": {
@@ -71,7 +85,9 @@ export function runCommand(
     }
 
     case "go": {
-      const target = rest[0]?.toLowerCase() as keyof typeof GO_ROUTES | undefined;
+      const target = rest[0]?.toLowerCase() as
+        | keyof typeof GO_ROUTES
+        | undefined;
       if (!target || !(target in GO_ROUTES)) {
         return { ok: false, message: "USAGE: go home|tasks|feed|tools|me" };
       }

@@ -6,7 +6,7 @@ import Panel from "@/components/ctos/Panel";
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
 import { writeClipboardText } from "@/global/globalFunctions";
-import { runCommand } from "./terminalCommands";
+import { TASK_EXAMPLE, runCommand } from "./terminalCommands";
 import { useToolsStore, type StandupField } from "./useToolsStore";
 import styles from "./toolsStyles";
 
@@ -32,7 +32,7 @@ export function TerminalPanel() {
           value={value}
           onChangeText={setValue}
           onSubmitEditing={submit}
-          placeholder="task fix auth bug --urgent"
+          placeholder={TASK_EXAMPLE}
           placeholderTextColor={Colors.textMuted}
           autoCapitalize="none"
           autoCorrect={false}

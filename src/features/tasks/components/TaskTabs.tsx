@@ -1,6 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 
 import type { RouteType } from "../taskTypes";
+import { ALL_TAB } from "../taskTypeUtils";
 import taskManagerStyles from "./taskManagerStyles";
 
 type Props = {
@@ -28,11 +29,21 @@ export default function TaskTabs({ routes, index, onChange, counts }: Props) {
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}
           >
-            <Text style={[taskManagerStyles.tabCount, on && taskManagerStyles.tabCountOn]}>
+            <Text
+              style={[
+                taskManagerStyles.tabCount,
+                on && taskManagerStyles.tabCountOn,
+              ]}
+            >
               {pad(counts[route.key] ?? 0)}
             </Text>
-            <Text style={[taskManagerStyles.tabLabel, on && taskManagerStyles.tabLabelOn]}>
-              {route.key === "*/" ? "ALL" : route.key.toUpperCase()}
+            <Text
+              style={[
+                taskManagerStyles.tabLabel,
+                on && taskManagerStyles.tabLabelOn,
+              ]}
+            >
+              {route.key === ALL_TAB ? "ALL" : route.key.toUpperCase()}
             </Text>
             {on ? <View style={taskManagerStyles.tabUnderline} /> : null}
           </Pressable>

@@ -1,3 +1,5 @@
+import type { taskMain, ALL_TAB } from "./taskTypeUtils";
+
 export interface TaskActionData {
   taskName: string;
   id: string;
@@ -5,14 +7,13 @@ export interface TaskActionData {
   remindTime: string; // ISO string, "" when unset
 }
 
-export interface TasksTypes {
-  active: boolean;
-  urgent: boolean;
-  done: boolean;
-}
+export type TaskKind = keyof typeof taskMain;
+export type TaskKindArr = TaskKind[];
+export type TaskTab = typeof ALL_TAB | TaskKind;
+export type TasksTypes = Record<TaskKind, boolean>;
 
 export type RouteType = {
-  key: "*/" | "active" | "urgent" | "done";
+  key: TaskTab;
   title: string;
 };
 
