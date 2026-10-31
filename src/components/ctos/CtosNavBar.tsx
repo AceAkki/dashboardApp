@@ -8,13 +8,14 @@ import { hud } from "@/style/globalStyles";
 
 type Item = {
   label: string;
-  path: "/" | "/TaskManager" | "/Feed" | "/Tools";
+  path: "/" | "/TaskManager" | "/SnippetVault" | "/Feed" | "/Tools";
   icon: React.ComponentProps<typeof Ionicons>["name"];
 };
 
 const ITEMS: Item[] = [
   { label: "HOME", path: "/", icon: "grid-outline" },
   { label: "TASKS", path: "/TaskManager", icon: "checkbox-outline" },
+  { label: "SNIPPETS", path: "/SnippetVault", icon: "document-text-outline" },
   { label: "FEED", path: "/Feed", icon: "pulse-outline" },
   { label: "TOOLS", path: "/Tools", icon: "terminal-outline" },
 ];

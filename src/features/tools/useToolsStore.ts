@@ -12,13 +12,18 @@ export interface Snippet {
   code: string;
 }
 
-interface ToolsState {
+export interface ToolsState {
   standup: Record<StandupField, string>;
-  snippets: Snippet[];
   setStandup: (field: StandupField, value: string) => void;
   appendToday: (line: string) => void;
+
+  snippets: Snippet[];
   addSnippet: (title: string, code: string) => void;
   deleteSnippet: (id: string) => void;
+  snippetID: string | null;
+  setSnippetID: (id: string) => void;
+  isPopupOpen: boolean;
+  toggleIsPopupOpen: () => void;
 }
 
 const makeId = () =>
@@ -28,14 +33,6 @@ export const useToolsStore = create<ToolsState>()(
   persist(
     (set) => ({
       standup: { yesterday: "", today: "", blocked: "" },
-      snippets: [
-        { id: "seed-1", title: "clear metro cache", code: "npx expo start -c" },
-        {
-          id: "seed-2",
-          title: "tidy local branches",
-          code: "git branch --merged | xargs git branch -d",
-        },
-      ],
       setStandup: (field, value) =>
         set((s) => ({ standup: { ...s.standup, [field]: value } })),
       appendToday: (line) =>
@@ -45,12 +42,27 @@ export const useToolsStore = create<ToolsState>()(
             today: s.standup.today ? `${s.standup.today}\n${line}` : line,
           },
         })),
+      snippets: [
+        { id: "seed-1", title: "clear metro cache", code: "npx expo start -c" },
+        {
+          id: "seed-2",
+          title: "tidy local branches",
+          code: "git branch --merged | xargs git branch -d",
+        },
+      ],
       addSnippet: (title, code) =>
         set((s) => ({
           snippets: [...s.snippets, { id: makeId(), title, code }],
         })),
       deleteSnippet: (id) =>
         set((s) => ({ snippets: s.snippets.filter((x) => x.id !== id) })),
+      snippetID: null,
+      setSnippetID: (id) => set({ snippetID: id }),
+      isPopupOpen: false,
+      toggleIsPopupOpen: () =>
+        set((state) => ({
+          isPopupOpen: !state.isPopupOpen,
+        })),
     }),
     {
       name: notesKey,

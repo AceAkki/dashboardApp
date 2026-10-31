@@ -1,0 +1,64 @@
+.pomo-main-wrap {
+  height: 100%;
+  width: 100%;
+  container-type: inline-size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: inline-size;
+}
+
+.circle {
+  display: block;
+  float: left;
+  width: auto;
+  height: auto;
+  padding: clamp(7.5rem, 20cqw, 8rem);
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -khtml-border-radius: 50%;
+  background: var(--primary);
+  border: 3px solid var(--secondary);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
+}
+
+.pomo-txt {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  font-size: 100%;
+  overflow: hidden;
+  margin: 25% 0;
+}
+
+.pomo-time {
+  font-size: clamp(3rem, 10cqw, 3.5rem);
+  font-weight: 800;
+  font-family: var(--heavy-font);
+  color: var(--secondary);
+}
+
+.pomo-btn {
+  background: var(--accent-color);
+  color: var(--primary);
+  border: 1px solid;
+  border-radius: 10px;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  width: unset;
+  transition: var(--transition-800-ease);
+}
+
+.pomo-btn svg {
+  width: clamp(25px, 5cqw, 35px);
+  height: clamp(25px, 5cqw, 35px);
+}
+
+.pomo-btn:hover {
+  background: var(--primary);
+  color: var(--accent-color);
+}

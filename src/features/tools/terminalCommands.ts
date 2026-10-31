@@ -17,13 +17,15 @@ export const GO_ROUTES = {
   feed: "/Feed",
   tools: "/Tools",
   me: "/UserProfile",
+  snipe: "/SnippetVault",
 } as const;
 
 // built from the task types, so renaming a type updates the help text too
 const TASK_USAGE = `task <text> [${TASK_FLAGS.join("|")}]`;
 
 // shown as the placeholder of the terminal input
-export const TASK_EXAMPLE = `task fix auth bug ${TASK_FLAGS.find((f) => f !== taskFlagOf(DEFAULT_KIND)) ?? ""}`.trim();
+export const TASK_EXAMPLE =
+  `task fix auth bug ${TASK_FLAGS.find((f) => f !== taskFlagOf(DEFAULT_KIND)) ?? ""}`.trim();
 
 export const HELP = `\n${TASK_USAGE} \nnote <text> \ntimer start|pause|reset \ngo home|tasks|feed|tools`;
 
@@ -46,8 +48,7 @@ export function runCommand(
 
     case "task": {
       const task = rest.join(" ").trim();
-      if (!task)
-        return { ok: false, message: `USAGE: ${TASK_USAGE}` };
+      if (!task) return { ok: false, message: `USAGE: ${TASK_USAGE}` };
       const flag = rest.find((w) => kindFromFlag(w));
       const kind = (flag && kindFromFlag(flag)) || DEFAULT_KIND;
       const name = rest

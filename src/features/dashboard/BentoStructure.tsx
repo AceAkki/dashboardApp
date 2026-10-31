@@ -23,7 +23,7 @@ import Tag from "@/components/ctos/Tag";
 import CtosText from "@/components/CtosText";
 import CtosItem from "@/components/CtosItem";
 
-import { TerminalPanel } from "@/features/tools/components";
+import TerminalPanel from "@/features/tools/components/TerminalPanel";
 import bentoStyles from "./bentoStyles";
 
 const BentoStructure = () => {

@@ -4,11 +4,10 @@ import CtosScreen from "@/components/ctos/CtosScreen";
 import CtosText from "@/components/CtosText";
 import globalStyles from "@/style/globalStyles";
 import FavLinks from "@/features/favLinks/FavLinks";
-import {
-  SnippetsPanel,
-  StandupPanel,
-  TerminalPanel,
-} from "@/features/tools/components";
+import TerminalPanel from "@/features/tools/components/TerminalPanel";
+import SnippetsPanel from "@/features/tools/components/SnippetsPanel";
+import StandupPanel from "@/features/tools/components/StandupPanel";
+
 import toolsStyles from "@/features/tools/toolsStyles";
 
 export default function Tools() {

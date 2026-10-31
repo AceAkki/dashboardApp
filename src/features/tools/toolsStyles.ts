@@ -2,6 +2,8 @@ import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
 import {
+  cardBase,
+  glowBase,
   fieldBase,
   fontSize,
   hud,
@@ -73,9 +75,28 @@ const toolsStyles = StyleSheet.create({
   snippetActions: { flexDirection: "row", gap: 14 },
   snippetAct: { ...text.caption, color: Colors.primary },
   snippetDel: { ...text.caption, color: Colors.danger },
+  editSnippetForm: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,4,6,0.8)",
+  },
+  editSnippetContent: {
+    ...cardBase,
+    ...glowBase,
+    overflow: "visible",
+    width: "85%",
+    gap: 16,
+    padding: 16,
+  },
   addForm: { gap: 8, marginTop: 10 },
   addInput: { ...fieldBase, fontSize: fontSize.sm },
-  addCode: { ...fieldBase, fontSize: fontSize.sm, minHeight: 64, textAlignVertical: "top" },
+  addCode: {
+    ...fieldBase,
+    fontSize: fontSize.sm,
+    minHeight: 64,
+    textAlignVertical: "top",
+  },
   addBtn: { ...primaryBtnBase, paddingVertical: 8 },
   toggle: { ...text.caption, color: Colors.primary },
 });

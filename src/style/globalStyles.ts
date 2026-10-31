@@ -243,7 +243,8 @@ const globalStyles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: hudFaint,
   },
-
+  
+  scene: { flex: 1, paddingHorizontal: 16, paddingBottom: 16 },
   screen: screenBase,
   card: cardBase,
   cardHead: cardHeadBase,
