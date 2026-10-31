@@ -34,7 +34,7 @@ export default function SnippetsPanel() {
         <Snippet sData={s} />
       ))}
 
-      {snippets.length === 0 && !isPopupOpen ? (
+      {snippets.length === 0 ? (
         <Text style={globalStyles.textMuted}>NO SNIPPETS SAVED</Text>
       ) : null}
 
