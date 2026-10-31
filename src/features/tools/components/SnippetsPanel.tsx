@@ -11,10 +11,11 @@ import globalStyles from "@/style/globalStyles";
 import styles from "../toolsStyles";
 
 export default function SnippetsPanel() {
-  const { snippets, isPopupOpen } = useToolsStore(
+  const { snippets, isPopupOpen, toggleIsPopupOpen } = useToolsStore(
     useShallow((s) => ({
       snippets: s.snippets,
       isPopupOpen: s.isPopupOpen,
+      toggleIsPopupOpen: s.toggleIsPopupOpen,
     })),
   );
 
@@ -24,8 +25,8 @@ export default function SnippetsPanel() {
     <Panel
       title="SNIPPETS"
       right={
-        <Pressable onPress={() => setAdding((a) => !a)} hitSlop={10}>
-          <Text style={styles.toggle}>{adding ? "CANCEL" : "+ NEW"}</Text>
+        <Pressable onPress={() => toggleIsPopupOpen((a) => !a)} hitSlop={10}>
+          <Text style={styles.toggle}>{isPopupOpen ? "CANCEL" : "+ NEW"}</Text>
         </Pressable>
       }
     >
@@ -37,7 +38,7 @@ export default function SnippetsPanel() {
         <Text style={globalStyles.textMuted}>NO SNIPPETS SAVED</Text>
       ) : null}
 
-      {isPopupOpen ? <SnippetForm setAdding={setAdding} /> : null}
+      {isPopupOpen ? <SnippetForm /> : null}
     </Panel>
   );
 }

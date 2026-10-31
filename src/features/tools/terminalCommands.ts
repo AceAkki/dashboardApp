@@ -17,7 +17,7 @@ export const GO_ROUTES = {
   feed: "/Feed",
   tools: "/Tools",
   me: "/UserProfile",
-  snipe: "/SnippetVault",
+  vault: "/SnippetVault",
 } as const;
 
 // built from the task types, so renaming a type updates the help text too
@@ -72,6 +72,13 @@ export function runCommand(
       const note = rest.join(" ").trim();
       if (!note) return { ok: false, message: "USAGE: note <text>" };
       useToolsStore.getState().appendToday(note);
+      return { ok: true, message: "ADDED TO STANDUP · TODAY" };
+    }
+
+    case "snipe": {
+      const snipe = rest.join(" ").trim();
+      if (!snipe) return { ok: false, message: "USAGE: snipe <text>" };
+      useToolsStore.getState().appendToday(snipesnipe);
       return { ok: true, message: "ADDED TO STANDUP · TODAY" };
     }
 
