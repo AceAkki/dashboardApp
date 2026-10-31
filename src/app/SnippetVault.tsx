@@ -5,7 +5,7 @@ import CtosScreen from "@/components/ctos/CtosScreen";
 import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
 
-import { useToolsStore } from "@/features/tools/useToolsStore";
+import { useToolsStore, type ToolsState } from "@/features/tools/useToolsStore";
 import Snippet from "@/features/tools/components/Snippet";
 import SnippetForm from "@/features/tools/components/SnippetForm";
 
