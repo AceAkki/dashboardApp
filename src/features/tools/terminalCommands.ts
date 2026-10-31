@@ -75,6 +75,14 @@ export function runCommand(
       return { ok: true, message: "ADDED TO STANDUP · TODAY" };
     }
 
+    case "snipe": {
+      const snipe = rest.join(" ").trim();
+      if (!snipe) return { ok: false, message: "USAGE: snipe <title> | <code>" };
+      const [title, code] = snipe.split("|");
+      useToolsStore.getState().addSnippet(title, code);
+      return { ok: true, message: "ADDED TO Snippet" };
+    }
+
     case "timer": {
       const action = rest[0]?.toLowerCase();
       const pomo = usePomodoroStore.getState();
