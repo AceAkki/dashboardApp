@@ -3,28 +3,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { notesKey } from "@/global/storageKeys";
-
-export type StandupField = "yesterday" | "today" | "blocked";
-
-export interface Snippet {
-  id: string;
-  title: string;
-  code: string;
-}
-
-export interface ToolsState {
-  standup: Record<StandupField, string>;
-  setStandup: (field: StandupField, value: string) => void;
-  appendToday: (line: string) => void;
-
-  snippets: Snippet[];
-  addSnippet: (title: string, code: string) => void;
-  deleteSnippet: (id: string) => void;
-  snippetID: string | null;
-  setSnippetID: (id: string) => void;
-  isPopupOpen: boolean;
-  toggleIsPopupOpen: () => void;
-}
+import type { ToolsState} from "../toolTypes"
 
 const makeId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -42,6 +21,7 @@ export const useToolsStore = create<ToolsState>()(
             today: s.standup.today ? `${s.standup.today}\n${line}` : line,
           },
         })),
+
       snippets: [
         { id: "seed-1", title: "clear metro cache", code: "npx expo start -c" },
         {
@@ -63,6 +43,8 @@ export const useToolsStore = create<ToolsState>()(
         set((state) => ({
           isPopupOpen: !state.isPopupOpen,
         })),
+      apps:null,
+      setApps:(({appsArr}) => set({apps:appsArr}))
     }),
     {
       name: notesKey,

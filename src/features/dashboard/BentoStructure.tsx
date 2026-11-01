@@ -1,10 +1,10 @@
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { useEffect } from "react";
+import { Pressable, Platform, ScrollView, Text, View } from "react-native";
 import { useShallow } from "zustand/shallow";
 import { useRouter } from "expo-router";
 
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
-import { useTaskStore } from "../tasks/hooks/useTasksStore";
 import { useUserStore } from "../auth/useAuthStore";
 import {
   timeOfTheDayGreeting,
@@ -18,12 +18,17 @@ import ServiceStatusPanel from "../devfeed/components/ServiceStatusPanel";
 import StoriesPanel from "../devfeed/components/StoriesPanel";
 import PackageWatchPanel from "../devfeed/components/PackageWatchPanel";
 import { isoWeek } from "../devfeed/utils";
-import Panel from "@/components/ctos/Panel";
 import Tag from "@/components/ctos/Tag";
 import CtosText from "@/components/CtosText";
 import CtosItem from "@/components/CtosItem";
 
 import TerminalPanel from "@/features/tools/components/TerminalPanel";
+import { useToolsStore } from "../tools/hooks/useToolsStore";
+import type {checkedApps} from "../tools/toolTypes"
+import {APPS} from "@/global/AppsConfig"
+import {isInstalled} from "@/global/launcher";
+
+
 import bentoStyles from "./bentoStyles";
 
 const BentoStructure = () => {
@@ -32,6 +37,9 @@ const BentoStructure = () => {
   const { username, location } = useUserStore(
     useShallow((s) => ({ username: s.username, location: s.location })),
   );
+  const {setApps} = useToolsStore(
+    useShallow((s) => ({setApps:s.setApps}))
+  )
 
   const now = new Date();
   const dateLabel = `${now.toLocaleDateString("en", { weekday: "short" }).toUpperCase()} ${String(
@@ -40,6 +48,18 @@ const BentoStructure = () => {
     2,
     "0",
   )} ${now.toLocaleDateString("en", { month: "short" }).toUpperCase()} · WK ${isoWeek(now)}`;
+
+
+  useEffect(()=> {
+    (async () => {
+      const visible = APPS.filter(a => a.platforms.includes(Platform.OS));
+      const checked = await Promise.all(
+          visible.map(async a => ({ ...a, installed: await isInstalled(a) }))
+        );
+      checked.sort((a, b) => Number(b.installed) - Number(a.installed));
+      setApps({appsArr:checked});
+    })();
+  }, [])
 
   return (
     <View style={bentoStyles.root}>

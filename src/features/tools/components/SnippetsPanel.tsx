@@ -3,7 +3,7 @@ import { useShallow } from "zustand/shallow";
 import { Pressable, Text } from "react-native";
 
 import Panel from "@/components/ctos/Panel";
-import { useToolsStore } from "../useToolsStore";
+import { useToolsStore } from "../hooks/useToolsStore";
 import SnippetForm from "./SnippetForm";
 import Snippet from "./Snippet";
 
@@ -25,13 +25,13 @@ export default function SnippetsPanel() {
     <Panel
       title="SNIPPETS"
       right={
-        <Pressable onPress={() => toggleIsPopupOpen((a) => !a)} hitSlop={10}>
+        <Pressable onPress={() => toggleIsPopupOpen} hitSlop={10}>
           <Text style={styles.toggle}>{isPopupOpen ? "CANCEL" : "+ NEW"}</Text>
         </Pressable>
       }
     >
       {limitSnippets.map((s) => (
-        <Snippet sData={s} />
+        <Snippet sData={s} key={s.id} />
       ))}
 
       {snippets.length === 0 ? (

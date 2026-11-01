@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useShallow } from "zustand/shallow";
 import { Modal, Pressable, Text, TextInput, View } from "react-native";
 
-import { useToolsStore, type ToolsState } from "../useToolsStore";
+import { useToolsStore, type ToolsState } from "../hooks/useToolsStore";
 
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
@@ -10,23 +10,16 @@ import globalStyles from "@/style/globalStyles";
 import styles from "../toolsStyles";
 
 const SnippetForm = () => {
-  const {
-    snippets,
-    addSnippet,
-    snippetID,
-    setSnippetID,
-    isPopupOpen,
-    toggleIsPopupOpen,
-  } = useToolsStore<ToolsState>(
-    useShallow((s) => ({
-      snippets: s.snippets,
-      addSnippet: s.addSnippet,
-      snippetID: s.snippetID,
-      setSnippetID: s.setSnippetID,
-      isPopupOpen: s.isPopupOpen,
-      toggleIsPopupOpen: s.toggleIsPopupOpen,
-    })),
-  );
+  const { snippets, addSnippet, snippetID, setSnippetID, toggleIsPopupOpen } =
+    useToolsStore(
+      useShallow((s) => ({
+        snippets: s.snippets,
+        addSnippet: s.addSnippet,
+        snippetID: s.snippetID,
+        setSnippetID: s.setSnippetID,
+        toggleIsPopupOpen: s.toggleIsPopupOpen,
+      })),
+    );
 
   const selectedSnippet = snippetID
     ? snippets.find((s) => s.id === snippetID)
@@ -55,16 +48,16 @@ const SnippetForm = () => {
             </Text>
 
             <Pressable
-              style={[styles.addBtn, { alignSelf: "end", padding: 5 }]}
+              style={[styles.addBtn,]}
               onPress={() => {
                 setSnippetID(null);
-                toggleIsPopupOpen(() => false);
+                toggleIsPopupOpen();
               }}
             >
               <Ionicons
                 name="close-outline"
                 size={20}
-                color={Colors.primaryBtnText}
+                color={Colors.textOnPrimary}
               />
             </Pressable>
           </View>

@@ -3,11 +3,12 @@ import { useShallow } from "zustand/shallow";
 import { Pressable, Text, TextInput, View } from "react-native";
 
 import { writeClipboardText } from "@/global/globalFunctions";
-import { useToolsStore } from "../useToolsStore";
+import { useToolsStore } from "../hooks/useToolsStore";
 
+import type { Snippet } from "../toolTypes";
 import styles from "../toolsStyles";
 
-const Snippet = ({ sData }) => {
+const Snippet = ({ sData }:{sData:Snippet}) => {
   const { deleteSnippet, snippetID, setSnippetID, toggleIsPopupOpen } =
     useToolsStore(
       useShallow((s) => ({

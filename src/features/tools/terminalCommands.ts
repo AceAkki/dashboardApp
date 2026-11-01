@@ -7,7 +7,7 @@ import {
 } from "@/features/tasks/taskTypeUtils";
 import { useTaskStore } from "@/features/tasks/hooks/useTasksStore";
 import { usePomodoroStore } from "@/features/pomodoro/hooks/pomodoroStore";
-import { useToolsStore } from "./useToolsStore";
+import { useToolsStore } from "./hooks/useToolsStore";
 
 export type CommandResult = { ok: boolean; message: string };
 

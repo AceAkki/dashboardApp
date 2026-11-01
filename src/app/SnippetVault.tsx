@@ -5,7 +5,7 @@ import CtosScreen from "@/components/ctos/CtosScreen";
 import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
 
-import { useToolsStore, type ToolsState } from "@/features/tools/useToolsStore";
+import { useToolsStore } from "@/features/tools/hooks/useToolsStore";
 import Snippet from "@/features/tools/components/Snippet";
 import SnippetForm from "@/features/tools/components/SnippetForm";
 
@@ -28,7 +28,7 @@ export default function SnippetVault() {
         <Text style={globalStyles.sectionLabel}>{"// Vault"}</Text>
         <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
           <CtosText style={globalStyles.textHeading}> Snippet Vault</CtosText>
-          <Pressable onPress={() => toggleIsPopupOpen((a) => !a)} hitSlop={10}>
+          <Pressable onPress={() => toggleIsPopupOpen} hitSlop={10}>
             <Text style={styles.toggle}>
               {isPopupOpen ? "CANCEL" : "+ NEW"}
             </Text>

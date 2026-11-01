@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import {Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 
-import Panel from "@/components/ctos/Panel";
 import { TASK_EXAMPLE, runCommand } from "../terminalCommands";
-import { useToolsStore } from "../useToolsStore";
+import { useToolsStore } from "../hooks/useToolsStore";
 
 import { Colors } from "@/constants/Colors";
-import globalStyles from "@/style/globalStyles";
 import styles from "../toolsStyles";
 
 export default function TerminalPanel() {
