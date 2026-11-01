@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Text, View, Pressable } from "react-native";
 
 import CtosScreen from "@/components/ctos/CtosScreen";
@@ -6,7 +5,7 @@ import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
 
 import { useToolsStore } from "@/features/tools/hooks/useToolsStore";
-import Snippet from "@/features/tools/components/Snippet";
+import {Snippet} from "@/features/tools/components/Snippet";
 import SnippetForm from "@/features/tools/components/SnippetForm";
 
 import globalStyles from "@/style/globalStyles";
@@ -28,7 +27,7 @@ export default function SnippetVault() {
         <Text style={globalStyles.sectionLabel}>{"// Vault"}</Text>
         <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
           <CtosText style={globalStyles.textHeading}> Snippet Vault</CtosText>
-          <Pressable onPress={() => toggleIsPopupOpen} hitSlop={10}>
+          <Pressable onPress={toggleIsPopupOpen} hitSlop={10}>
             <Text style={styles.toggle}>
               {isPopupOpen ? "CANCEL" : "+ NEW"}
             </Text>

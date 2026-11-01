@@ -8,6 +8,8 @@ import {
 import { useTaskStore } from "@/features/tasks/hooks/useTasksStore";
 import { usePomodoroStore } from "@/features/pomodoro/hooks/pomodoroStore";
 import { useToolsStore } from "./hooks/useToolsStore";
+import { launchApp } from "@/global/launcher";
+import { appsIDs } from "@/global/AppsConfig";
 
 export type CommandResult = { ok: boolean; message: string };
 
@@ -27,7 +29,7 @@ const TASK_USAGE = `task <text> [${TASK_FLAGS.join("|")}]`;
 export const TASK_EXAMPLE =
   `task fix auth bug ${TASK_FLAGS.find((f) => f !== taskFlagOf(DEFAULT_KIND)) ?? ""}`.trim();
 
-export const HELP = `\n${TASK_USAGE} \nnote <text> \ntimer start|pause|reset \ngo home|tasks|feed|tools`;
+export const HELP = `\n${TASK_USAGE} \nnote <text> \ntimer start|pause|reset \ngo home|tasks|feed|tools \nstart ${appsIDs.join("|")}`;
 
 const makeId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -102,6 +104,18 @@ export function runCommand(
       }
       navigate(GO_ROUTES[target]);
       return { ok: true, message: `OPENING ${target.toUpperCase()}` };
+    }
+
+    case "start":{
+      const tyepdApp = rest.join(" ").trim();
+      if (!tyepdApp) return { ok: false, message: "USAGE: start <app name>" };
+      let selectedApp = useToolsStore.getState().apps?.find(app => app.id === tyepdApp);
+      if (selectedApp !== undefined) {
+        setTimeout(() => launchApp(selectedApp), 1000);
+        return { ok: true, message: `OPENING ${tyepdApp.toUpperCase()}` };
+      } else {
+        return { ok: false, message: `Failed to open ${tyepdApp.toUpperCase()}`};
+      }
     }
 
     default:

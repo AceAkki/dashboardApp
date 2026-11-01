@@ -73,7 +73,7 @@ export const APPS = [
     scheme: null,
     androidPackage: 'org.torproject.torbrowser',
     fallbackUrl: 'https://www.torproject.org/download/',
-    platforms: ['android'], // no official iOS Tor Browser
+    platforms: ['android'],
     verified: true,
   },
   {
@@ -81,7 +81,7 @@ export const APPS = [
     name: 'Termux',
     scheme: null,
     androidPackage: 'com.termux',
-    fallbackUrl: 'https://f-droid.org/packages/com.termux/', // not updated on Play Store
+    fallbackUrl: 'https://f-droid.org/packages/com.termux/',
     platforms: ['android'],
     verified: true,
   },
@@ -89,9 +89,11 @@ export const APPS = [
     id: 'octohide',
     name: 'Octohide VPN',
     scheme: null,
-    androidPackage: null, // TODO: confirm package name from the Play Store URL
+    androidPackage: 'octohide.vpn',
     fallbackUrl: 'https://octohide.com/',
     platforms: ['android', 'ios'],
     verified: false,
   },
 ];
+
+export const appsIDs = APPS.map(app => app.id);

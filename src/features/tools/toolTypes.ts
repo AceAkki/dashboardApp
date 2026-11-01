@@ -2,7 +2,7 @@ import {APPS} from "@/global/AppsConfig"
 
 export type StandupField = "yesterday" | "today" | "blocked";
 
-export interface Snippet {
+export interface snippetType {
   id: string;
   title: string;
   code: string;
@@ -27,7 +27,7 @@ export interface ToolsState {
   setStandup: (field: StandupField, value: string) => void;
   appendToday: (line: string) => void;
 
-  snippets: Snippet[];
+  snippets: snippetType[];
   addSnippet: (title: string, code: string) => void;
   deleteSnippet: (id: string) => void;
   snippetID: string | null;

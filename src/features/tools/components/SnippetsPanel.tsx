@@ -1,11 +1,10 @@
-import { useState } from "react";
 import { useShallow } from "zustand/shallow";
 import { Pressable, Text } from "react-native";
 
 import Panel from "@/components/ctos/Panel";
 import { useToolsStore } from "../hooks/useToolsStore";
 import SnippetForm from "./SnippetForm";
-import Snippet from "./Snippet";
+import {Snippet} from "./Snippet";
 
 import globalStyles from "@/style/globalStyles";
 import styles from "../toolsStyles";
@@ -25,7 +24,7 @@ export default function SnippetsPanel() {
     <Panel
       title="SNIPPETS"
       right={
-        <Pressable onPress={() => toggleIsPopupOpen} hitSlop={10}>
+        <Pressable onPress={toggleIsPopupOpen} hitSlop={10}>
           <Text style={styles.toggle}>{isPopupOpen ? "CANCEL" : "+ NEW"}</Text>
         </Pressable>
       }

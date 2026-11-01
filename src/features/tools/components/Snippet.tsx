@@ -5,10 +5,10 @@ import { Pressable, Text, TextInput, View } from "react-native";
 import { writeClipboardText } from "@/global/globalFunctions";
 import { useToolsStore } from "../hooks/useToolsStore";
 
-import type { Snippet } from "../toolTypes";
+import type { snippetType } from "../toolTypes";
 import styles from "../toolsStyles";
 
-const Snippet = ({ sData }:{sData:Snippet}) => {
+export const Snippet = ({ sData }:{sData:snippetType}) => {
   const { deleteSnippet, snippetID, setSnippetID, toggleIsPopupOpen } =
     useToolsStore(
       useShallow((s) => ({
@@ -59,4 +59,4 @@ const Snippet = ({ sData }:{sData:Snippet}) => {
   );
 };
 
-export default Snippet;
+
