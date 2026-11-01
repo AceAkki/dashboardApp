@@ -3,7 +3,6 @@ import {Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import { TASK_EXAMPLE, runCommand } from "../terminalCommands";
-import { useToolsStore } from "../hooks/useToolsStore";
 
 import { Colors } from "@/constants/Colors";
 import styles from "../toolsStyles";
@@ -20,6 +19,18 @@ export default function TerminalPanel() {
     setResult(runCommand(value, (path) => router.replace(path as never)));
     setValue("");
   };
+
+  let defaultMsg = "TASK · NOTE · TIMER · GO · START  —  TYPE help";
+  let resultMsg =  result && `${result.ok ? "OK" : "ERR"} · ${result.message}`;
+
+  let terminalMsg = () => {
+    if (result) {
+      let msg = resultMsg
+      setTimeout(()=> msg = defaultMsg, 1000);
+      return msg;
+    } else return defaultMsg;
+  };
+
 
   return (
     <View>
@@ -44,9 +55,7 @@ export default function TerminalPanel() {
           result && { color: result.ok ? Colors.success : Colors.danger },
         ]}
       >
-        {result
-          ? `${result.ok ? "OK" : "ERR"} · ${result.message}`
-          : "TASK · NOTE · TIMER · GO  —  TYPE help"}
+        {terminalMsg()}
       </Text>
     </View>
   );
