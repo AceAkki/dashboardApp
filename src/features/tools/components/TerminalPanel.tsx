@@ -55,7 +55,7 @@ export default function TerminalPanel() {
           result && { color: result.ok ? Colors.success : Colors.danger },
         ]}
       >
-        {terminalMsg()}
+        {result ? resultMsg : defaultMsg}
       </Text>
     </View>
   );
