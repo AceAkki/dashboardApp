@@ -16,9 +16,13 @@ export default function ServiceStatusPanel() {
     <Panel
       title="SERVICE STATUS"
       onPress={refetch}
+      style={{ flex: 1 }}
       right={
         data ? (
-          <Tag label={allOk ? "ALL CLEAR" : "ATTENTION"} color={allOk ? Colors.success : Colors.warning} />
+          <Tag
+            label={allOk ? "STABLE" : "ALERT"}
+            color={allOk ? Colors.success : Colors.warning}
+          />
         ) : loading ? (
           <ActivityIndicator size="small" color={Colors.primary} />
         ) : null
@@ -34,7 +38,9 @@ export default function ServiceStatusPanel() {
         </View>
       ))}
       {error ? <Text style={styles.error}>{error}</Text> : null}
-      {!data && !loading && !error ? <Text style={styles.hint}>NO DATA</Text> : null}
+      {!data && !loading && !error ? (
+        <Text style={styles.hint}>NO DATA</Text>
+      ) : null}
     </Panel>
   );
 }

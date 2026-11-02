@@ -23,11 +23,14 @@ import CtosText from "@/components/CtosText";
 import CtosItem from "@/components/CtosItem";
 
 import TerminalPanel from "@/features/tools/components/TerminalPanel";
-import { useToolsStore } from "../tools/hooks/useToolsStore";
-import type {checkedApps} from "../tools/toolTypes"
-import {APPS} from "@/global/AppsConfig"
-import {isInstalled} from "@/global/launcher";
+import FavLinks from "@/features/favLinks/FavLinks";
+import SnippetsPanel from "@/features/tools/components/SnippetsPanel";
+import StandupPanel from "@/features/tools/components/StandupPanel";
 
+import { useToolsStore } from "../tools/hooks/useToolsStore";
+import type { checkedApps } from "../tools/toolTypes";
+import { APPS } from "@/global/AppsConfig";
+import { isInstalled } from "@/global/launcher";
 
 import bentoStyles from "./bentoStyles";
 
@@ -37,9 +40,9 @@ const BentoStructure = () => {
   const { username, location } = useUserStore(
     useShallow((s) => ({ username: s.username, location: s.location })),
   );
-  const {setApps} = useToolsStore(
-    useShallow((s) => ({setApps:s.setApps}))
-  )
+  const { setApps } = useToolsStore(
+    useShallow((s) => ({ setApps: s.setApps })),
+  );
 
   const now = new Date();
   const dateLabel = `${now.toLocaleDateString("en", { weekday: "short" }).toUpperCase()} ${String(
@@ -49,17 +52,16 @@ const BentoStructure = () => {
     "0",
   )} ${now.toLocaleDateString("en", { month: "short" }).toUpperCase()} · WK ${isoWeek(now)}`;
 
-
-  useEffect(()=> {
+  useEffect(() => {
     (async () => {
-      const visible = APPS.filter(a => a.platforms.includes(Platform.OS));
+      const visible = APPS.filter((a) => a.platforms.includes(Platform.OS));
       const checked = await Promise.all(
-          visible.map(async a => ({ ...a, installed: await isInstalled(a) }))
-        );
+        visible.map(async (a) => ({ ...a, installed: await isInstalled(a) })),
+      );
       checked.sort((a, b) => Number(b.installed) - Number(a.installed));
-      setApps({appsArr:checked});
+      setApps({ appsArr: checked });
     })();
-  }, [])
+  }, []);
 
   return (
     <View style={bentoStyles.root}>
@@ -117,7 +119,7 @@ const BentoStructure = () => {
         </CtosItem>
 
         <CtosItem index={3}>
-          <ServiceStatusPanel />
+          <PomodoroCard />
         </CtosItem>
 
         <CtosItem index={4}>
@@ -130,8 +132,21 @@ const BentoStructure = () => {
 
         <CtosItem index={6}>
           <View style={bentoStyles.row}>
-            <PomodoroCard />
+            <ServiceStatusPanel />
+            <PackageWatchPanel />
           </View>
+        </CtosItem>
+
+        <CtosItem index={8}>
+          <FavLinks />
+        </CtosItem>
+
+        <CtosItem index={8}>
+          <SnippetsPanel />
+        </CtosItem>
+
+        <CtosItem index={9}>
+          <StandupPanel />
         </CtosItem>
       </ScrollView>
     </View>

@@ -15,11 +15,12 @@ export default function PackageWatchPanel() {
     <Panel
       title="PACKAGE WATCH"
       onPress={acknowledge}
+      style={{ flex: 1 }}
       right={
         loading && rows.length === 0 ? (
           <ActivityIndicator size="small" color={Colors.primary} />
         ) : anyNew ? (
-          <Tag label="UPDATES" color={Colors.success} />
+          <Tag label="Latest" color={Colors.success} />
         ) : null
       }
     >

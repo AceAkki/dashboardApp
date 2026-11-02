@@ -19,13 +19,18 @@ export default function TaskSummary() {
   return (
     <Panel
       title="TASK QUEUE"
-      onPress={() => router.replace("/TaskManager")}
+      onPress={() => router.push("/TaskManager")}
       right={<Text style={bentoStyles.small}>OPEN ›</Text>}
     >
       <View style={bentoStyles.counts}>
         {taskTypesArr.map((k) => (
           <View key={k} style={bentoStyles.countCell}>
-            <Text style={[globalStyles.textReadout, { color: taskMain[k].taskColor }]}>
+            <Text
+              style={[
+                globalStyles.textReadout,
+                { color: taskMain[k].taskColor },
+              ]}
+            >
               {String(counts[k]).padStart(2, "0")}
             </Text>
             <Text style={bentoStyles.countLabel}>

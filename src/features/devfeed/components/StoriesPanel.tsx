@@ -17,7 +17,14 @@ export default function StoriesPanel() {
     <Panel
       title="TOP ON HACKER NEWS"
       onPress={() => router.replace("/Feed")}
-      right={loading && !data ? <ActivityIndicator size="small" color={Colors.primary} /> : <Text style={styles.lineValue}>FEED ›</Text>}
+
+      right={
+        loading && !data ? (
+          <ActivityIndicator size="small" color={Colors.primary} />
+        ) : (
+          <Text style={styles.lineValue}>FEED ›</Text>
+        )
+      }
     >
       {(data ?? []).slice(0, 3).map((s, i) => (
         <Pressable

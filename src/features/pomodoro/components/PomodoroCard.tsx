@@ -18,12 +18,14 @@ export default function PomodoroCard() {
     usePomodoro();
 
   return (
-    <View style={pomodoroStyles.card}>
+    <View style={[pomodoroStyles.card, { flex: 1 }]}>
       <Pressable
         style={pomodoroStyles.cardHead}
         onPress={() => router.push("/Pomodoro")}
       >
-        <CtosText style={pomodoroStyles.cardTitle}>{"// Pomodoro Timer"}</CtosText>
+        <CtosText style={pomodoroStyles.cardTitle}>
+          {"// Pomodoro Timer"}
+        </CtosText>
         <Ionicons
           name="expand-outline"
           size={14}

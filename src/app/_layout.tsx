@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import { useUserStore } from "@/features/auth/useAuthStore";
+import { TOOL_ROUTES } from "@/features/tools/toolRoutes";
 
 // new ------------------------
 import { useFonts } from "expo-font";
@@ -126,6 +127,13 @@ export default function RootLayout() {
             headerShown: false,
           }}
         />
+        {TOOL_ROUTES.map((r) => (
+          <Stack.Screen
+            key={r.name}
+            name={r.name}
+            options={{ title: r.title, headerShown: false }}
+          />
+        ))}
       </Stack.Protected>
 
       <Stack.Protected guard={!isLoggedIn}>
