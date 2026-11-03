@@ -28,9 +28,9 @@ import SnippetsPanel from "@/features/tools/components/SnippetsPanel";
 import StandupPanel from "@/features/tools/components/StandupPanel";
 
 import { useToolsStore } from "../tools/hooks/useToolsStore";
-import type { checkedApps } from "../tools/toolTypes";
 import { APPS } from "@/global/AppsConfig";
 import { isInstalled } from "@/global/launcher";
+import useNotifications from "@/global/useNotifications";
 
 import bentoStyles from "./bentoStyles";
 
@@ -43,6 +43,12 @@ const BentoStructure = () => {
   const { setApps } = useToolsStore(
     useShallow((s) => ({ setApps: s.setApps })),
   );
+  const { requestPermission } = useNotifications();
+
+  // ask for notification permission once, as the main screen opens
+  useEffect(() => {
+    requestPermission();
+  }, [requestPermission]);
 
   const now = new Date();
   const dateLabel = `${now.toLocaleDateString("en", { weekday: "short" }).toUpperCase()} ${String(

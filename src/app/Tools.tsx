@@ -35,7 +35,7 @@ export default function Tools() {
           </CtosText>
         </View>
         <TerminalPanel />
-        <ToolRoutesPanel />
+
         <ToolGroup title="Network">
           <IpPortPanel />
           <PingPanel />
@@ -53,6 +53,7 @@ export default function Tools() {
           <TimestampPanel />
           <ColorPanel />
         </ToolGroup>
+        <ToolRoutesPanel />
       </ScrollView>
     </CtosScreen>
   );

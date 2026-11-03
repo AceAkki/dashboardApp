@@ -10,8 +10,13 @@ export default function ColorPanel() {
   const rgb = parseColor(input);
 
   return (
-    <ToolPanel title="COLOR CONVERTER">
-      <Field label="HEX · RGB · HSL" value={input} onChangeText={setInput} placeholder="#1E90FF" />
+    <ToolPanel title="COLOR CONVERTER" iconName="color-fill-outline">
+      <Field
+        label="HEX · RGB · HSL"
+        value={input}
+        onChangeText={setInput}
+        placeholder="#1E90FF"
+      />
       {rgb ? (
         <>
           <View
@@ -27,7 +32,9 @@ export default function ColorPanel() {
           <ResultRow label="HSL" value={toHslString(rgb)} />
         </>
       ) : input.trim() ? (
-        <Status tone="error">TRY #1E90FF · rgb(30, 144, 255) · hsl(210, 100%, 56%)</Status>
+        <Status tone="error">
+          TRY #1E90FF · rgb(30, 144, 255) · hsl(210, 100%, 56%)
+        </Status>
       ) : null}
     </ToolPanel>
   );

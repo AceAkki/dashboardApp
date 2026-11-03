@@ -10,7 +10,7 @@ export default function DnsPanel() {
   const { busy, data, error, run } = useAsyncAction(lookupDns);
 
   return (
-    <ToolPanel title="DNS LOOKUP">
+    <ToolPanel title="DNS LOOKUP" iconName="globe-outline">
       <Field label="DOMAIN" value={domain} onChangeText={setDomain} placeholder="example.com" />
       <ChipRow>
         {DNS_TYPE_LIST.map((t) => (

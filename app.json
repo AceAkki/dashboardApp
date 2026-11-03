@@ -15,8 +15,9 @@
     },
     "android": {
       "package": "com.aceakki.dashapp",
+       "permissions": ["SCHEDULE_EXACT_ALARM"],
       "adaptiveIcon": {
-        "backgroundColor": "#090A0F",
+        "backgroundColor": "#04080B",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
@@ -34,7 +35,7 @@
         {
           "backgroundColor": "#090A0F",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 120
         }
       ],
       [
@@ -57,6 +58,14 @@
         "expo-location",
         {
           "locationWhenInUsePermission": "dashApp uses your location to show the weather where you are."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#00E5FF",
+          "sounds": ["./assets/sounds/ctos_alert.mp3"]
         }
       ],
       "@react-native-community/datetimepicker"

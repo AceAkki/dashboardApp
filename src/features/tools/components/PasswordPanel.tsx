@@ -6,7 +6,15 @@ import {
   generateToken,
   type CharsetKey,
 } from "../logic/password";
-import { ActionButton, Chip, ChipRow, Hint, OutputBlock, Sub, ToolPanel } from "../toolKit";
+import {
+  ActionButton,
+  Chip,
+  ChipRow,
+  Hint,
+  OutputBlock,
+  Sub,
+  ToolPanel,
+} from "../toolKit";
 
 type Mode = "password" | "hex" | "base64url";
 
@@ -28,11 +36,21 @@ export default function PasswordPanel() {
   const [mode, setMode] = useState<Mode>("password");
   const [length, setLength] = useState(16);
   const [bytes, setBytes] = useState(32);
-  const [sets, setSets] = useState<CharsetKey[]>(["lower", "upper", "digits", "symbols"]);
+  const [sets, setSets] = useState<CharsetKey[]>([
+    "lower",
+    "upper",
+    "digits",
+    "symbols",
+  ]);
   const [value, setValue] = useState("");
 
   const generate = useCallback(
-    () => setValue(mode === "password" ? generatePassword(length, sets) : generateToken(bytes, mode)),
+    () =>
+      setValue(
+        mode === "password"
+          ? generatePassword(length, sets)
+          : generateToken(bytes, mode),
+      ),
     [mode, length, bytes, sets],
   );
 
@@ -50,10 +68,15 @@ export default function PasswordPanel() {
     );
 
   return (
-    <ToolPanel title="PASSWORD / TOKEN">
+    <ToolPanel title="PASSWORD / TOKEN" iconName="shield-checkmark-outline">
       <ChipRow>
         {MODES.map((m) => (
-          <Chip key={m.key} label={m.label} active={m.key === mode} onPress={() => setMode(m.key)} />
+          <Chip
+            key={m.key}
+            label={m.label}
+            active={m.key === mode}
+            onPress={() => setMode(m.key)}
+          />
         ))}
       </ChipRow>
 
@@ -62,13 +85,23 @@ export default function PasswordPanel() {
           <Sub>LENGTH</Sub>
           <ChipRow>
             {LENGTHS.map((n) => (
-              <Chip key={n} label={String(n)} active={n === length} onPress={() => setLength(n)} />
+              <Chip
+                key={n}
+                label={String(n)}
+                active={n === length}
+                onPress={() => setLength(n)}
+              />
             ))}
           </ChipRow>
           <Sub>CHARACTERS</Sub>
           <ChipRow>
             {SETS.map((s) => (
-              <Chip key={s.key} label={s.label} active={sets.includes(s.key)} onPress={() => toggleSet(s.key)} />
+              <Chip
+                key={s.key}
+                label={s.label}
+                active={sets.includes(s.key)}
+                onPress={() => toggleSet(s.key)}
+              />
             ))}
           </ChipRow>
         </>
@@ -77,7 +110,12 @@ export default function PasswordPanel() {
           <Sub>SIZE (BYTES)</Sub>
           <ChipRow>
             {BYTES.map((n) => (
-              <Chip key={n} label={String(n)} active={n === bytes} onPress={() => setBytes(n)} />
+              <Chip
+                key={n}
+                label={String(n)}
+                active={n === bytes}
+                onPress={() => setBytes(n)}
+              />
             ))}
           </ChipRow>
         </>
@@ -85,7 +123,8 @@ export default function PasswordPanel() {
 
       <OutputBlock label="RESULT" value={value} />
       <Hint>
-        ~{mode === "password" ? entropyBits(length, sets) : bytes * 8} BITS OF RANDOMNESS · MADE ON THIS PHONE, NEVER SENT ANYWHERE
+        ~{mode === "password" ? entropyBits(length, sets) : bytes * 8} BITS OF
+        RANDOMNESS · MADE ON THIS PHONE, NEVER SENT ANYWHERE
       </Hint>
       <ActionButton label="GENERATE" onPress={generate} />
     </ToolPanel>

@@ -12,14 +12,26 @@ export default function SslPanel() {
   const tone = days < 0 || days <= 7 ? "error" : days <= 30 ? "warn" : "ok";
 
   return (
-    <ToolPanel title="SSL EXPIRY">
-      <Field label="DOMAIN" value={host} onChangeText={setHost} placeholder="example.com" />
-      <ActionButton label="CHECK" busy={busy} disabled={!host.trim()} onPress={() => run(host)} />
+    <ToolPanel title="SSL EXPIRY" iconName="lock-closed">
+      <Field
+        label="DOMAIN"
+        value={host}
+        onChangeText={setHost}
+        placeholder="example.com"
+      />
+      <ActionButton
+        label="CHECK"
+        busy={busy}
+        disabled={!host.trim()}
+        onPress={() => run(host)}
+      />
       {error ? <Status tone="error">{error}</Status> : null}
       {data ? (
         <>
           <Status tone={tone}>
-            {days < 0 ? `EXPIRED ${-days} DAYS AGO` : `VALID · ${days} DAYS LEFT`}
+            {days < 0
+              ? `EXPIRED ${-days} DAYS AGO`
+              : `VALID · ${days} DAYS LEFT`}
           </Status>
           <ResultRow label="EXPIRES" value={data.validTo.slice(0, 10)} />
           <ResultRow label="ISSUED BY" value={data.issuedBy} />

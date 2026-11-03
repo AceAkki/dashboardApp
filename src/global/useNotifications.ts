@@ -4,7 +4,7 @@ import * as Notifications from "expo-notifications";
 
 // Local notifications (the phone shows them itself, no server needed).
 //
-//   const { notify, schedule, cancel, permission, openSettings } = useNotifications();
+//   const { notify, schedule, cancel, permission, requestPermission, openSettings } = useNotifications();
 //
 //   await notify({ title: "Saved", body: "Your note is stored" });      // now
 //   const id = await schedule({ title: "Stand-up" }, new Date(...));    // later
@@ -24,9 +24,16 @@ export type NotificationInput = {
   data?: Record<string, unknown>; // anything you want back when the user taps it
 };
 
-// Android 8+ shows every notification through a "channel". "default" is the
-// one expo-notifications uses when you don't name a channel.
-const CHANNEL_ID = "default";
+// Your custom sound: the file name listed under "sounds" in app.json.
+// Use "default" for the phone's normal sound.
+const SOUND = "ctos_alert.mp3";
+
+// Android 8+ shows every notification through a "channel", and the sound belongs to the
+// channel. A notification only uses this channel if it names it (see channelId below),
+// otherwise expo-notifications falls back to its own built-in one.
+// A channel's settings are frozen once it exists: to change SOUND later, use a NEW id
+// here (e.g. "reminders2") or reinstall the app.
+const CHANNEL_ID = "reminders2";
 
 // scheduling does not exist on web
 const supported = Platform.OS !== "web";
@@ -41,6 +48,42 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
+
+// Many components can ask at the same instant (every Task on first launch). They all
+// share ONE request, and once we have asked during this app session we never ask again,
+// so the user sees the prompt at most once. Outside the hook so every copy shares it.
+let asking: Promise<Notifications.NotificationPermissionsStatus> | null = null;
+let askedThisSession = false;
+
+function checkPermission() {
+  if (!asking) {
+    asking = (async () => {
+      // the channel must exist before Android shows the permission prompt
+      if (Platform.OS === "android") {
+        await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
+          name: "Task reminders",
+          importance: Notifications.AndroidImportance.HIGH,
+          sound: SOUND,
+        });
+      }
+
+      let current = await Notifications.getPermissionsAsync();
+      // once the user taps "Don't allow" the system will not ask again (canAskAgain)
+      if (
+        current.status !== Notifications.PermissionStatus.GRANTED &&
+        current.canAskAgain &&
+        !askedThisSession
+      ) {
+        askedThisSession = true;
+        current = await Notifications.requestPermissionsAsync();
+      }
+      return current;
+    })().finally(() => {
+      asking = null;
+    });
+  }
+  return asking;
+}
 
 export default function useNotifications() {
   // kept in state so the screen can react: e.g. show an "Enable notifications" button
@@ -58,20 +101,7 @@ export default function useNotifications() {
   // why they are being asked. Returns true when we are allowed to send.
   const ensurePermission = useCallback(async () => {
     if (!supported) return false;
-
-    // the channel must exist before Android shows the permission prompt
-    if (Platform.OS === "android") {
-      await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
-        name: "General",
-        importance: Notifications.AndroidImportance.HIGH,
-      });
-    }
-
-    let current = await Notifications.getPermissionsAsync();
-    // once the user taps "Don't allow" the system will not ask again
-    if (current.status !== Notifications.PermissionStatus.GRANTED && current.canAskAgain) {
-      current = await Notifications.requestPermissionsAsync();
-    }
+    const current = await checkPermission();
     setPermission(current.status);
     return current.status === Notifications.PermissionStatus.GRANTED;
   }, []);
@@ -81,23 +111,27 @@ export default function useNotifications() {
     async (input: NotificationInput) => {
       if (!(await ensurePermission())) return null;
       return Notifications.scheduleNotificationAsync({
-        content: input,
-        trigger: null, // null = immediately
+        content: { ...input, sound: SOUND }, // iOS reads the sound from here
+        trigger: { channelId: CHANNEL_ID }, // no date = immediately; Android reads the sound from the channel
       });
     },
     [ensurePermission],
   );
 
-  // show a notification at a date and time; returns an id you can cancel
+  // show a notification at a date and time; returns an id you can cancel.
+  // Pass your own `id` (a task id, say) to make it replace the earlier one with that id:
+  // scheduling twice with the same id leaves ONE notification, and cancel(id) finds it.
   const schedule = useCallback(
-    async (input: NotificationInput, when: Date) => {
-      if (when.getTime() <= Date.now()) return null; // nothing to schedule in the past
+    async (input: NotificationInput, when: Date, id?: string) => {
+      if (!(when.getTime() > Date.now())) return null; // past dates and invalid dates (NaN)
       if (!(await ensurePermission())) return null;
       return Notifications.scheduleNotificationAsync({
-        content: input,
+        identifier: id,
+        content: { ...input, sound: SOUND },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DATE,
           date: when,
+          channelId: CHANNEL_ID,
         },
       });
     },
@@ -115,5 +149,14 @@ export default function useNotifications() {
   // for when permission is "denied": the only way back is the phone's settings
   const openSettings = useCallback(() => Linking.openSettings(), []);
 
-  return { permission, notify, schedule, cancel, cancelAll, openSettings };
+  // requestPermission: call it once when the app opens (e.g. on the main screen)
+  return {
+    permission,
+    requestPermission: ensurePermission,
+    notify,
+    schedule,
+    cancel,
+    cancelAll,
+    openSettings,
+  };
 }

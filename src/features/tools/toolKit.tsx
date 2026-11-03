@@ -1,10 +1,12 @@
 import { useState, type ReactNode } from "react";
 import {
+  Modal,
   Pressable,
   ScrollView,
   Text,
   TextInput,
   View,
+  useWindowDimensions,
   type TextInputProps,
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -31,64 +33,51 @@ export const Stack = ({ children }: { children: ReactNode }) => (
 // A panel that starts folded: tap the header to open it. Keeps a long list of tools short.
 export function ToolPanel({
   title,
+  iconName,
   children,
 }: {
   title: string;
+  iconName: string;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const { width } = useWindowDimensions();
+
   return (
-    <Panel>
+    <Panel style={{ width: width / 2 - 30 }}>
       <Pressable
         onPress={() => setOpen((o) => !o)}
-        style={[globalStyles.cardHead, open && { marginBottom: 12 }]}
+        style={[kit.toolPanel]}
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
       >
-        <CtosText style={globalStyles.sectionLabel}>{`// ${title}`}</CtosText>
+        <Ionicons name={iconName} size={25} color={Colors.primary} />
+        <CtosText style={globalStyles.sectionLabel}>{`${title}`}</CtosText>
+        {/*
         <Ionicons
           name={open ? "remove" : "add"}
           size={16}
           color={Colors.primary}
         />
+        
+        */}
       </Pressable>
-      {open ? <Stack>{children}</Stack> : null}
-    </Panel>
-  );
-}
-
-// A full screen tool: back link, title, scrolling body.
-export function ToolScreen({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}) {
-  const router = useRouter();
-  const goBack = () =>
-    router.canGoBack() ? router.back() : router.replace("/Tools");
-
-  return (
-    <CtosScreen>
-      <ScrollView
-        contentContainerStyle={kit.scroll}
-        keyboardShouldPersistTaps="handled"
-        automaticallyAdjustKeyboardInsets
-      >
-        <View>
-          <Pressable onPress={goBack} style={kit.back} hitSlop={8}>
-            <Ionicons name="chevron-back" size={14} color={Colors.primary} />
-            <Text style={kit.backTxt}>TOOLS</Text>
+      {open ? (
+        <Modal transparent visible animationType="fade">
+          <Pressable
+            style={kit.editModalForm}
+            onPress={() => setOpen((o) => !o)}
+          >
+            <Pressable
+              style={kit.editModalContent}
+              onPress={(e) => e.stopPropagation()}
+            >
+              <Stack>{children}</Stack>
+            </Pressable>
           </Pressable>
-          <Text style={globalStyles.sectionLabel}>{"// Tool"}</Text>
-          <CtosText style={[globalStyles.textHeading, { marginTop: 6 }]}>
-            {title}
-          </CtosText>
-        </View>
-        {children}
-      </ScrollView>
-    </CtosScreen>
+        </Modal>
+      ) : null}
+    </Panel>
   );
 }
 
@@ -102,10 +91,46 @@ export function ToolGroup({
   return (
     <View style={kit.stack}>
       <Text style={globalStyles.sectionLabel}>{`// ${title}`}</Text>
-      {children}
+      <View style={kit.toolGroup}>{children}</View>
     </View>
   );
 }
+
+// A full screen tool: back link, title, scrolling body.
+export function ToolScreen({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  const router = useRouter();
+  // const goBack = () => router.canGoBack() ? router.back() : router.replace("/Tools");
+  const goBack = () => router.replace("/Tools");
+
+  return (
+    <CtosScreen>
+      <ScrollView
+        contentContainerStyle={kit.scroll}
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets
+      >
+        <View>
+          <Pressable onPress={goBack} style={kit.back} hitSlop={8}>
+            <Ionicons name="chevron-back" size={14} color={Colors.primary} />
+            <Text style={kit.backTxt}>TOOLS</Text>
+          </Pressable>
+          {/* Text style={globalStyles.sectionLabel}>{}</Text> */}
+          <CtosText style={[globalStyles.textHeading, { marginTop: 6 }]}>
+            {title}
+          </CtosText>
+        </View>
+        {children}
+      </ScrollView>
+    </CtosScreen>
+  );
+}
+
 // ---------- input ----------
 
 type FieldProps = {

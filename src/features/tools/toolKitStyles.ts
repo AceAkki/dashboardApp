@@ -2,8 +2,11 @@ import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
 import {
+  cardHeadBase,
   chipActiveBase,
   chipBase,
+  cardBase,
+  glowBase,
   fieldBase,
   fontSize,
   hud,
@@ -15,8 +18,38 @@ import {
 const kit = StyleSheet.create({
   // screen
   scroll: { padding: 16, paddingBottom: 40, gap: 16 },
-  back: { flexDirection: "row", alignItems: "center", gap: 4, alignSelf: "flex-start", marginBottom: 10 },
+  back: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    alignSelf: "flex-start",
+    marginBottom: 10,
+  },
   backTxt: { ...text.caption, color: Colors.primary },
+
+  editModalForm: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,4,6,0.8)",
+  },
+  editModalContent: {
+    ...cardBase,
+    ...glowBase,
+    overflow: "visible",
+    width: "85%",
+    gap: 16,
+    padding: 16,
+  },
+
+  toolGroup: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 20,
+  },
+  toolPanel: { ...cardHeadBase, justifyContent: "flex-start", gap: 10 },
 
   // inside a panel
   stack: { gap: 12 },
@@ -25,7 +58,11 @@ const kit = StyleSheet.create({
 
   // text field
   fieldWrap: { gap: 6 },
-  fieldHead: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  fieldHead: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   fieldActions: { flexDirection: "row", gap: 14 },
   action: { ...text.caption, color: Colors.primary },
   input: { ...fieldBase, fontSize: fontSize.sm + 1 },
@@ -33,7 +70,12 @@ const kit = StyleSheet.create({
 
   // chips
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  chip: { ...chipBase, paddingVertical: 6, paddingHorizontal: 10, borderRadius: radius.xs },
+  chip: {
+    ...chipBase,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: radius.xs,
+  },
   chipOn: { ...chipActiveBase, shadowOpacity: 0 },
   chipTxt: { ...text.caption },
   chipTxtOn: { color: Colors.primary },
@@ -54,7 +96,13 @@ const kit = StyleSheet.create({
   btnOff: { opacity: 0.45 },
 
   // results
-  row: { ...insetBase, padding: 10, flexDirection: "row", alignItems: "center", gap: 10 },
+  row: {
+    ...insetBase,
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
   rowLabel: { ...text.caption, width: 88 },
   rowValue: {
     flex: 1,
@@ -63,7 +111,11 @@ const kit = StyleSheet.create({
     fontSize: fontSize.sm + 1,
   },
   block: { ...insetBase, padding: 10, gap: 8 },
-  blockHead: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  blockHead: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   blockText: {
     fontFamily: Typography.primary,
     color: Colors.primary,

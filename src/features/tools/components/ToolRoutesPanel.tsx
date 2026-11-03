@@ -13,7 +13,7 @@ export default function ToolRoutesPanel() {
   const router = useRouter();
 
   return (
-    <Panel title="MORE TOOLS">
+
       <View style={styles.list}>
         {TOOL_ROUTES.map((r) => (
           <Pressable
@@ -32,7 +32,7 @@ export default function ToolRoutesPanel() {
           </Pressable>
         ))}
       </View>
-    </Panel>
+
   );
 }
 

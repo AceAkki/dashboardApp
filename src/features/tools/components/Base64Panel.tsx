@@ -1,7 +1,14 @@
 import { useMemo, useState } from "react";
 
 import { decodeBase64, encodeBase64 } from "../logic/base64";
-import { Chip, ChipRow, Field, OutputBlock, Status, ToolPanel } from "../toolKit";
+import {
+  Chip,
+  ChipRow,
+  Field,
+  OutputBlock,
+  Status,
+  ToolPanel,
+} from "../toolKit";
 
 export default function Base64Panel() {
   const [mode, setMode] = useState<"encode" | "decode">("encode");
@@ -12,19 +19,36 @@ export default function Base64Panel() {
   const result = useMemo(() => {
     if (!input) return null;
     try {
-      return { out: mode === "encode" ? encodeBase64(input, urlSafe) : decodeBase64(input) };
+      return {
+        out:
+          mode === "encode"
+            ? encodeBase64(input, urlSafe)
+            : decodeBase64(input),
+      };
     } catch (e) {
       return { error: (e as Error).message };
     }
   }, [input, mode, urlSafe]);
 
   return (
-    <ToolPanel title="BASE64">
+    <ToolPanel title="BASE64" iconName="aperture-outline">
       <ChipRow>
-        <Chip label="ENCODE" active={mode === "encode"} onPress={() => setMode("encode")} />
-        <Chip label="DECODE" active={mode === "decode"} onPress={() => setMode("decode")} />
+        <Chip
+          label="ENCODE"
+          active={mode === "encode"}
+          onPress={() => setMode("encode")}
+        />
+        <Chip
+          label="DECODE"
+          active={mode === "decode"}
+          onPress={() => setMode("decode")}
+        />
         {mode === "encode" ? (
-          <Chip label="URL-SAFE" active={urlSafe} onPress={() => setUrlSafe((u) => !u)} />
+          <Chip
+            label="URL-SAFE"
+            active={urlSafe}
+            onPress={() => setUrlSafe((u) => !u)}
+          />
         ) : null}
       </ChipRow>
       <Field
@@ -35,7 +59,9 @@ export default function Base64Panel() {
         multiline
       />
       {result?.error ? <Status tone="error">{result.error}</Status> : null}
-      {result?.out !== undefined ? <OutputBlock label="RESULT" value={result.out} /> : null}
+      {result?.out !== undefined ? (
+        <OutputBlock label="RESULT" value={result.out} />
+      ) : null}
     </ToolPanel>
   );
 }

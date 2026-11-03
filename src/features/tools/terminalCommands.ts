@@ -20,16 +20,26 @@ export const GO_ROUTES = {
   tools: "/Tools",
   me: "/UserProfile",
   vault: "/SnippetVault",
+
+  json: "/JsonFormatter",
+  regex: "/RegexTester",
+  diff: "/DiffChecker",
+  encrpt: "/Encryption",
+  status: "/HttpStatus",
+  git: "/GitCheatsheet",
 } as const;
+const routesGo = Object.keys(GO_ROUTES);
+
+const dividerTxt = " | ";
 
 // built from the task types, so renaming a type updates the help text too
-const TASK_USAGE = `task <text> [${TASK_FLAGS.join("|")}]`;
+const TASK_USAGE = `task <text> [${TASK_FLAGS.join(dividerTxt)}]`;
 
 // shown as the placeholder of the terminal input
 export const TASK_EXAMPLE =
   `task fix auth bug ${TASK_FLAGS.find((f) => f !== taskFlagOf(DEFAULT_KIND)) ?? ""}`.trim();
 
-export const HELP = `\n${TASK_USAGE} \nnote <text> \ntimer start|pause|reset \ngo home|tasks|feed|tools \nstart ${appsIDs.join("|")}`;
+export const HELP = `\n${TASK_USAGE} \n\nnote <text> \n\ntimer start|pause|reset \n\ngo ${routesGo.join(dividerTxt)} \n\nstart ${appsIDs.join(dividerTxt)}`;
 
 const makeId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -79,7 +89,8 @@ export function runCommand(
 
     case "snipe": {
       const snipe = rest.join(" ").trim();
-      if (!snipe) return { ok: false, message: "USAGE: snipe <title> | <code>" };
+      if (!snipe)
+        return { ok: false, message: "USAGE: snipe <title> | <code>" };
       const [title, code] = snipe.split("|");
       useToolsStore.getState().addSnippet(title, code);
       return { ok: true, message: "ADDED TO Snippet" };
@@ -106,15 +117,20 @@ export function runCommand(
       return { ok: true, message: `OPENING ${target.toUpperCase()}` };
     }
 
-    case "start":{
+    case "start": {
       const tyepdApp = rest.join(" ").trim();
       if (!tyepdApp) return { ok: false, message: "USAGE: start <app name>" };
-      let selectedApp = useToolsStore.getState().apps?.find(app => app.id === tyepdApp);
+      let selectedApp = useToolsStore
+        .getState()
+        .apps?.find((app) => app.id === tyepdApp);
       if (selectedApp !== undefined) {
         setTimeout(() => launchApp(selectedApp), 1000);
         return { ok: true, message: `OPENING ${tyepdApp.toUpperCase()}` };
       } else {
-        return { ok: false, message: `Failed to open ${tyepdApp.toUpperCase()}`};
+        return {
+          ok: false,
+          message: `Failed to open ${tyepdApp.toUpperCase()}`,
+        };
       }
     }
 

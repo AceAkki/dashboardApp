@@ -21,12 +21,20 @@ export default function HashPanel() {
   }, [input]);
 
   return (
-    <ToolPanel title="HASH GENERATOR">
-      <Field label="TEXT" value={input} onChangeText={setInput} placeholder="text to hash" multiline />
+    <ToolPanel title="HASH GENERATOR" iconName="code-working-outline">
+      <Field
+        label="TEXT"
+        value={input}
+        onChangeText={setInput}
+        placeholder="text to hash"
+        multiline
+      />
       {rows.map((r) => (
         <ResultRow key={r.label} label={r.label} value={r.hex} />
       ))}
-      <Hint>MD5 AND SHA-1 ARE BROKEN FOR SECURITY. USE THEM FOR CHECKSUMS ONLY.</Hint>
+      <Hint>
+        MD5 AND SHA-1 ARE BROKEN FOR SECURITY. USE THEM FOR CHECKSUMS ONLY.
+      </Hint>
     </ToolPanel>
   );
 }
