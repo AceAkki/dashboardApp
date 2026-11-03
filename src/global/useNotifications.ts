@@ -33,6 +33,7 @@ const SOUND = "ctos_alert.mp3";
 // otherwise expo-notifications falls back to its own built-in one.
 // A channel's settings are frozen once it exists: to change SOUND later, use a NEW id
 // here (e.g. "reminders2") or reinstall the app.
+// updated after first build
 const CHANNEL_ID = "reminders2";
 
 // scheduling does not exist on web
