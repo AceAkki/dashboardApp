@@ -2,7 +2,7 @@ import {Text, TextInput, View } from "react-native";
 
 import Panel from "@/components/ctos/Panel";
 import { Colors } from "@/constants/Colors";
-import { useToolsStore, type StandupField } from "../hooks/useToolsStore";
+import { useToolsStore } from "../hooks/useToolsStore";
 import type {StandupField} from "../toolTypes.ts";
 import styles from "../toolsStyles";
 
