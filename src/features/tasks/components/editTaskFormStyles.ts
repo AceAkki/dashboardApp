@@ -1,6 +1,13 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { cardBase, fieldBase, glowBase, radius } from "@/style/globalStyles";
+import { Typography } from "@/constants/Typography";
+import {
+  cardBase,
+  fieldBase,
+  fontSize,
+  glowBase,
+  radius,
+} from "@/style/globalStyles";
 
 const editTaskFormStyles = StyleSheet.create({
   // overlay (replaces fixed full-screen blurred layer)
@@ -19,6 +26,25 @@ const editTaskFormStyles = StyleSheet.create({
     padding: 16,
   },
   taskEdit: { ...fieldBase },
+  // Text does not inherit colour or font from the field around it
+  fieldTxt: {
+    fontFamily: Typography.primary,
+    fontSize: fontSize.md,
+    color: Colors.textPrimary,
+  },
+  reminderBlock: { gap: 8 },
+  clearTxt: {
+    fontFamily: Typography.primary,
+    fontSize: fontSize.sm,
+    color: Colors.danger,
+    textAlign: "right",
+  },
+  errorTxt: {
+    fontFamily: Typography.primary,
+    fontSize: fontSize.xs,
+    letterSpacing: 1,
+    color: Colors.danger,
+  },
   btnWrap: {
     flexDirection: "row",
     justifyContent: "center",
@@ -31,6 +57,7 @@ const editTaskFormStyles = StyleSheet.create({
     borderColor: Colors.border,
     borderRadius: radius.sm,
   },
+  btnDisabled: { opacity: 0.4 },
   confirmBtn: {
     backgroundColor: Colors.success,
   },

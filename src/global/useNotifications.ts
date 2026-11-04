@@ -26,7 +26,7 @@ export type NotificationInput = {
 
 // Your custom sound: the file name listed under "sounds" in app.json.
 // Use "default" for the phone's normal sound.
-const SOUND = "ctos_alert.mp3";
+const SOUND = "ctos_alert.wav";
 
 // Android 8+ shows every notification through a "channel", and the sound belongs to the
 // channel. A notification only uses this channel if it names it (see channelId below),

@@ -1,20 +1,20 @@
 {
   "expo": {
-    "name": "dashApp",
-    "slug": "dashApp",
+    "name": "terminalDeck",
+    "slug": "terminalDeck",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "dashapp",
+    "scheme": "terminalDeck",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#090A0F",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.aceakki.dashapp",
+      "bundleIdentifier": "com.aceakki.terminalDeck",
       "supportsTablet": false
     },
     "android": {
-      "package": "com.aceakki.dashapp",
+      "package": "com.aceakki.terminalDeck",
        "permissions": ["SCHEDULE_EXACT_ALARM"],
       "adaptiveIcon": {
         "backgroundColor": "#04080B",
@@ -65,7 +65,7 @@
         {
           "icon": "./assets/images/notification-icon.png",
           "color": "#00E5FF",
-          "sounds": ["./assets/sounds/ctos_alert.mp3"]
+          "sounds": ["./assets/sounds/ctos_alert.wav"]
         }
       ],
       "@react-native-community/datetimepicker"

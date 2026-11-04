@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import { useUserStore } from "@/features/auth/useAuthStore";
 import { TOOL_ROUTES } from "@/features/tools/toolRoutes";
+import useTaskReminders from "@/features/tasks/hooks/useTaskReminders";
 
 // new ------------------------
 import { useFonts } from "expo-font";
@@ -58,6 +59,9 @@ export default function RootLayout() {
     //if (fontError) console.warn("Font loading failed:", fontError);
     if (ready) SplashScreen.hideAsync();
   }, [ready]);
+
+  // keeps the phone's reminders in step with the saved tasks, from any screen
+  useTaskReminders();
 
   if (!ready) return null;
   if (!booted) return <BootSequence onDone={() => setBooted(true)} />;

@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { ComponentProps , useState, type ReactNode } from "react";
 import {
   Modal,
   Pressable,
@@ -21,6 +21,7 @@ import { writeClipboardText } from "@/global/globalFunctions";
 import globalStyles, { text } from "@/style/globalStyles";
 import kit from "./toolKitStyles";
 
+type IconName = ComponentProps<typeof Ionicons>["name"];
 // The small building blocks every tool panel and tool screen is made from.
 
 // ---------- layout ----------
@@ -37,7 +38,7 @@ export function ToolPanel({
   children,
 }: {
   title: string;
-  iconName: string;
+  iconName: IconName;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);

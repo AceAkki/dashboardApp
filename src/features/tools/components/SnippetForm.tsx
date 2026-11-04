@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useShallow } from "zustand/shallow";
 import { Modal, Pressable, Text, TextInput, View } from "react-native";
 
-import { useToolsStore, type ToolsState } from "../hooks/useToolsStore";
+import { useToolsStore } from "../hooks/useToolsStore";
 
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";

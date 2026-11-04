@@ -20,6 +20,7 @@ import {
   useTaskStore,
   type TaskStore,
 } from "@/features/tasks/hooks/useTasksStore";
+import useNotifications from "@/global/useNotifications";
 
 const UserProfile = () => {
   const { username, userID, location, logOutUser } = useUserStore(
@@ -36,6 +37,8 @@ const UserProfile = () => {
     (state: WeatherStore) => state.invalidate,
   );
   const tasksPurge = useTaskStore((state: TaskStore) => state.clearAllTasks);
+  const { cancelAll } = useNotifications();
+  
   return (
     <CtosScreen nav>
       <View style={globalStyles.header}>
@@ -77,6 +80,7 @@ const UserProfile = () => {
                 gitInvalidate();
                 weatherInvalidate();
                 tasksPurge();
+                 cancelAll();
                 logOutUser();
               }}
               style={globalStyles.dangerBtn}

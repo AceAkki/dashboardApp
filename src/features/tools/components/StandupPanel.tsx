@@ -1,12 +1,9 @@
-import { useState } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
-import { useRouter } from "expo-router";
+import {Text, TextInput, View } from "react-native";
 
 import Panel from "@/components/ctos/Panel";
 import { Colors } from "@/constants/Colors";
-import globalStyles from "@/style/globalStyles";
 import { useToolsStore, type StandupField } from "../hooks/useToolsStore";
-
+import type {StandupField} from "../toolTypes.ts";
 import styles from "../toolsStyles";
 
 const FIELDS: { key: StandupField; label: string; placeholder: string }[] = [

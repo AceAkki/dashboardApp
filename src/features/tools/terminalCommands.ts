@@ -24,7 +24,7 @@ export const GO_ROUTES = {
   json: "/JsonFormatter",
   regex: "/RegexTester",
   diff: "/DiffChecker",
-  encrpt: "/Encryption",
+  encrypt: "/Encryption",
   status: "/HttpStatus",
   git: "/GitCheatsheet",
 } as const;
@@ -39,7 +39,7 @@ const TASK_USAGE = `task <text> [${TASK_FLAGS.join(dividerTxt)}]`;
 export const TASK_EXAMPLE =
   `task fix auth bug ${TASK_FLAGS.find((f) => f !== taskFlagOf(DEFAULT_KIND)) ?? ""}`.trim();
 
-export const HELP = `\n${TASK_USAGE} \n\nnote <text> \n\ntimer start|pause|reset \n\ngo ${routesGo.join(dividerTxt)} \n\nstart ${appsIDs.join(dividerTxt)}`;
+export const HELP = `\n${TASK_USAGE} \n\nnote <text> \n\nsnip <title> |&| <code> \ntimer start|pause|reset \n\ngo ${routesGo.join(dividerTxt)} \n\nstart ${appsIDs.join(dividerTxt)}`;
 
 const makeId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -87,11 +87,16 @@ export function runCommand(
       return { ok: true, message: "ADDED TO STANDUP · TODAY" };
     }
 
-    case "snipe": {
-      const snipe = rest.join(" ").trim();
-      if (!snipe)
-        return { ok: false, message: "USAGE: snipe <title> | <code>" };
-      const [title, code] = snipe.split("|");
+    case "snip": {
+      const body = input.slice(cmd.length);
+      const at = body.indexOf("|&|"); // the FIRST one only: the code may contain more
+      if (at < 0)
+        return { ok: false, message: "USAGE: snip <title> |&| <code>" };
+        
+      const title = body.slice(0, at).trim();
+      const code = body.slice(at + 3).trim();
+      if (!title) return { ok: false, message: "SNIPPET NEEDS A TITLE" };
+      if (!code) return { ok: false, message: "SNIPPET NEEDS CODE" };
       useToolsStore.getState().addSnippet(title, code);
       return { ok: true, message: "ADDED TO Snippet" };
     }
@@ -118,18 +123,18 @@ export function runCommand(
     }
 
     case "start": {
-      const tyepdApp = rest.join(" ").trim();
-      if (!tyepdApp) return { ok: false, message: "USAGE: start <app name>" };
+      const targetApp = rest.join("").trim().toLowerCase();
+      if (!targetApp) return { ok: false, message: "USAGE: start <app name>" };
       let selectedApp = useToolsStore
         .getState()
-        .apps?.find((app) => app.id === tyepdApp);
+        .apps?.find((app) => app.id === targetApp);
       if (selectedApp !== undefined) {
         setTimeout(() => launchApp(selectedApp), 1000);
-        return { ok: true, message: `OPENING ${tyepdApp.toUpperCase()}` };
+        return { ok: true, message: `OPENING ${targetApp.toUpperCase()}` };
       } else {
         return {
           ok: false,
-          message: `Failed to open ${tyepdApp.toUpperCase()}`,
+          message: `Failed to open ${targetApp.toUpperCase()}`,
         };
       }
     }

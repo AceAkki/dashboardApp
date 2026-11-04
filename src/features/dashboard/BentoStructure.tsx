@@ -31,7 +31,7 @@ import { useToolsStore } from "../tools/hooks/useToolsStore";
 import { APPS } from "@/global/AppsConfig";
 import { isInstalled } from "@/global/launcher";
 import useNotifications from "@/global/useNotifications";
-
+import { askExactAlarmOnce } from "@/global/exactAlarm";
 import bentoStyles from "./bentoStyles";
 
 const BentoStructure = () => {
@@ -46,8 +46,11 @@ const BentoStructure = () => {
   const { requestPermission } = useNotifications();
 
   // ask for notification permission once, as the main screen opens
+  // if it was allowed, explain the Android "Alarms & reminders" setting (once, ever)
   useEffect(() => {
-    requestPermission();
+    requestPermission().then((granted) => {
+      if (granted) askExactAlarmOnce();
+    });
   }, [requestPermission]);
 
   const now = new Date();
@@ -125,7 +128,10 @@ const BentoStructure = () => {
         </CtosItem>
 
         <CtosItem index={3}>
-          <PomodoroCard />
+          <View style={bentoStyles.row}>
+            <PomodoroCard />
+            <PackageWatchPanel />
+          </View>
         </CtosItem>
 
         <CtosItem index={4}>
@@ -137,10 +143,7 @@ const BentoStructure = () => {
         </CtosItem>
 
         <CtosItem index={6}>
-          <View style={bentoStyles.row}>
-            <ServiceStatusPanel />
-            <PackageWatchPanel />
-          </View>
+          <ServiceStatusPanel />
         </CtosItem>
 
         <CtosItem index={8}>
