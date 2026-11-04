@@ -31,8 +31,7 @@ const SOUND = "ctos_alert.wav";
 // Android 8+ shows every notification through a "channel", and the sound belongs to the
 // channel. A notification only uses this channel if it names it (see channelId below),
 // otherwise expo-notifications falls back to its own built-in one.
-// A channel's settings are frozen once it exists: to change SOUND later, use a NEW id
-// here (e.g. "reminders2") or reinstall the app.
+// A channel's settings are frozen once it exists: to change SOUND later, use a NEW id here (e.g. "reminders2") or reinstall the app.
 // updated after first build
 const CHANNEL_ID = "reminders2";
 
