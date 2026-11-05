@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 import { statusName } from "./httpStatus";
 
 // Everything here is a plain fetch to a public, keyless service (or to the target itself).
@@ -30,7 +32,17 @@ export function cleanHost(input: string): string {
 
 // ---------- ping ----------
 
-export type PingResult = { url: string; status: number; statusText: string; ok: boolean; ms: number };
+// opaque = a browser (web) hides the status of a cross-site answer. We only learn that the server answered. On the phone the real status is always visible.
+export type PingResult = {
+  url: string;
+  status: number;
+  statusText: string;
+  ok: boolean;
+  opaque: boolean;
+  ms: number;
+};
+
+const onWeb = Platform.OS === "web";
 
 export async function pingSite(input: string): Promise<PingResult> {
   const host = input.trim();
@@ -39,16 +51,21 @@ export async function pingSite(input: string): Promise<PingResult> {
 
   const start = Date.now();
   try {
+    /* A browser blocks reading a cross-site answer (CORS). "no-cors" still sends the request
+     and tells us it arrived, just without the status. The phone has no such rule. */
+    const init: RequestInit = onWeb ? { method: "HEAD", mode: "no-cors" } : { method: "HEAD" };
     // HEAD = headers only, nothing is downloaded. A few servers refuse it, so retry with GET.
-    let res = await timedFetch(url, { method: "HEAD" }, 8000);
+    let res = await timedFetch(url, init, 8000);
     if (res.status === 405 || res.status === 501) {
-      res = await timedFetch(url, { method: "GET" }, 8000);
+      res = await timedFetch(url, { ...init, method: "GET" }, 8000);
     }
+    const opaque = res.type === "opaque";
     return {
       url,
       status: res.status,
-      statusText: statusName(res.status),
-      ok: res.ok,
+      statusText: opaque ? "" : statusName(res.status),
+      ok: opaque || res.ok,
+      opaque,
       ms: Date.now() - start,
     };
   } catch (e) {
@@ -59,13 +76,17 @@ export async function pingSite(input: string): Promise<PingResult> {
 
 // ---------- port ----------
 
-export type PortResult = { state: "open" | "no-answer" | "closed"; detail: string; ms: number };
+/* "no-http" is deliberately not called "closed": from an HTTP request alone we cannot tell a
+closed port from an open one that speaks something else (SSH, a database, a bad certificate). */
+export type PortResult = { state: "open" | "no-answer" | "no-http"; detail: string; ms: number };
 
-// A phone app cannot open a raw TCP connection, so this sends an HTTP request instead.
-//   any HTTP answer        -> open
-//   nothing for 5 seconds  -> no-answer (firewall drops it, or the host is down)
-//   fails straight away    -> closed (or open but not speaking HTTP, e.g. SSH or a database)
+/* A phone app cannot open a raw TCP connection, so this sends an HTTP request instead.
+  any HTTP answer        -> open
+  nothing for 5 seconds  -> no-answer (firewall drops it, or the host is down)
+  fails straight away    -> no-http (refused, reset, not HTTP, or a certificate problem)
+  Plain http:// needs the app to allow cleartext traffic (see app.json / README note). */
 export async function checkPort(hostInput: string, portInput: string): Promise<PortResult> {
+  if (onWeb) throw new Error("PORT CHECK NEEDS THE PHONE APP: A BROWSER CAN'T DO IT");
   const host = cleanHost(hostInput);
   const port = Number(portInput);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("PORT MUST BE 1-65535");
@@ -80,7 +101,7 @@ export async function checkPort(hostInput: string, portInput: string): Promise<P
     if ((e as Error).message === "TIMED OUT") {
       return { state: "no-answer", detail: "NO ANSWER IN 5S", ms };
     }
-    return { state: "closed", detail: "CLOSED OR NOT HTTP", ms };
+    return { state: "no-http", detail: "NO HTTP ANSWER", ms };
   }
 }
 
@@ -144,8 +165,7 @@ export type SslInfo = {
   names: string[];
 };
 
-// A phone app cannot read the certificate itself, so NetworkCalc connects to the
-// server and reports it. Free, no key.
+// A phone app cannot read the certificate itself, so NetworkCalc connects to the server and reports it. Free, no key.
 export async function checkSsl(input: string): Promise<SslInfo> {
   const host = cleanHost(input);
   const res = await timedFetch(

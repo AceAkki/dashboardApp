@@ -85,13 +85,14 @@ function PortSection() {
             ? "OPEN"
             : data.state === "no-answer"
               ? "NO ANSWER"
-              : "CLOSED"}{" "}
+              : "NO HTTP ANSWER"}{" "}
           · {data.detail} · {data.ms} MS
         </Status>
       ) : null}
       <Hint>
-        SENDS AN HTTP REQUEST FROM THIS PHONE, SO IT ONLY TESTS WEB PORTS. SSH
-        OR DATABASE PORTS SHOW AS CLOSED.
+        SENDS AN HTTP REQUEST FROM THIS PHONE. IT CAN CONFIRM A WEB PORT IS
+        OPEN, BUT "NO HTTP ANSWER" COULD BE A CLOSED PORT OR ONE THAT ISN'T
+        WEB (SSH, DATABASE). IT CAN'T TELL WHICH.
       </Hint>
     </>
   );

@@ -86,13 +86,20 @@ export const formatDue = (iso: string, now = Date.now()) => {
   if (Number.isNaN(t)) return null;
   const diff = t - now;
   const abs = Math.abs(diff);
-  const h = Math.floor(abs / 36e5);
-  const d = Math.floor(h / 24);
-  if (diff < 0)
-    return {
-      label: `OVERDUE ${d >= 1 ? `${d}D` : `${Math.max(h, 1)}H`}`,
-      overdue: true,
-    };
+  if (diff < 0) {
+    const mins = Math.floor(abs / 6e4);
+    const days = Math.floor(mins / 1440);
+    const hours = Math.floor((mins % 1440) / 60);
+    const m = mins % 60;
+
+    const span =
+      days >= 1 ? `${days}D ${hours}H`
+      : hours >= 1 ? `${hours}H ${m}M`
+      : mins >= 1 ? `${m}M`
+      : "JUST NOW";
+
+    return { label: `OVERDUE ${span}`, overdue: true };
+  }
   const date = new Date(t);
   const sameDay = date.toDateString() === new Date(now).toDateString();
   const time = date.toLocaleTimeString(undefined, {

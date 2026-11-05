@@ -39,7 +39,12 @@ const TASK_USAGE = `task <text> [${TASK_FLAGS.join(dividerTxt)}]`;
 export const TASK_EXAMPLE =
   `task fix auth bug ${TASK_FLAGS.find((f) => f !== taskFlagOf(DEFAULT_KIND)) ?? ""}`.trim();
 
-export const HELP = `\n${TASK_USAGE} \n\nnote <text> \n\nsnip <title> |&| <code> \ntimer start|pause|reset \n\ngo ${routesGo.join(dividerTxt)} \n\nstart ${appsIDs.join(dividerTxt)}`;
+export const HELP = `\n${TASK_USAGE} \n\n
+note <text> \n\n
+snip <title> |&| <code> \n\n
+pomo start|pause|reset \n\n
+go ${routesGo.join(dividerTxt)} \n\n
+start ${appsIDs.join(dividerTxt)}`;
 
 const makeId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -92,7 +97,6 @@ export function runCommand(
       const at = body.indexOf("|&|"); // the FIRST one only: the code may contain more
       if (at < 0)
         return { ok: false, message: "USAGE: snip <title> |&| <code>" };
-        
       const title = body.slice(0, at).trim();
       const code = body.slice(at + 3).trim();
       if (!title) return { ok: false, message: "SNIPPET NEEDS A TITLE" };
@@ -101,22 +105,22 @@ export function runCommand(
       return { ok: true, message: "ADDED TO Snippet" };
     }
 
-    case "timer": {
+    case "pomo": {
       const action = rest[0]?.toLowerCase();
       const pomo = usePomodoroStore.getState();
       if (action === "start") pomo.start();
       else if (action === "pause") pomo.pause();
       else if (action === "reset") pomo.reset();
-      else return { ok: false, message: "USAGE: timer start|pause|reset" };
-      return { ok: true, message: `TIMER ${action.toUpperCase()}` };
+      else return { ok: false, message: "USAGE: pomo start|pause|reset" };
+      return { ok: true, message: `POMO ${action.toUpperCase()}` };
     }
 
     case "go": {
       const target = rest[0]?.toLowerCase() as
         | keyof typeof GO_ROUTES
         | undefined;
-      if (!target || !(target in GO_ROUTES)) {
-        return { ok: false, message: "USAGE: go home|tasks|feed|tools|me" };
+      if (!target || !Object.hasOwn(GO_ROUTES, target)) {
+        return { ok: false, message: `USAGE: go <screen name>` };
       }
       navigate(GO_ROUTES[target]);
       return { ok: true, message: `OPENING ${target.toUpperCase()}` };

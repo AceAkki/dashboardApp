@@ -5,17 +5,18 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "terminalDeck",
+    "scheme": "terminaldeck",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#090A0F",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.aceakki.terminalDeck",
-      "supportsTablet": false
+      "bundleIdentifier": "com.aceakki.terminaldeck",
+      "supportsTablet": false,
+      "infoPlist": { "NSAppTransportSecurity": { "NSAllowsArbitraryLoads": true } }
     },
     "android": {
-      "package": "com.aceakki.terminalDeck",
-       "permissions": ["SCHEDULE_EXACT_ALARM"],
+      "package": "com.aceakki.terminaldeck",
+      "permissions": ["SCHEDULE_EXACT_ALARM"],
       "adaptiveIcon": {
         "backgroundColor": "#04080B",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -57,7 +58,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "dashApp uses your location to show the weather where you are."
+          "locationWhenInUsePermission": "terminalDeck uses your location to show the weather where you are."
         }
       ],
       [
@@ -68,6 +69,7 @@
           "sounds": ["./assets/sounds/ctos_alert.wav"]
         }
       ],
+      ["expo-build-properties", { "android": { "usesCleartextTraffic": true } }],
       "@react-native-community/datetimepicker"
     ],
     "experiments": {

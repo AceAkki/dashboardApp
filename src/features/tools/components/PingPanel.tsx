@@ -26,11 +26,19 @@ export default function PingPanel() {
       {data ? (
         <>
           <Status tone={data.ok ? "ok" : data.status < 500 ? "warn" : "error"}>
-            {data.ok ? "ONLINE" : "ANSWERED WITH AN ERROR"}
+            {data.opaque
+              ? "REACHABLE"
+              : data.ok
+                ? "ONLINE"
+                : "ANSWERED WITH AN ERROR"}
           </Status>
           <ResultRow
             label="STATUS"
-            value={`${data.status} ${data.statusText}`.trim()}
+            value={
+              data.opaque
+                ? "HIDDEN BY THE BROWSER"
+                : `${data.status} ${data.statusText}`.trim()
+            }
           />
           <ResultRow label="TIME" value={`${data.ms} MS`} />
           <ResultRow label="URL" value={data.url} />

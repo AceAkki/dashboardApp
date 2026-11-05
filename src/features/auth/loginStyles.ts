@@ -41,7 +41,8 @@ const loginStyles = StyleSheet.create({
     marginTop: 4,
   },
   locationBtn: {
-    padding: 8,
+    flexDirection: "row",
+    gap: 10,
   },
   submitBtn: { ...primaryBtnBase, paddingVertical: 10 },
   submitTxt: { ...text.btn, fontSize: 16 },

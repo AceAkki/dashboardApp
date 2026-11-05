@@ -243,7 +243,7 @@ const globalStyles = StyleSheet.create({
     marginVertical: 10,
     backgroundColor: hudFaint,
   },
-  
+
   scene: { flex: 1, paddingHorizontal: 16, paddingBottom: 16 },
   screen: screenBase,
   card: cardBase,
@@ -253,9 +253,11 @@ const globalStyles = StyleSheet.create({
   field: fieldBase,
   primaryBtn: primaryBtnBase,
   primaryBtnTxt: text.btn,
-  dangerBtn:{...primaryBtnBase, backgroundColor:Colors.danger},
+  dangerBtn: { ...primaryBtnBase, backgroundColor: Colors.danger },
   chip: chipBase,
   chipActive: chipActiveBase,
+
+  btnGrp: { gap: 10, flexDirection: "row" },
 
   textDisplay: text.display,
   textHeading: text.heading,
@@ -269,7 +271,7 @@ const globalStyles = StyleSheet.create({
   scroll: { padding: 16, gap: 16 },
 
   // section based
-  header: { paddingHorizontal: 16, paddingTop: 12, marginBottom:14 },
+  header: { paddingHorizontal: 16, paddingTop: 12, marginBottom: 14 },
   sectionTitle: { ...text.heading },
   sectionPara: { ...text.small, fontSize: fontSize.md, marginTop: 4 },
   sectionSubTitle: {
