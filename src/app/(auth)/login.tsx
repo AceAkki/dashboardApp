@@ -111,7 +111,7 @@ export default function Login() {
               </View>
             </View>
             <Pressable style={loginStyles.locationBtn} onPress={grabLocation}>
-              <Ionicons name="location-outline" size={32} />
+              <Ionicons name="location-outline" size={32} style={{backgroundColor:Colors.textOnPrimary}}/>
             </Pressable>
           </View>
 
