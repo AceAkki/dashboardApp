@@ -3,39 +3,18 @@ import { Stack } from "expo-router";
 import { useUserStore } from "@/features/auth/useAuthStore";
 import { TOOL_ROUTES } from "@/features/tools/toolRoutes";
 import useTaskReminders from "@/features/tasks/hooks/useTaskReminders";
+import BootScreen from "@/components/BootScreen";
+import { Colors } from "@/constants/Colors";
 
 // new ------------------------
-import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { Typography } from "@/constants/Typography";
-import { Colors } from "@/constants/Colors";
-// import BootScreen from "@/components/BootScreen";
 
 // ctos based -
 // import BootAnimation from "@/components/BootAnimation";
-import BootSequence from "@/components/BootSequence";
-
-// keep the splash screen up until fonts + saved user are ready (no flash of
-// system-font text, no flash of the login screen)
-// SplashScreen.preventAutoHideAsync();
-// new end ------------------------
+// import BootSequence from "@/components/BootSequence";
 
 export default function RootLayout() {
   const isLoggedIn = useUserStore((state) => state.username.length > 0);
-
-  // new ------------------------
-  // const [fontsLoaded, fontError] = useFonts({
-  //   [Typography.primary]: require("../../assets/fonts/JetBrainsMono-Regular.ttf"),
-  //   [Typography.primary_medium]: require("../../assets/fonts/JetBrainsMono-Medium.ttf"),
-  //   [Typography.primary_bold]: require("../../assets/fonts/JetBrainsMono-Bold.ttf"),
-  //   [Typography.primaryItalic]: require("../../assets/fonts/JetBrainsMono-Italic.ttf"),
-  //   [Typography.numbers]: require("../../assets/fonts/FiraCode-Light.ttf"),
-  //   [Typography.secondary]: require("../../assets/fonts/Inter18pt-Regular.ttf"),
-  //   [Typography.secondary_medium]: require("../../assets/fonts/Inter18pt-Medium.ttf"),
-  //   [Typography.secondary_semibold]: require("../../assets/fonts/Inter18pt-SemiBold.ttf"),
-  //   [Typography.secondary_bold]: require("../../assets/fonts/Inter18pt-Bold.ttf"),
-  // });
-  // new end ------------------------
 
   // the persisted user loads asynchronously from AsyncStorage; wait for it so a logged-in user doesn't flash the login screen
   const [hydrated, setHydrated] = useState(useUserStore.persist.hasHydrated());
@@ -47,8 +26,6 @@ export default function RootLayout() {
     return unsub;
   }, []);
 
-  // if (!hydrated) return null;
-
   // boot screen shows once per app launch, after the native splash hides
   const [booted, setBooted] = useState(false);
 
@@ -56,7 +33,6 @@ export default function RootLayout() {
   const ready = hydrated;
 
   useEffect(() => {
-    //if (fontError) console.warn("Font loading failed:", fontError);
     if (ready) SplashScreen.hideAsync();
   }, [ready]);
 
@@ -64,8 +40,7 @@ export default function RootLayout() {
   useTaskReminders();
 
   if (!ready) return null;
-  if (!booted) return <BootSequence onDone={() => setBooted(true)} />;
-  // new end ------------------------
+  if (!booted) return <BootScreen onDone={() => setBooted(true)} />;
 
   return (
     <Stack
