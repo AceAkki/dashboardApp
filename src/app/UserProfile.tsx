@@ -314,6 +314,17 @@ const UserProfile = () => {
           </Panel>
         ) : null}
 
+        <Panel title="Boot_Screen">
+          <Row label="Boot Type">
+            
+            <Pressable style={globalStyles.primaryBtn}>
+              <Text style={globalStyles.primaryBtnTxt}>
+               Change Boot Screen
+              </Text>
+            </Pressable>
+          </Row>
+
+        </Panel>
         <Panel title="Backup_Data">
           <Row label="Export_Data">
             
