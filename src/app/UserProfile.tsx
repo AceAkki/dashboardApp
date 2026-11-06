@@ -314,17 +314,44 @@ const UserProfile = () => {
           </Panel>
         ) : null}
 
-        <Panel title="App">
-           <Row label="App_Version">
-            <Text style={globalStyles.primaryBtnTxt}>v{Constants.expoConfig?.version ?? "1.0.0"}</Text>
-           </Row>
-           <Row label="Build_Number">
-            <Text style={globalStyles.primaryBtnTxt}>  {Constants.expoConfig?.android?.versionCode ?? "Not set"}</Text>
-           </Row>
+        <Panel title="Backup_Data">
+          <Row label="Export_Data">
+            
+            <Pressable style={globalStyles.primaryBtn}>
+              <Text style={globalStyles.primaryBtnTxt}>
+                Export Data
+              </Text>
+            </Pressable>
+          </Row>
+          <Row label="Import_Data">
+            
+            <Pressable style={globalStyles.primaryBtn}>
+              <Text style={globalStyles.primaryBtnTxt}>
+                Import Data
+              </Text>
+            </Pressable>
+          </Row>
+        </Panel>
+
+        <Panel title="App_Build">
+          <Row label="App_Version">
+            <Text style={globalStyles.cardTitle}>
+              v{Constants.expoConfig?.version ?? "1.0.0"}
+            </Text>
+          </Row>
+          <Row label="Build_Number">
+            <Text style={globalStyles.cardTitle}>
+              {" "}
+              {Constants.expoConfig?.android?.versionCode ?? "Not set"}
+            </Text>
+          </Row>
 
           <Text style={globalStyles.primaryBtnTxt}>Android Package id</Text>
           <Pressable style={globalStyles.primaryBtn}>
-            <Text style={globalStyles.primaryBtnTxt}>  {Constants.expoConfig?.android?.package ?? "Not set"}</Text>
+            <Text style={globalStyles.primaryBtnTxt}>
+              {" "}
+              {Constants.expoConfig?.android?.package ?? "Not set"}
+            </Text>
           </Pressable>
         </Panel>
         <Panel title="Session">
