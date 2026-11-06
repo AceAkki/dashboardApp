@@ -8,7 +8,7 @@ export const getWeather = async ({
     // timezone=auto returns times in the location's own timezone
     // (the web version hardcoded Asia/Bangkok)
     const res = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,sunrise,sunset,daylight_duration,weather_code&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature,precipitation,surface_pressure,pressure_msl,weather_code,rain,snowfall&timezone=auto`,
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,sunrise,sunset,daylight_duration,weather_code&hourly=temperature_2m,weather_code&current=is_day,temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature,precipitation,surface_pressure,pressure_msl,weather_code,rain,snowfall&timezone=auto`,
     );
     if (!res.ok) {
       throw new Error(`API error ${res.status}`);

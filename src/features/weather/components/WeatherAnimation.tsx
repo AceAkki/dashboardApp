@@ -12,6 +12,7 @@ const partlyShower = require("../lottieAnime/Weather-partly-shower.json");
 const snow = require("../lottieAnime/Weather-snow.json");
 const storm = require("../lottieAnime/Weather-storm.json");
 const thunder = require("../lottieAnime/Weather-thunder.json");
+const night = require("../lottieAnime/Weather-night.json");
 
 const weatherRef = [
   { ids: [0, 1], file: sunny },
@@ -24,13 +25,16 @@ const weatherRef = [
   { ids: [56, 57, 66, 67, 71, 73, 75, 77, 85, 86], file: snow },
 ];
 
-type Props = { code: number; size?: number };
+type Props = { code: number; size?: number; isDay?: boolean };
 
 // Replaces useLottieAnime / RenderAnime. Unknown codes fall back to
 // partly-cloudy instead of crashing like the web lookup did.
-const WeatherAnimation = ({ code, size = 64 }: Props) => {
+const WeatherAnimation = ({ code, size = 64, isDay = true }: Props) => {
+  // a clear sky at night shows the moon; every other weather looks the same day or night
   const source =
-    weatherRef.find((o) => o.ids.includes(code))?.file ?? partlyCloudy;
+    !isDay && (code === 0 || code === 1)
+      ? night
+      : (weatherRef.find((o) => o.ids.includes(code))?.file ?? partlyCloudy);
   // Fixed-size wrapper: on web the player fills its parent and ignores its own
   // width/height, so the wrapper is what actually sets the size.
   return (

@@ -295,6 +295,10 @@ const globalStyles = StyleSheet.create({
   centerTxt: { ...text.small, fontSize: fontSize.lg, textAlign: "center" },
   retryBtn: { ...primaryBtnBase, paddingHorizontal: 18 },
   retryTxt: { ...text.btn, fontSize: 14 },
+
+  // logo
+  box: { borderWidth: 0, backgroundColor: "transparent", overflow: "hidden" },
+  image: { width: "100%", height: "100%" },
 });
 
 export default globalStyles;

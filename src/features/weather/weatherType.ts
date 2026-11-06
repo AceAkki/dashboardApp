@@ -50,6 +50,7 @@ export type WeatherData = {
 export type Weather_current_units = {
   time: string;
   interval: string;
+  is_day: string;
   temperature_2m: string;
   relative_humidity_2m: string;
   wind_speed_10m: string;
@@ -65,6 +66,8 @@ export type Weather_current_units = {
 export type Weather_current = {
   time: string;
   interval: number;
+  // 1 = daytime, 0 = night.
+  is_day?: number;
   temperature_2m: number;
   relative_humidity_2m: number;
   wind_speed_10m: number;

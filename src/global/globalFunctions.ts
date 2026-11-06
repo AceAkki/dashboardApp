@@ -6,6 +6,8 @@ import { useRouter } from "expo-router";
 
 import { userKey } from "./storageKeys";
 
+export const APP_TAG = "~/deck/";
+
 export const fetchData = async (apiURL: string) => {
   try {
     const res = await fetch(`${apiURL}`);

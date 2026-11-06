@@ -55,7 +55,11 @@ const WeatherCard = ({
           {current.temperature_2m}
           {current_units.temperature_2m}
         </Text>
-        <WeatherAnimation code={current.weather_code} size={135} />
+        <WeatherAnimation
+          code={current.weather_code}
+          size={135}
+          isDay={current.is_day !== 0}
+        />
       </View>
 
       <View style={weatherStyles.aqiRow}>

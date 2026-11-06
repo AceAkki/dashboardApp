@@ -1,125 +1,249 @@
-import { useState } from "react";
-import { Pressable, Text, TextInput, View, Alert } from "react-native";
-import CtosScreen from "@/components/ctos/CtosScreen";
-import * as Location from "expo-location";
+import { type Ref, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+  Image,
+  StyleSheet,
+  type ImageSourcePropType,
+  type TextInputProps,
+} from "react-native";
+import Constants from "expo-constants";
 import { Ionicons } from "@expo/vector-icons";
 
+import CtosScreen from "@/components/ctos/CtosScreen";
+import CtosText from "@/components/CtosText";
+import Panel from "@/components/ctos/Panel";
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
 import { useUserStore } from "@/features/auth/useAuthStore";
 import loginStyles from "@/features/auth/loginStyles";
-import CtosText from "@/components/CtosText";
+import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
 
-const locationRegx = /-?\d+\.\d+/m;
+// The logo shown above the form. Set it to null to show the ">_" text instead.
+// (A missing file is a build error, so it can't be "detected" while the app runs.)
+const LOGO: ImageSourcePropType | null = require("../../../assets/images/icon.png");
 
-type Errors = { latitudeErr?: string; longitudeErr?: string };
+type Errors = { name?: string; git?: string; lat?: string; lon?: string };
+
+type FieldProps = Omit<TextInputProps, "style"> & {
+  label: string;
+  error?: string;
+  valid?: boolean;
+  ref?: Ref<TextInput>;
+};
+
+// label above, input, green tick when valid, red text under it when wrong
+const Field = ({ label, error, valid, ref, ...rest }: FieldProps) => (
+  <View style={loginStyles.fieldWrap}>
+    <Text style={globalStyles.sectionLabel}>{label}</Text>
+    <View>
+      <TextInput
+        ref={ref}
+        style={[
+          loginStyles.input,
+          !!error && loginStyles.inputError,
+          valid && loginStyles.inputPad,
+        ]}
+        placeholderTextColor={Colors.textMuted}
+        {...rest}
+      />
+      {valid ? (
+        <View style={loginStyles.checkWrap} pointerEvents="none">
+          <Ionicons name="checkmark" size={18} color={Colors.primary} />
+        </View>
+      ) : null}
+    </View>
+    {error ? <Text style={loginStyles.errTxt}>{error}</Text> : null}
+  </View>
+);
 
 export default function Login() {
   const updateUser = useUserStore((state) => state.updateUser);
 
-  // controlled inputs replace <Form>, FormData and the refs
   const [name, setName] = useState("");
   const [userID, setUserID] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [errors, setErrors] = useState<Errors>({});
+  const [locating, setLocating] = useState(false);
+  // true once the image fails to load: fall back to the text
+  const [logoFailed, setLogoFailed] = useState(false);
 
-  // replaces the web action(): validate, then log the user in
+  // Next on the keyboard moves down the form
+  const gitRef = useRef<TextInput>(null);
+  const latRef = useRef<TextInput>(null);
+  const lonRef = useRef<TextInput>(null);
+
+  // typing in a field clears that field's error
+  const edit = (set: (v: string) => void, key: keyof Errors) => (v: string) => {
+    set(v);
+    setErrors((e) => ({ ...e, [key]: undefined }));
+  };
+
   const onSubmit = () => {
-    const nextErrors: Errors = {};
-    if (!locationRegx.test(latitude)) nextErrors.latitudeErr = "Invalid input";
-    if (!locationRegx.test(longitude))
-      nextErrors.longitudeErr = "Invalid input";
-    setErrors(nextErrors);
-    if (!name.trim() || Object.keys(nextErrors).length > 0) return;
+    const lat = parseCoord(latitude, 90);
+    const lon = parseCoord(longitude, 180);
+    const next: Errors = {};
+    if (!name.trim()) next.name = "Enter your name";
+    if (!isGitId(userID)) {
+      next.git = userID.trim()
+        ? "Not a valid GitHub username"
+        : "GitHub username is required";
+    }
+    if (lat === null) next.lat = "Number from -90 to 90";
+    if (lon === null) next.lon = "Number from -180 to 180";
+    setErrors(next);
+    if (Object.keys(next).length > 0 || lat === null || lon === null) return;
 
     // the root layout's guard switches to the app screens once username is set
-    updateUser(name.trim(), Number(latitude), Number(longitude), userID.trim());
+    updateUser(name.trim(), lat, lon, userID.trim());
   };
 
   const grabLocation = async () => {
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert(
-          "Permission needed",
-          "Allow location access or type your coordinates.",
-        );
-        return;
-      }
-      const { coords } = await Location.getCurrentPositionAsync({});
-      setLatitude(String(coords.latitude));
-      setLongitude(String(coords.longitude));
-    } catch (err: any) {
-      Alert.alert("Couldn't get location", err?.message ?? "Unknown error");
-    }
+    if (locating) return; // a second tap while the first is still working
+    setLocating(true);
+    const coords = await getCoords();
+    setLocating(false);
+    if (!coords) return;
+    setLatitude(String(coords.latitude));
+    setLongitude(String(coords.longitude));
+    setErrors((e) => ({ ...e, lat: undefined, lon: undefined }));
   };
+
+  const appName = (Constants.expoConfig?.name ?? "terminalDeck").toUpperCase();
+  const showImage = LOGO !== null && !logoFailed;
 
   return (
     <CtosScreen style={globalStyles.containerFull}>
-      <View style={loginStyles.loginSection}>
-        <View style={loginStyles.formWrap}>
-          <View style={loginStyles.formIcon}>
-            <Ionicons name="bulb-outline" size={32} />
+      <ScrollView
+        contentContainerStyle={loginStyles.scroll}
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets
+      >
+        <View style={loginStyles.brand}>
+          <View style={[loginStyles.logoBox, showImage && globalStyles.box]}>
+            {showImage ? (
+              <Image
+                source={LOGO}
+                style={globalStyles.image}
+                resizeMode="contain"
+                onError={() => setLogoFailed(true)}
+              />
+            ) : (
+              <Text style={loginStyles.logoTxt}>{">_"}</Text>
+            )}
           </View>
-          <CtosText style={loginStyles.loginTitle}>Login</CtosText>
+          <CtosText style={loginStyles.loginTitle}>{appName}</CtosText>
+          <Text style={globalStyles.sectionLabel}>
+            {"// INITIALIZE OPERATOR"}
+          </Text>
+        </View>
 
-          <TextInput
-            style={loginStyles.input}
-            placeholder="Name"
-            placeholderTextColor={Colors.textMuted}
-            value={name}
-            onChangeText={setName}
-            autoCapitalize="words"
-          />
+        <Panel title="Operator Profile">
+          <View style={loginStyles.form}>
+            <Field
+              label="NAME"
+              placeholder="Your name"
+              value={name}
+              onChangeText={edit(setName, "name")}
+              error={errors.name}
+              valid={!!name.trim()}
+              autoCapitalize="words"
+              returnKeyType="next"
+              onSubmitEditing={() => gitRef.current?.focus()}
+            />
 
-          <TextInput
-            style={loginStyles.input}
-            placeholder="GitHub userID"
-            placeholderTextColor={Colors.textMuted}
-            value={userID}
-            onChangeText={setUserID}
-          />
+            <Field
+              ref={gitRef}
+              label="GIT_ID"
+              placeholder="github username"
+              value={userID}
+              onChangeText={edit(setUserID, "git")}
+              error={errors.git}
+              valid={isGitId(userID)}
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="next"
+              onSubmitEditing={() => latRef.current?.focus()}
+            />
 
-          <View style={loginStyles.locationMainWrap}>
-            <View style={loginStyles.locationGrpWrap}>
-              <View>
-                <TextInput
-                  style={loginStyles.input}
-                  placeholder="latitude"
-                  placeholderTextColor={Colors.textMuted}
+            <View style={loginStyles.coordRow}>
+              <View style={loginStyles.coordCol}>
+                <Field
+                  ref={latRef}
+                  label="LATITUDE"
+                  placeholder="28.6139"
                   value={latitude}
-                  onChangeText={setLatitude}
+                  onChangeText={edit(setLatitude, "lat")}
+                  error={errors.lat}
+                  valid={parseCoord(latitude, 90) !== null}
                   keyboardType="numbers-and-punctuation"
+                  returnKeyType="next"
+                  onSubmitEditing={() => lonRef.current?.focus()}
                 />
-                {errors.latitudeErr && (
-                  <Text style={loginStyles.errTxt}>{errors.latitudeErr}</Text>
-                )}
               </View>
-              <View>
-                <TextInput
-                  style={loginStyles.input}
-                  placeholder="longitude"
-                  placeholderTextColor={Colors.textMuted}
+              <View style={loginStyles.coordCol}>
+                <Field
+                  ref={lonRef}
+                  label="LONGITUDE"
+                  placeholder="77.2090"
                   value={longitude}
-                  onChangeText={setLongitude}
+                  onChangeText={edit(setLongitude, "lon")}
+                  error={errors.lon}
+                  valid={parseCoord(longitude, 180) !== null}
                   keyboardType="numbers-and-punctuation"
+                  returnKeyType="done"
+                  onSubmitEditing={onSubmit}
                 />
-                {errors.longitudeErr && (
-                  <Text style={loginStyles.errTxt}>{errors.longitudeErr}</Text>
-                )}
               </View>
             </View>
-            <Pressable style={loginStyles.locationBtn} onPress={grabLocation}>
-              <Ionicons name="location-outline" size={32} style={{backgroundColor:Colors.textOnPrimary}}/>
+
+            <Pressable
+              style={loginStyles.locateBtn}
+              onPress={grabLocation}
+              disabled={locating}
+              accessibilityRole="button"
+              accessibilityLabel="Use my location"
+            >
+              {locating ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+              ) : (
+                <Ionicons
+                  name="location-outline"
+                  size={18}
+                  color={Colors.primary}
+                />
+              )}
+              <Text style={loginStyles.locateTxt}>
+                {locating ? "LOCATING…" : "USE MY LOCATION"}
+              </Text>
+            </Pressable>
+            <Text style={loginStyles.hint}>
+              Used only for weather. Stays on this phone.
+            </Text>
+
+            <Pressable style={loginStyles.submitBtn} onPress={onSubmit}>
+              <Text style={loginStyles.submitTxt}>INITIALIZE</Text>
+              <Ionicons
+                name="chevron-forward"
+                size={18}
+                color={Colors.textOnPrimary}
+              />
             </Pressable>
           </View>
+        </Panel>
 
-          <Pressable style={loginStyles.submitBtn} onPress={onSubmit}>
-            <Text style={loginStyles.submitTxt}>Submit</Text>
-          </Pressable>
+        <View style={loginStyles.footer}>
+          <Text style={loginStyles.footerTxt}>
+            {`v${Constants.expoConfig?.version ?? "1.0.0"} · LOCAL STORAGE ONLY`}
+          </Text>
+          <Text style={loginStyles.footerOk}>[ OK ] SYSTEM READY</Text>
         </View>
-      </View>
+      </ScrollView>
     </CtosScreen>
   );
 }

@@ -19,7 +19,7 @@ import CtosScreen from "@/components/ctos/CtosScreen";
 import globalStyles from "@/style/globalStyles";
 
 // keys that are shown elsewhere (card / hourly) and don't get a tile
-const hiddenKeys = ["time", "interval", "temperature_2m", "weather_code"];
+const hiddenKeys = ["time", "interval", "is_day", "temperature_2m", "weather_code"];
 
 const Weather = () => {
   const { weatherData, aqiData, loading, error, storageTime, refetch } =

@@ -9,7 +9,6 @@ import {
   TextInput,
   View,
 } from "react-native";
-import * as Location from "expo-location";
 import { Ionicons } from "@expo/vector-icons";
 
 import CtosScreen from "@/components/ctos/CtosScreen";
@@ -18,6 +17,11 @@ import Panel from "@/components/ctos/Panel";
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
 import loginStyles from "@/features/auth/loginStyles";
+import {
+  getCoords,
+  isGitId,
+  parseCoord,
+} from "@/features/auth/profileFields";
 
 import { useUserStore } from "@/features/auth/useAuthStore";
 import {
@@ -34,20 +38,13 @@ import {
 } from "@/features/tasks/hooks/useTasksStore";
 import useNotifications from "@/global/useNotifications";
 import { openExactAlarmSettings } from "@/global/exactAlarm";
+import { APP_TAG } from "@/global/globalFunctions";
 
 // only Android 14+ has the "Alarms & reminders" switch
 const hasAlarmSetting =
   Platform.OS === "android" && Number(Platform.Version) >= 34;
 
-// a plain decimal number inside its allowed range, or null
-const parseCoord = (text: string, limit: number) => {
-  const t = text.trim();
-  if (!/^-?\d+(\.\d+)?$/.test(t)) return null;
-  const n = Number(t);
-  return Math.abs(n) <= limit ? n : null;
-};
-
-type Errors = { name?: string; lat?: string; lon?: string };
+type Errors = { name?: string; git?: string; lat?: string; lon?: string };
 
 // one label + value (or input) with a divider under it
 const Row = ({ label, children }: { label: string; children: ReactNode }) => (
@@ -107,6 +104,11 @@ const UserProfile = () => {
     const lon = parseCoord(longitude, 180);
     const next: Errors = {};
     if (!name.trim()) next.name = "Name can't be empty";
+    if (!isGitId(newUserID)) {
+      next.git = newUserID.trim()
+        ? "Not a valid GitHub username"
+        : "GitHub username is required";
+    }
     if (lat === null) next.lat = "Number from -90 to 90";
     if (lon === null) next.lon = "Number from -180 to 180";
     setErrors(next);
@@ -123,22 +125,11 @@ const UserProfile = () => {
   };
 
   const grabLocation = async () => {
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert(
-          "Permission needed",
-          "Allow location access or type your coordinates.",
-        );
-        return;
-      }
-      const { coords } = await Location.getCurrentPositionAsync({});
-      setLatitude(String(coords.latitude));
-      setLongitude(String(coords.longitude));
-      setErrors((e) => ({ ...e, lat: undefined, lon: undefined }));
-    } catch (err: any) {
-      Alert.alert("Couldn't get location", err?.message ?? "Unknown error");
-    }
+    const coords = await getCoords();
+    if (!coords) return;
+    setLatitude(String(coords.latitude));
+    setLongitude(String(coords.longitude));
+    setErrors((e) => ({ ...e, lat: undefined, lon: undefined }));
   };
 
   // logging out wipes the tasks on this phone, so ask first
@@ -165,7 +156,7 @@ const UserProfile = () => {
   return (
     <CtosScreen nav>
       <View style={globalStyles.header}>
-        <Text style={globalStyles.sectionLabel}>{"// CTOS · Main"}</Text>
+        <Text style={globalStyles.sectionLabel}>{`${APP_TAG}Main`}</Text>
         <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
           <CtosText style={globalStyles.textHeading}>USER PROFILE</CtosText>
         </View>
@@ -203,15 +194,18 @@ const UserProfile = () => {
 
           <Row label="Git_ID">
             {isEditMode ? (
-              <TextInput
-                style={loginStyles.input}
-                placeholder="GitHub userID"
-                placeholderTextColor={Colors.textMuted}
-                value={newUserID}
-                onChangeText={setNewUserID}
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
+              <>
+                <TextInput
+                  style={[loginStyles.input, !!errors.git && loginStyles.inputError]}
+                  placeholder="GitHub userID"
+                  placeholderTextColor={Colors.textMuted}
+                  value={newUserID}
+                  onChangeText={setNewUserID}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                <Err text={errors.git} />
+              </>
             ) : (
               <Text style={globalStyles.cardTitle}>{userID || "—"}</Text>
             )}
@@ -253,20 +247,26 @@ const UserProfile = () => {
                   <Ionicons
                     name="location-outline"
                     size={16}
-                    color={Colors.textPrimary}
+                    color={Colors.textOnPrimary}
                   />
-                  <Text style={globalStyles.primaryBtnTxt}>Use my location</Text>
+                  <Text style={globalStyles.primaryBtnTxt}>
+                    Use my location
+                  </Text>
                 </Pressable>
               </>
             ) : (
               <View style={{ flexDirection: "row", gap: 24 }}>
                 <Text style={globalStyles.sectionPara}>
                   LAT{" "}
-                  <Text style={globalStyles.cardTitle}>{location.latitude}</Text>
+                  <Text style={globalStyles.cardTitle}>
+                    {location.latitude}
+                  </Text>
                 </Text>
                 <Text style={globalStyles.sectionPara}>
                   LON{" "}
-                  <Text style={globalStyles.cardTitle}>{location.longitude}</Text>
+                  <Text style={globalStyles.cardTitle}>
+                    {location.longitude}
+                  </Text>
                 </Text>
               </View>
             )}
