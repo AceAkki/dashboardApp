@@ -9,6 +9,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import Constants from "expo-constants";
 import { Ionicons } from "@expo/vector-icons";
 
 import CtosScreen from "@/components/ctos/CtosScreen";
@@ -17,11 +18,7 @@ import Panel from "@/components/ctos/Panel";
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
 import loginStyles from "@/features/auth/loginStyles";
-import {
-  getCoords,
-  isGitId,
-  parseCoord,
-} from "@/features/auth/profileFields";
+import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
 
 import { useUserStore } from "@/features/auth/useAuthStore";
 import {
@@ -196,7 +193,10 @@ const UserProfile = () => {
             {isEditMode ? (
               <>
                 <TextInput
-                  style={[loginStyles.input, !!errors.git && loginStyles.inputError]}
+                  style={[
+                    loginStyles.input,
+                    !!errors.git && loginStyles.inputError,
+                  ]}
                   placeholder="GitHub userID"
                   placeholderTextColor={Colors.textMuted}
                   value={newUserID}
@@ -314,6 +314,20 @@ const UserProfile = () => {
           </Panel>
         ) : null}
 
+        <Panel title="App">
+          <Text style={globalStyles.primaryBtnTxt}>App Version</Text>
+          <Pressable style={globalStyles.primaryBtn}>
+            <Text style={globalStyles.primaryBtnTxt}>v{Constants.expoConfig?.version ?? "1.0.0"}</Text>
+          </Pressable>
+          <Text style={globalStyles.primaryBtnTxt}>Build Number </Text>
+          <Pressable style={globalStyles.primaryBtn}>
+            <Text style={globalStyles.primaryBtnTxt}>  {Constants.expoConfig?.android?.versionCode ?? "Not set"}</Text>
+          </Pressable>
+          <Text style={globalStyles.primaryBtnTxt}>Android Package id</Text>
+          <Pressable style={globalStyles.primaryBtn}>
+            <Text style={globalStyles.primaryBtnTxt}>  {Constants.expoConfig?.android?.package ?? "Not set"}</Text>
+          </Pressable>
+        </Panel>
         <Panel title="Session">
           <Pressable style={globalStyles.dangerBtn} onPress={confirmLogOut}>
             <Text style={globalStyles.primaryBtnTxt}>Log Out</Text>
