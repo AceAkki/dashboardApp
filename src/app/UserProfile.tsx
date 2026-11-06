@@ -315,14 +315,13 @@ const UserProfile = () => {
         ) : null}
 
         <Panel title="App">
-          <Text style={globalStyles.primaryBtnTxt}>App Version</Text>
-          <Pressable style={globalStyles.primaryBtn}>
+           <Row label="App_Version">
             <Text style={globalStyles.primaryBtnTxt}>v{Constants.expoConfig?.version ?? "1.0.0"}</Text>
-          </Pressable>
-          <Text style={globalStyles.primaryBtnTxt}>Build Number </Text>
-          <Pressable style={globalStyles.primaryBtn}>
+           </Row>
+           <Row label="Build_Number">
             <Text style={globalStyles.primaryBtnTxt}>  {Constants.expoConfig?.android?.versionCode ?? "Not set"}</Text>
-          </Pressable>
+           </Row>
+
           <Text style={globalStyles.primaryBtnTxt}>Android Package id</Text>
           <Pressable style={globalStyles.primaryBtn}>
             <Text style={globalStyles.primaryBtnTxt}>  {Constants.expoConfig?.android?.package ?? "Not set"}</Text>
