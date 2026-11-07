@@ -130,28 +130,27 @@ const BentoStructure = () => {
         <CtosItem index={3}>
           <View style={bentoStyles.row}>
             <PomodoroCard />
-            <PackageWatchPanel />
           </View>
         </CtosItem>
 
         <CtosItem index={4}>
-          <StoriesPanel />
-        </CtosItem>
-
-        <CtosItem index={5}>
-          <PackageWatchPanel />
-        </CtosItem>
-
-        <CtosItem index={6}>
-          <ServiceStatusPanel />
-        </CtosItem>
-
-        <CtosItem index={8}>
           <FavLinks />
         </CtosItem>
 
-        <CtosItem index={8}>
+        <CtosItem index={5}>
           <SnippetsPanel />
+        </CtosItem>
+
+        <CtosItem index={6}>
+          <StoriesPanel />
+        </CtosItem>
+
+        <CtosItem index={8}>
+          <PackageWatchPanel />
+        </CtosItem>
+
+        <CtosItem index={8}>
+          <ServiceStatusPanel />
         </CtosItem>
 
         <CtosItem index={9}>

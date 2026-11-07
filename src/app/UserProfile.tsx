@@ -352,10 +352,10 @@ const UserProfile = () => {
 
         <Panel title="Danger_Zone">
           <Pressable style={globalStyles.dangerBtn} onPress={tasksNNotificationPurge}>
-            <Text style={globalStyles.primaryBtnTxt}>Clear all tasks</Text>
+            <Text style={globalStyles.primaryBtnTxt}>Purge Tasks Data</Text>
           </Pressable>
           <Pressable style={globalStyles.dangerBtn} onPress={purgeAllData}>
-            <Text style={globalStyles.primaryBtnTxt}>Purge data</Text>
+            <Text style={globalStyles.primaryBtnTxt}>Purge All Data</Text>
           </Pressable>
         </Panel>
 
