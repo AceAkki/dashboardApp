@@ -22,6 +22,7 @@ import globalStyles from "@/style/globalStyles";
 import { useUserStore } from "@/features/auth/useAuthStore";
 import loginStyles from "@/features/auth/loginStyles";
 import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
+import { appName } from "@/global/globalFunctions";
 
 // The logo shown above the form. Set it to null to show the ">_" text instead.
 // (A missing file is a build error, so it can't be "detected" while the app runs.)
@@ -114,7 +115,6 @@ export default function Login() {
     setErrors((e) => ({ ...e, lat: undefined, lon: undefined }));
   };
 
-  const appName = (Constants.expoConfig?.name ?? "terminalDeck").toUpperCase();
   const showImage = LOGO !== null && !logoFailed;
 
   return (

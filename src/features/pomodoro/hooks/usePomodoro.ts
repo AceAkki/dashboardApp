@@ -43,8 +43,8 @@ export default function usePomodoro() {
   }, [running]);
 
   const msLeft = store.endAt
-    ? Math.max(0, store.endAt - now)
-    : store.remaining * 1000;
+  ? Math.min(store.remaining * 1000, Math.max(0, store.endAt - now))
+  : store.remaining * 1000;
   const secondsLeft = Math.ceil(msLeft / 1000);
   const totalMs = MODE_SECONDS[store.mode] * 1000;
   const progress = totalMs > 0 ? 1 - msLeft / totalMs : 0;

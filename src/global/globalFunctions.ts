@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from "expo-clipboard";
 import NetInfo from "@react-native-community/netinfo";
+import Constants from "expo-constants";
 import { useRouter } from "expo-router";
-
 import { userKey } from "./storageKeys";
 
 export const APP_TAG = "~/deck/";
+export const appName = (Constants.expoConfig?.name ?? "terminalDeck").toUpperCase();
 
 export const fetchData = async (apiURL: string) => {
   try {

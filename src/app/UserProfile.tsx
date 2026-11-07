@@ -316,10 +316,9 @@ const UserProfile = () => {
 
         <Panel title="Boot_Screen">
           <Row label="Boot Type">
-            
             <Pressable style={globalStyles.primaryBtn}>
               <Text style={globalStyles.primaryBtnTxt}>
-               Change Boot Screen
+              Change Boot Screen
               </Text>
             </Pressable>
           </Row>
@@ -327,7 +326,6 @@ const UserProfile = () => {
         </Panel>
         <Panel title="Backup_Data">
           <Row label="Export_Data">
-            
             <Pressable style={globalStyles.primaryBtn}>
               <Text style={globalStyles.primaryBtnTxt}>
                 Export Data
@@ -335,7 +333,6 @@ const UserProfile = () => {
             </Pressable>
           </Row>
           <Row label="Import_Data">
-            
             <Pressable style={globalStyles.primaryBtn}>
               <Text style={globalStyles.primaryBtnTxt}>
                 Import Data
@@ -350,20 +347,6 @@ const UserProfile = () => {
               v{Constants.expoConfig?.version ?? "1.0.0"}
             </Text>
           </Row>
-          <Row label="Build_Number">
-            <Text style={globalStyles.cardTitle}>
-              {" "}
-              {Constants.expoConfig?.android?.versionCode ?? "Not set"}
-            </Text>
-          </Row>
-
-          <Text style={globalStyles.primaryBtnTxt}>Android Package id</Text>
-          <Pressable style={globalStyles.primaryBtn}>
-            <Text style={globalStyles.primaryBtnTxt}>
-              {" "}
-              {Constants.expoConfig?.android?.package ?? "Not set"}
-            </Text>
-          </Pressable>
         </Panel>
         <Panel title="Session">
           <Pressable style={globalStyles.dangerBtn} onPress={confirmLogOut}>
