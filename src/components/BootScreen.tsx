@@ -10,7 +10,7 @@ import { appName } from "@/global/globalFunctions";
 
 // The "Fast Boot" button skips it during the first half.
 
-const LINE_DELAY = 250; // ms between lines
+const LINE_DELAY = 600; // ms between lines
 const HOLD = 1900; // ms to hold after the last line
 
 export default function BootScreen({ onDone }: { onDone: () => void }) {
@@ -56,7 +56,7 @@ export default function BootScreen({ onDone }: { onDone: () => void }) {
     if (shown < lineLength) {
       // a little pause on the "verifying" line, like a real boot waiting on something
       const lineDelay = lines[shown].includes("[ INFO ]")
-        ? LINE_DELAY + 200
+        ? LINE_DELAY + 400
         : LINE_DELAY;
       const t = setTimeout(() => setShown((n) => n + 1), lineDelay);
       return () => clearTimeout(t);
