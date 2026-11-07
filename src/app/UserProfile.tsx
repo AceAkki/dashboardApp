@@ -129,6 +129,17 @@ const UserProfile = () => {
     setErrors((e) => ({ ...e, lat: undefined, lon: undefined }));
   };
 
+  const tasksNNotificationPurge = () => {
+    tasksPurge();
+    cancelAll();
+  };
+
+  const purgeAllData = () => {
+    gitInvalidate();
+    weatherInvalidate();
+    tasksNNotificationPurge();
+  };
+
   // logging out wipes the tasks on this phone, so ask first
   const confirmLogOut = () =>
     Alert.alert(
@@ -140,10 +151,7 @@ const UserProfile = () => {
           text: "Log out",
           style: "destructive",
           onPress: () => {
-            gitInvalidate();
-            weatherInvalidate();
-            tasksPurge();
-            cancelAll();
+            purgeAllData();
             logOutUser();
           },
         },
@@ -317,26 +325,19 @@ const UserProfile = () => {
         <Panel title="Boot_Screen">
           <Row label="Boot Type">
             <Pressable style={globalStyles.primaryBtn}>
-              <Text style={globalStyles.primaryBtnTxt}>
-              Change Boot Screen
-              </Text>
+              <Text style={globalStyles.primaryBtnTxt}>Change Boot Screen</Text>
             </Pressable>
           </Row>
-
         </Panel>
         <Panel title="Backup_Data">
           <Row label="Export_Data">
             <Pressable style={globalStyles.primaryBtn}>
-              <Text style={globalStyles.primaryBtnTxt}>
-                Export Data
-              </Text>
+              <Text style={globalStyles.primaryBtnTxt}>Export Data</Text>
             </Pressable>
           </Row>
           <Row label="Import_Data">
             <Pressable style={globalStyles.primaryBtn}>
-              <Text style={globalStyles.primaryBtnTxt}>
-                Import Data
-              </Text>
+              <Text style={globalStyles.primaryBtnTxt}>Import Data</Text>
             </Pressable>
           </Row>
         </Panel>
@@ -348,6 +349,16 @@ const UserProfile = () => {
             </Text>
           </Row>
         </Panel>
+
+        <Panel title="Danger_Zone">
+          <Pressable style={globalStyles.dangerBtn} onPress={tasksNNotificationPurge}>
+            <Text style={globalStyles.primaryBtnTxt}>Clear all tasks</Text>
+          </Pressable>
+          <Pressable style={globalStyles.dangerBtn} onPress={purgeAllData}>
+            <Text style={globalStyles.primaryBtnTxt}>Purge data</Text>
+          </Pressable>
+        </Panel>
+
         <Panel title="Session">
           <Pressable style={globalStyles.dangerBtn} onPress={confirmLogOut}>
             <Text style={globalStyles.primaryBtnTxt}>Log Out</Text>
