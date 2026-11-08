@@ -40,6 +40,7 @@ export default function RootLayout() {
   useTaskReminders();
 
   if (!ready) return null;
+  // boot screen
   if (!booted) return <BootScreen onDone={() => setBooted(true)} />;
 
   return (
