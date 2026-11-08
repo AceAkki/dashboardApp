@@ -1,4 +1,4 @@
-import { ComponentProps , useState, type ReactNode } from "react";
+import { ComponentProps, useState, type ReactNode } from "react";
 import {
   Modal,
   Pressable,
@@ -17,7 +17,7 @@ import CtosScreen from "@/components/ctos/CtosScreen";
 import Panel from "@/components/ctos/Panel";
 import CtosText from "@/components/CtosText";
 import { Colors } from "@/constants/Colors";
-import { writeClipboardText } from "@/global/globalFunctions";
+import { writeClipboardText, APP_TAG } from "@/global/globalFunctions";
 import globalStyles, { text } from "@/style/globalStyles";
 import kit from "./toolKitStyles";
 
@@ -122,9 +122,14 @@ export function ToolScreen({
             <Text style={kit.backTxt}>TOOLS</Text>
           </Pressable>
           {/* Text style={globalStyles.sectionLabel}>{}</Text> */}
-          <CtosText style={[globalStyles.textHeading, { marginTop: 6 }]}>
-            {title}
-          </CtosText>
+          <View style={globalStyles.header}>
+            <Text style={globalStyles.sectionLabel}>{`${APP_TAG}Main`}</Text>
+            <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
+              <CtosText style={[globalStyles.textHeading, { marginTop: 6 }]}>
+                {title}
+              </CtosText>
+            </View>
+          </View>
         </View>
         {children}
       </ScrollView>
