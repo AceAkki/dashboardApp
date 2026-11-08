@@ -18,6 +18,7 @@ import SslPanel from "@/features/tools/components/SslPanel";
 import TimestampPanel from "@/features/tools/components/TimestampPanel";
 import UrlPanel from "@/features/tools/components/UrlPanel";
 import UuidPanel from "@/features/tools/components/UuidPanel";
+import { APP_TAG } from "@/global/globalFunctions";
 
 import toolsStyles from "@/features/tools/toolsStyles";
 
@@ -29,7 +30,7 @@ export default function Tools() {
         keyboardShouldPersistTaps="handled"
       >
         <View>
-          <Text style={globalStyles.sectionLabel}>{"// Toolkit"}</Text>
+          <Text style={globalStyles.sectionLabel}>{`${APP_TAG}Toolkit`}</Text>
           <CtosText style={[globalStyles.textHeading, { marginTop: 6 }]}>
             Utilities
           </CtosText>

@@ -6,8 +6,9 @@ import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import { userKey } from "./storageKeys";
 
-export const APP_TAG = "~/deck/";
-export const appName = (Constants.expoConfig?.name ?? "terminalDeck").toUpperCase();
+const appCleanName = (Constants.expoConfig?.name ?? "terminaldeck");
+export const appName = appCleanName.toUpperCase();
+export const APP_TAG = `~/${appCleanName}/`;
 
 export const fetchData = async (apiURL: string) => {
   try {

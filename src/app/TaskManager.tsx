@@ -14,6 +14,7 @@ import TaskForm from "@/features/tasks/components/TaskForm";
 import TaskTabs from "@/features/tasks/components/TaskTabs";
 import TasksMain from "@/features/tasks/components/TasksMain";
 import EditTaskForm from "@/features/tasks/components/EditTaskForm";
+import { APP_TAG } from "@/global/globalFunctions";
 
 import { useTaskStore } from "@/features/tasks/hooks/useTasksStore";
 import useTaskMain from "@/features/tasks/hooks/useTaskMain";
@@ -72,9 +73,7 @@ export default function TaskManager() {
   return (
     <CtosScreen nav>
       <View style={globalStyles.header}>
-        <Text style={globalStyles.sectionLabel}>
-          {"// CTOS · TASK_MANAGER"}
-        </Text>
+         <Text style={globalStyles.sectionLabel}>{`${APP_TAG}Task_Manager`}</Text>
         <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
           <CtosText style={globalStyles.textHeading}>Task Queue</CtosText>
           <Tag label={`${String(open).padStart(2, "0")} OPEN`} />

@@ -8,10 +8,12 @@ import CtosScreen from "@/components/ctos/CtosScreen";
 import { useUserStore } from "@/features/auth/useAuthStore";
 import { appName } from "@/global/globalFunctions";
 
-// The "Fast Boot" button skips it during the first half.
-
+// The "Fast Boot" button skips it
 const LINE_DELAY = 600; // ms between lines
-const HOLD = 1900; // ms to hold after the last line
+const HOLD = 2500; // ms to hold after the last line
+
+const warnTag = "[ WARN ]"
+const infoTag = "[ INFO ]"
 
 export default function BootScreen({ onDone }: { onDone: () => void }) {
   const username = useUserStore((s) => s.username);
@@ -37,10 +39,10 @@ export default function BootScreen({ onDone }: { onDone: () => void }) {
     "[  OK  ] Connected to api.open-meteo.com:443 (TLS 1.3)",
     "[  OK  ] Started Task Scheduler and Reminder Daemon",
     "[  OK  ] Started Snippet Vault Indexer",
-    "[ INFO ] Verifying session token...",
+    `${infoTag} Verifying session token...`,
     username
       ? `[  OK  ] Session verified for operator ${username}`
-      : "[ WARN ] No active session found",
+      : `${warnTag} No active session found`,
     "[  OK  ] Reached target Graphical Interface",
     // the last line is shown big, so it is the one that should matter
     username
@@ -55,7 +57,7 @@ export default function BootScreen({ onDone }: { onDone: () => void }) {
   useEffect(() => {
     if (shown < lineLength) {
       // a little pause on the "verifying" line, like a real boot waiting on something
-      const lineDelay = lines[shown].includes("[ INFO ]")
+      const lineDelay = lines[shown].includes(infoTag)
         ? LINE_DELAY + 400
         : LINE_DELAY;
       const t = setTimeout(() => setShown((n) => n + 1), lineDelay);
@@ -83,7 +85,7 @@ export default function BootScreen({ onDone }: { onDone: () => void }) {
             key={i}
             style={[
               styles.line,
-              line.includes("[ WARN ]") && styles.warn,
+              line.includes(warnTag) && styles.warn,
               i === lineLength - 1 && styles.lineFinal,
             ]}
           >
@@ -109,7 +111,7 @@ export default function BootScreen({ onDone }: { onDone: () => void }) {
 }
 
 const styles = StyleSheet.create({
-  // the original look: roomy padding and gaps, small uppercase text, big cyan last line
+  // roomy padding and gaps, small uppercase text, big cyan last line
   log: {
     padding: spacing.xl,
     justifyContent: "center",

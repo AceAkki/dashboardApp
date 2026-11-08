@@ -5,12 +5,13 @@ import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
 
 import { useToolsStore } from "@/features/tools/hooks/useToolsStore";
-import {Snippet} from "@/features/tools/components/Snippet";
+import { Snippet } from "@/features/tools/components/Snippet";
 import SnippetForm from "@/features/tools/components/SnippetForm";
 
 import globalStyles from "@/style/globalStyles";
 import styles from "@/features/tools/toolsStyles";
 import { useShallow } from "zustand/shallow";
+import { APP_TAG } from "@/global/globalFunctions";
 
 export default function SnippetVault() {
   const { snippets, isPopupOpen, toggleIsPopupOpen } = useToolsStore(
@@ -24,7 +25,8 @@ export default function SnippetVault() {
   return (
     <CtosScreen nav>
       <View style={globalStyles.header}>
-        <Text style={globalStyles.sectionLabel}>{"// Vault"}</Text>
+        <Text style={globalStyles.sectionLabel}>{`${APP_TAG}Vault`}</Text>
+
         <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
           <CtosText style={globalStyles.textHeading}> Snippet Vault</CtosText>
           <Pressable onPress={toggleIsPopupOpen} hitSlop={10}>

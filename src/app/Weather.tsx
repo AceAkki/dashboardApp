@@ -16,8 +16,9 @@ import useFetchWeatherData from "@/features/weather/hooks/useFetchWeatherData";
 import weatherStyles from "@/features/weather/weatherStyles";
 import type { WeatherData } from "@/features/weather/weatherType";
 import CtosScreen from "@/components/ctos/CtosScreen";
+import CtosText from "@/components/CtosText";
 import globalStyles from "@/style/globalStyles";
-
+import { APP_TAG } from "@/global/globalFunctions";
 // keys that are shown elsewhere (card / hourly) and don't get a tile
 const hiddenKeys = ["time", "interval", "is_day", "temperature_2m", "weather_code"];
 
@@ -60,10 +61,10 @@ const Weather = () => {
         }
       >
         <View>
-          <Text style={weatherStyles.sectionTitle}>Weather</Text>
-          <Text style={weatherStyles.sectionPara}>
-            Check out the current weather and forecast for your location
-          </Text>
+          <Text style={globalStyles.sectionLabel}>{`${APP_TAG}Weather`}</Text>
+          <CtosText style={[globalStyles.textHeading, { marginTop: 6 }]}>
+            Current Weather
+          </CtosText>
         </View>
 
         <WeatherCard

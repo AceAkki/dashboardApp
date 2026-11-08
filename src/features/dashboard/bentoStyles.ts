@@ -45,7 +45,7 @@ const bentoStyles = StyleSheet.create({
 
   greetWrap: { marginTop: 4 },
   counts: { flexDirection: "row", marginTop: 2 },
-  countCell: { flex: 1, gap: 2 },
+  countCell: { flex: 1, gap: 2, alignItems:"center" },
   countLabel: { ...text.caption },
   segBar: { flexDirection: "row", height: 4, gap: 2, marginTop: 14 },
   greet: { ...text.title },

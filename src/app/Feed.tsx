@@ -14,7 +14,7 @@ import StoryRow from "@/features/devfeed/components/StoryRow";
 import styles from "@/features/devfeed/components/devFeedStyles";
 import { useStories } from "@/features/devfeed/hooks";
 import { SOURCE_LABEL } from "@/features/devfeed/utils";
-
+import { APP_TAG } from "@/global/globalFunctions";
 import type { StorySource } from "@/features/devfeed/devTypes";
 
 const SOURCES: StorySource[] = ["hn", "dev", "lobsters"];
@@ -34,7 +34,8 @@ export default function Feed() {
   return (
     <CtosScreen nav>
       <View style={globalStyles.header}>
-        <Text style={globalStyles.sectionLabel}>{"// DEV FEED"}</Text>
+         <Text style={globalStyles.sectionLabel}>{`${APP_TAG}DEV_FEED`}</Text>
+
         <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
           <CtosText style={globalStyles.textHeading}>Signal</CtosText>
           <Tag
