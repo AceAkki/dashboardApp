@@ -34,6 +34,7 @@ import {
   type TaskStore,
 } from "@/features/tasks/hooks/useTasksStore";
 import useNotifications from "@/global/useNotifications";
+import {bootMap} from "@/global/globalFunctions"
 import { openExactAlarmSettings } from "@/global/exactAlarm";
 import { APP_TAG } from "@/global/globalFunctions";
 
@@ -58,25 +59,25 @@ const Err = ({ text }: { text?: string }) =>
   text ? <Text style={loginStyles.errTxt}>{text}</Text> : null;
 
 const UserProfile = () => {
-  const { username, userID, location, logOutUser, updateUser } = useUserStore(
+  const { username, userID, location, logOutUser, updateUser, updateBootOption } = useUserStore(
     useShallow((s) => ({
       username: s.username,
       userID: s.userID,
       location: s.location,
       logOutUser: s.logOutUser,
       updateUser: s.updateUser,
+      updateBootOption:s.updateBootOption
     })),
   );
   const gitInvalidate = useGitStore((state: GitStore) => state.invalidate);
-  const weatherInvalidate = useWeatherStore(
-    (state: WeatherStore) => state.invalidate,
-  );
+  const weatherInvalidate = useWeatherStore((state: WeatherStore) => state.invalidate);
   const tasksPurge = useTaskStore((state: TaskStore) => state.clearAllTasks);
   const { cancelAll } = useNotifications();
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [name, setName] = useState(username);
   const [newUserID, setNewUserID] = useState(userID);
+  const [bootName, setBootName] = useState<string>("")
   const [latitude, setLatitude] = useState(String(location.latitude));
   const [longitude, setLongitude] = useState(String(location.longitude));
   const [errors, setErrors] = useState<Errors>({});
@@ -324,7 +325,12 @@ const UserProfile = () => {
 
         <Panel title="Boot_Screen">
           <Row label="Boot Type">
-            <Pressable style={globalStyles.primaryBtn}>
+            {Object.keys(bootMap).map(key => (
+              <Pressable style={globalStyles.primaryBtn} onPress={() => setBootName(key)}>
+              <Text style={globalStyles.primaryBtnTxt}>{key}</Text>
+            </Pressable>
+            ))}
+            <Pressable style={globalStyles.primaryBtn} onPress={() => updateBootOption(bootName)}>
               <Text style={globalStyles.primaryBtnTxt}>Change Boot Screen</Text>
             </Pressable>
           </Row>

@@ -3,18 +3,21 @@ import { Stack } from "expo-router";
 import { useUserStore } from "@/features/auth/useAuthStore";
 import { TOOL_ROUTES } from "@/features/tools/toolRoutes";
 import useTaskReminders from "@/features/tasks/hooks/useTaskReminders";
-import BootScreen from "@/components/BootScreen";
+import {bootMap, type BootMapKey} from "@/global/globalFunctions"
 import { Colors } from "@/constants/Colors";
 
 // new ------------------------
 import * as SplashScreen from "expo-splash-screen";
+import { useShallow } from "zustand/shallow";
 
-// ctos based -
-// import BootAnimation from "@/components/BootAnimation";
-// import BootSequence from "@/components/BootSequence";
 
 export default function RootLayout() {
-  const isLoggedIn = useUserStore((state) => state.username.length > 0);
+  const {isLoggedIn, BootOption } = useUserStore(
+    useShallow((s) => ({
+      isLoggedIn :  s.username.length > 0,
+      BootOption: s.BootOption
+    })));
+  const BootScreen = bootMap[BootOption as BootMapKey];
 
   // the persisted user loads asynchronously from AsyncStorage; wait for it so a logged-in user doesn't flash the login screen
   const [hydrated, setHydrated] = useState(useUserStore.persist.hasHydrated());

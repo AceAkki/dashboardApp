@@ -6,6 +6,17 @@ import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import { userKey } from "./storageKeys";
 
+import BootScreen from "@/components/BootScreen";
+import BootAnimation from "@/components/BootAnimation";
+import BootSequence from "@/components/BootSequence";
+
+export const bootMap = {
+  BootTypeScreen : BootScreen,
+  CTOSFullAnime : BootAnimation,
+  CTOSCOnfigAnime : BootSequence
+} as const
+export type BootMapKey = keyof typeof bootMap;
+
 const appCleanName = (Constants.expoConfig?.name ?? "terminaldeck");
 export const appName = appCleanName.toUpperCase();
 export const APP_TAG = `~/${appCleanName}/`;
