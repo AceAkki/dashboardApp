@@ -11,9 +11,9 @@ import BootAnimation from "@/components/BootAnimation";
 import BootSequence from "@/components/BootSequence";
 
 export const bootMap = {
-  BootTypeScreen : BootScreen,
-  CTOSFullAnime : BootAnimation,
-  CTOSCOnfigAnime : BootSequence
+  Linux : BootScreen,
+  CTOS : BootAnimation,
+  QCK : BootSequence
 } as const
 export type BootMapKey = keyof typeof bootMap;
 

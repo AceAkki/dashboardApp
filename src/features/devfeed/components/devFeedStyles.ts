@@ -44,8 +44,7 @@ const devFeedStyles = StyleSheet.create({
   storyMeta: { ...text.caption, marginTop: 7 },
   storySource: { color: Colors.primary + "B3" },
 
-  // source switcher
-  chips: { flexDirection: "row", gap: 8, paddingHorizontal: 16, paddingVertical: 12 },
+
 });
 
 export default devFeedStyles;

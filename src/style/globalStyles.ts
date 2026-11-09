@@ -119,6 +119,11 @@ export const primaryBtnBase = {
   ...glowBase,
 } as const;
 
+export const dangerBtnBase = {
+  ...primaryBtnBase,
+  backgroundColor: Colors.danger 
+} as const;
+
 // square tag used for tabs, filters and engine chips (+ its selected state)
 export const chipBase = {
   paddingVertical: 6,
@@ -229,6 +234,7 @@ export const text = {
 //   <View style={globalStyles.card}><Text style={globalStyles.cardTitle}>…
 // ─────────────────────────────────────────────────────────────────────────────
 const globalStyles = StyleSheet.create({
+  
   containerFull: {
     flex: 1,
   },
@@ -237,13 +243,13 @@ const globalStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
+  
   divider: {
     height: 1,
     marginVertical: 10,
     backgroundColor: hudFaint,
   },
-
+  
   scene: { flex: 1, paddingHorizontal: 16, paddingBottom: 16 },
   screen: screenBase,
   card: cardBase,
@@ -253,10 +259,14 @@ const globalStyles = StyleSheet.create({
   field: fieldBase,
   primaryBtn: primaryBtnBase,
   primaryBtnTxt: text.btn,
-  dangerBtn: { ...primaryBtnBase, backgroundColor: Colors.danger },
+  dangerBtn: dangerBtnBase,
+  primaryBtnStart: { ...primaryBtnBase, alignSelf:"flex-start"},
+  dangerBtnStart:{ ...dangerBtnBase,  alignSelf:"flex-start"},
+  
+  chips: { flexDirection: "row", gap: 8, paddingHorizontal: 16, paddingVertical: 12 },
   chip: chipBase,
   chipActive: chipActiveBase,
-
+  
   btnGrp: { gap: 10, flexDirection: "row" },
 
   textDisplay: text.display,

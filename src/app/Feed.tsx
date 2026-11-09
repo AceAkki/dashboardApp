@@ -11,7 +11,6 @@ import globalStyles, { text } from "@/style/globalStyles";
 
 import ReleasesPanel from "@/features/devfeed/components/ReleasesPanel";
 import StoryRow from "@/features/devfeed/components/StoryRow";
-import styles from "@/features/devfeed/components/devFeedStyles";
 import { useStories } from "@/features/devfeed/hooks";
 import { SOURCE_LABEL } from "@/features/devfeed/utils";
 import { APP_TAG } from "@/global/globalFunctions";
@@ -45,7 +44,7 @@ export default function Feed() {
         </View>
       </View>
 
-      <View style={styles.chips}>
+      <View style={globalStyles.chips}>
         {SOURCES.map((s) => (
           <Pressable
             key={s}

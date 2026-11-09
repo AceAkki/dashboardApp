@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import {bootMap} from "@/global/globalFunctions"
 import { userKey } from "../../global/storageKeys";
 
 export type userType = {
@@ -13,11 +13,13 @@ export type userType = {
   location: { latitude: number; longitude: number };
 };
 
+const defaultBootKey = Object.keys(bootMap)[0];
+
 const initialState: userType = {
   username: "",
   userID: "",
   backgroundURL: "",
-  BootOption:"default",
+  BootOption:defaultBootKey,
   themeType: "light",
   location: { latitude: 0, longitude: 0 },
 };
