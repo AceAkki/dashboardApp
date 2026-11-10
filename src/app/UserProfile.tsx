@@ -92,10 +92,11 @@ const UserProfile = () => {
     (state: WeatherStore) => state.invalidate,
   );
 
-  const {snippets} = useToolsStore(
+  const {snippets, apps} = useToolsStore(
     useShallow((s) => (
       {
-        snippets:s.snippets
+        snippets:s.snippets,
+        apps:s.apps
       }
     ))
   )
@@ -194,7 +195,16 @@ const UserProfile = () => {
       "This deletes all data on this device.",
       [
         {text:"cancel", style:"cancel"},
-        {text:"Delete Data", style:"destructive", onPress:purgeAllData}
+        {text:"Delete Data", style:"destructive", onPress:() => {
+          Alert.alert(
+            "This will delete data!",
+             "This deletes all data on this device.",
+            [
+              {text:"cancel", style:"cancel"},
+              {text:"Delete Data", style:"destructive", onPress:purgeAllData}
+            ]
+          )
+        }}
       ]
     )
   }
@@ -429,6 +439,9 @@ const UserProfile = () => {
             </Text>
             <Text style={globalStyles.cardTitle}>
               All Snippets Count : {snippets.length}
+            </Text>
+            <Text style={globalStyles.cardTitle}>
+              Core Apps Support : {apps ? apps.length : 0}
             </Text>
 
           </Row>

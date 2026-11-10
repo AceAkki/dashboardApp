@@ -70,6 +70,9 @@
         }
       ],
       ["expo-build-properties", { "android": { "usesCleartextTraffic": true } }],
+      [
+      "./plugins/withPackageQueries"
+    ],
       "@react-native-community/datetimepicker"
     ],
     "experiments": {
