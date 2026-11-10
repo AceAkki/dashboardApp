@@ -16,7 +16,7 @@ import CtosScreen from "@/components/ctos/CtosScreen";
 import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
 import { Colors } from "@/constants/Colors";
-import globalStyles, { spacing } from "@/style/globalStyles";
+import globalStyles, { spacing, text } from "@/style/globalStyles";
 import loginStyles from "@/features/auth/loginStyles";
 import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
 
@@ -33,6 +33,9 @@ import {
   useTaskStore,
   type TaskStore,
 } from "@/features/tasks/hooks/useTasksStore";
+import {
+  useToolsStore
+} from "@/features/tools/hooks/useToolsStore"
 import useNotifications from "@/global/useNotifications";
 import { bootMap } from "@/global/globalFunctions";
 import { openExactAlarmSettings } from "@/global/exactAlarm";
@@ -88,7 +91,20 @@ const UserProfile = () => {
   const weatherInvalidate = useWeatherStore(
     (state: WeatherStore) => state.invalidate,
   );
-  const tasksPurge = useTaskStore((state: TaskStore) => state.clearAllTasks);
+
+  const {snippets} = useToolsStore(
+    useShallow((s) => (
+      {
+        snippets:s.snippets
+      }
+    ))
+  )
+  const {tasks, tasksPurge} = useTaskStore(
+    useShallow((state: TaskStore) => ({
+      tasksPurge: state.clearAllTasks,
+      tasks:state.tasks
+    }))
+  );
   const { cancelAll } = useNotifications();
 
   const [isEditMode, setIsEditMode] = useState(false);
@@ -147,16 +163,41 @@ const UserProfile = () => {
     setErrors((e) => ({ ...e, lat: undefined, lon: undefined }));
   };
 
-  const tasksNNotificationPurge = () => {
+  const purgeTasks = () => {
     tasksPurge();
     cancelAll();
   };
 
+  const confirmPurgeTasks = () => {
+    Alert.alert(
+      "Delete All Tasks?",
+      "This deletes all tasks on thid device.",
+      [
+        {text:"Cancel", style:"cancel"},
+        {
+          text:"Purge Tasks", style:"destructive",
+          onPress:purgeTasks
+        }
+      ]
+    )
+  }
+
   const purgeAllData = () => {
     gitInvalidate();
     weatherInvalidate();
-    tasksNNotificationPurge();
+    purgeTasks();
   };
+
+  const confirmPurgeAllData = () => {
+    Alert.alert(
+      "Delete all data?",
+      "This deletes all data on this device.",
+      [
+        {text:"cancel", style:"cancel"},
+        {text:"Delete Data", style:"destructive", onPress:purgeAllData}
+      ]
+    )
+  }
 
   // logging out wipes the tasks on this phone, so ask first
   const confirmLogOut = () =>
@@ -298,7 +339,7 @@ const UserProfile = () => {
             )}
           </Row>
 
-          <View style={[globalStyles.btnGrp, { marginTop: 10 }]}>
+          <ButtonGroup>
             {isEditMode ? (
               <>
                 <Pressable
@@ -316,13 +357,13 @@ const UserProfile = () => {
               </>
             ) : (
               <Pressable
-                style={[globalStyles.primaryBtn, { flex: 1 }]}
+                style={globalStyles.primaryBtnStart}
                 onPress={startEdit}
               >
                 <Text style={globalStyles.primaryBtnTxt}>Edit</Text>
               </Pressable>
             )}
-          </View>
+          </ButtonGroup>
         </Panel>
 
         {hasAlarmSetting ? (
@@ -340,9 +381,6 @@ const UserProfile = () => {
           </Panel>
         ) : null}
 
-      
-
-
         <Panel title="App_Data">
           <Row label="App_Version">
             <Text style={globalStyles.cardTitle}>
@@ -351,7 +389,6 @@ const UserProfile = () => {
           </Row>
 
           <Row label="Boot_Screen">
-         
             <View style={[globalStyles.chips, {paddingHorizontal:0}]}>
               {Object.keys(bootMap).map((key) => (
                 <Pressable
@@ -386,6 +423,16 @@ const UserProfile = () => {
             </ButtonGroup>
           </Row>
 
+          <Row label="User_Stats">
+            <Text style={globalStyles.cardTitle}>
+              All Tasks Count : {tasks.length}
+            </Text>
+            <Text style={globalStyles.cardTitle}>
+              All Snippets Count : {snippets.length}
+            </Text>
+
+          </Row>
+
           <Row label="Backup_Data">
             <ButtonGroup>
               <Pressable style={globalStyles.primaryBtnStart}>
@@ -399,18 +446,17 @@ const UserProfile = () => {
         </Panel>
 
         <Panel title="Danger_Zone">
-          
           <Row label="Purge_Data">
             <ButtonGroup>
               <Pressable
                 style={globalStyles.dangerBtnStart}
-                onPress={tasksNNotificationPurge}
+                onPress={confirmPurgeTasks}
               >
                 <Text style={globalStyles.primaryBtnTxt}>Tasks</Text>
               </Pressable>
               <Pressable
                 style={globalStyles.dangerBtnStart}
-                onPress={purgeAllData}
+                onPress={confirmPurgeAllData}
               >
                 <Text style={globalStyles.primaryBtnTxt}>Reset</Text>
               </Pressable>
