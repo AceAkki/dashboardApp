@@ -51,6 +51,7 @@ export const useGitStats = (): GitStatRes => {
         }
         saveGitStats({
           gitStatData: gitNewData,
+          fetchedAt: Date.now(),
           expiresAt: Date.now() + CACHE_MS,
         });
       })

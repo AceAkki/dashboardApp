@@ -10,8 +10,9 @@ export const gitKey = "git-storage";
 export interface GitStore {
   gitStatData: GitStats | null;
   /** ms timestamp after which the cache is stale */
+  fetchedAt: number | null;
   expiresAt: number | null;
-  saveGitStats: (payload: { gitStatData: GitStats; expiresAt: number }) => void;
+  saveGitStats: (payload: { gitStatData: GitStats;fetchedAt:number, expiresAt: number }) => void;
   invalidate: () => void;
 }
 
@@ -19,10 +20,12 @@ export const useGitStore = create<GitStore>()(
   persist(
     (set) => ({
       gitStatData: null,
+      fetchedAt:null,
       expiresAt: null,
-      saveGitStats: ({ gitStatData, expiresAt }) =>
+      saveGitStats: ({ gitStatData, fetchedAt, expiresAt }) =>
         set({
           gitStatData: gitStatData,
+          fetchedAt,
           expiresAt,
         }),
       invalidate: () => set({ expiresAt: null }),

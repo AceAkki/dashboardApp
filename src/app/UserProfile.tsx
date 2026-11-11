@@ -87,7 +87,12 @@ const UserProfile = () => {
       updateBootOption: s.updateBootOption,
     })),
   );
-  const gitInvalidate = useGitStore((state: GitStore) => state.invalidate);
+  const {fetchTime, gitInvalidate} = useGitStore(
+    useShallow((state: GitStore) => ({
+      gitInvalidate:state.invalidate,
+      fetchTime:state.fetchedAt
+    }))
+  );
   const weatherInvalidate = useWeatherStore(
     (state: WeatherStore) => state.invalidate,
   );
@@ -455,14 +460,10 @@ const UserProfile = () => {
 
           <Row label="Git_Stats">
             <Text style={globalStyles.cardTitle}>
-              All Tasks Count : {tasks.length}
+              Last Fetch Time : {fetchTime}
             </Text>
-            <Text style={globalStyles.cardTitle}>
-              All Snippets Count : {snippets.length}
-            </Text>
-            <Text style={globalStyles.cardTitle}>
-              Core Apps Support : {apps ? apps.length : 0}
-            </Text>
+           
+            
 
           </Row>
 
