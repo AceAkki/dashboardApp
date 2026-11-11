@@ -393,18 +393,21 @@ const UserProfile = () => {
               Allow "Alarms & reminders" so task reminders arrive on the minute,
               not a few minutes late.
             </Text>
-            <Pressable
-              style={[globalStyles.primaryBtn, { marginTop: 12 }]}
-              onPress={() => openExactAlarmSettings()}
-            >
-              <Text style={globalStyles.primaryBtnTxt}>Open Settings</Text>
-            </Pressable>
-            <Pressable
-              style={[globalStyles.primaryBtn, { marginTop: 12 }]}
-              onPress={async () => {await notify({ title: "Test", body: "Testing notification" })}}
-            >
-              <Text style={globalStyles.primaryBtnTxt}>Test Notification</Text>
-            </Pressable>
+            <ButtonGroup>
+              <Pressable
+                style={[globalStyles.primaryBtn, { marginTop: 12 }]}
+                onPress={() => openExactAlarmSettings()}
+              >
+                <Text style={globalStyles.primaryBtnTxt}>Open Settings</Text>
+              </Pressable>
+              <Pressable
+                style={[globalStyles.primaryBtn, { marginTop: 12 }]}
+                onPress={async () => {await notify({ title: "Test", body: "Testing notification" })}}
+              >
+                <Text style={globalStyles.primaryBtnTxt}>Test Notification</Text>
+              </Pressable>
+
+            </ButtonGroup>
           </Panel>
         ) : null}
 
