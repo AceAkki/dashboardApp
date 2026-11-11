@@ -172,12 +172,23 @@ const UserProfile = () => {
   const confirmPurgeTasks = () => {
     Alert.alert(
       "Delete All Tasks?",
-      "This deletes all tasks on thid device.",
+      "This deletes all tasks on this device.",
       [
         {text:"Cancel", style:"cancel"},
         {
           text:"Purge Tasks", style:"destructive",
-          onPress:purgeTasks
+          onPress:() => {
+             Alert.alert(
+              "Delete All Tasks?",
+              "This deletes all tasks on this device.",
+              [
+                {text:"Cancel", style:"cancel"},
+                {
+                  text:"Purge Tasks", style:"destructive",
+                  onPress:purgeTasks
+                }
+              ])                                
+          }
         }
       ]
     )
