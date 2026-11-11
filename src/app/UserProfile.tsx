@@ -453,6 +453,19 @@ const UserProfile = () => {
             </ButtonGroup>
           </Row>
 
+          <Row label="Git_Stats">
+            <Text style={globalStyles.cardTitle}>
+              All Tasks Count : {tasks.length}
+            </Text>
+            <Text style={globalStyles.cardTitle}>
+              All Snippets Count : {snippets.length}
+            </Text>
+            <Text style={globalStyles.cardTitle}>
+              Core Apps Support : {apps ? apps.length : 0}
+            </Text>
+
+          </Row>
+
           <Row label="User_Stats">
             <Text style={globalStyles.cardTitle}>
               All Tasks Count : {tasks.length}
