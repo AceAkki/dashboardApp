@@ -37,7 +37,7 @@ import {
   useToolsStore
 } from "@/features/tools/hooks/useToolsStore"
 import useNotifications from "@/global/useNotifications";
-import { bootMap } from "@/global/globalFunctions";
+import { bootMap, dateFormat } from "@/global/globalFunctions";
 import { openExactAlarmSettings } from "@/global/exactAlarm";
 import { APP_TAG } from "@/global/globalFunctions";
 
@@ -51,7 +51,7 @@ type Errors = { name?: string; git?: string; lat?: string; lon?: string };
 const Row = ({ label, children }: { label: string; children: ReactNode }) => (
   <View style={{ marginVertical: 5 }}>
     <View style={{ gap: 8 }}>
-      <Text style={globalStyles.sectionLabel}>{label}</Text>
+      <Text style={globalStyles.textCaption}>{label}</Text>
       {children}
     </View>
     <View style={globalStyles.divider} />
@@ -87,10 +87,12 @@ const UserProfile = () => {
       updateBootOption: s.updateBootOption,
     })),
   );
-  const {fetchTime, gitInvalidate} = useGitStore(
+  const {gitStatData, fetchTime, expiresAt, gitInvalidate} = useGitStore(
     useShallow((state: GitStore) => ({
       gitInvalidate:state.invalidate,
-      fetchTime:state.fetchedAt
+      fetchTime:state.fetchedAt,
+      expiresAt:state.expiresAt,
+      gitStatData:state.gitStatData
     }))
   );
   const weatherInvalidate = useWeatherStore(
@@ -241,7 +243,7 @@ const UserProfile = () => {
           },
         },
       ],
-    );
+  );
 
   return (
     <CtosScreen nav>
@@ -416,6 +418,52 @@ const UserProfile = () => {
           </Panel>
         ) : null}
 
+        <Panel title="User_Stats">
+          <Row label="All_Tasks_Count">
+            <Text style={globalStyles.cardTitle}>
+              {tasks.length}
+            </Text>
+          </Row>
+          <Row label="All_Snippets_Count">
+            <Text style={globalStyles.cardTitle}>
+              {snippets.length}
+            </Text>
+          </Row>
+          <Row label="Core_Apps_Support">
+            <Text style={globalStyles.cardTitle}>
+              {apps ? apps.length : 0}
+            </Text>
+          </Row>
+        </Panel>
+
+        <Panel title="Github_Stats">
+            <Row label="Connection_Status">
+              <Text style={globalStyles.cardTitle}>
+                 {gitStatData ? "GitHub Connected" : "Failed to connect!!"}
+              </Text>
+            </Row>
+
+            <Row label="Last_Fetch_Time">
+              <Text style={globalStyles.cardTitle}>
+                {fetchTime ? dateFormat({dateString:new Date(fetchTime).toLocaleString(), hasTime:true}) : "-"}
+              </Text>
+            </Row>
+
+            <Row label="Expires_Time">
+              <Text style={globalStyles.cardTitle}>
+                {expiresAt ? dateFormat({dateString:new Date(expiresAt).toLocaleString(), hasTime:true}) : "-"}
+              </Text>
+            </Row>
+
+           <ButtonGroup>
+              <Pressable style={globalStyles.primaryBtnStart} onPress={gitInvalidate}>
+                <Text style={globalStyles.primaryBtnTxt}>Refresh GitHub</Text>
+              </Pressable>
+             
+            </ButtonGroup>
+            
+        </Panel>
+
         <Panel title="App_Data">
           <Row label="App_Version">
             <Text style={globalStyles.cardTitle}>
@@ -458,27 +506,9 @@ const UserProfile = () => {
             </ButtonGroup>
           </Row>
 
-          <Row label="Git_Stats">
-            <Text style={globalStyles.cardTitle}>
-              Last Fetch Time : {fetchTime}
-            </Text>
-           
-            
+          
 
-          </Row>
-
-          <Row label="User_Stats">
-            <Text style={globalStyles.cardTitle}>
-              All Tasks Count : {tasks.length}
-            </Text>
-            <Text style={globalStyles.cardTitle}>
-              All Snippets Count : {snippets.length}
-            </Text>
-            <Text style={globalStyles.cardTitle}>
-              Core Apps Support : {apps ? apps.length : 0}
-            </Text>
-
-          </Row>
+         
 
           <Row label="Backup_Data">
             <ButtonGroup>

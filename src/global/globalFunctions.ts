@@ -34,12 +34,21 @@ export const fetchData = async (apiURL: string) => {
   }
 };
 
-export const dateFormat = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("sv-SE", {
+export const dateFormat = ({dateString, hasTime}:{dateString:string, hasTime:boolean}) => {
+   let option:Intl.DateTimeFormatOptions  = hasTime ? {
     day: "numeric",
     year: "numeric",
     month: "2-digit",
-  });
+    hour:"2-digit",
+    minute:"2-digit",
+    second:"2-digit"
+  } : {
+    day: "numeric",
+    year: "numeric",
+    month: "2-digit",
+  };
+
+  return new Date(dateString).toLocaleString("sv-SE", option);
 };
 
 export async function writeClipboardText(text: string) {

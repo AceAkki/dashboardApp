@@ -92,7 +92,7 @@ export const getGitData = async (userid: string): Promise<GitStats | null> => {
     let lastPushedRepo = reposDataArr
       .filter((repo) => Boolean(repo.pushed_at))
       .sort((a, b) => Date.parse(b.pushed_at) - Date.parse(a.pushed_at))[0];
-    let lastPushDate = dateFormat(lastPushedRepo.pushed_at);
+    let lastPushDate = dateFormat({dateString:lastPushedRepo.pushed_at, hasTime:false});
 
     return {
       ...userData,
