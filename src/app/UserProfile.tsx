@@ -106,7 +106,7 @@ const UserProfile = () => {
       tasks:state.tasks
     }))
   );
-  const { cancelAll } = useNotifications();
+  const { notify, cancelAll } = useNotifications();
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [name, setName] = useState(username);
@@ -398,6 +398,12 @@ const UserProfile = () => {
               onPress={() => openExactAlarmSettings()}
             >
               <Text style={globalStyles.primaryBtnTxt}>Open Settings</Text>
+            </Pressable>
+            <Pressable
+              style={[globalStyles.primaryBtn, { marginTop: 12 }]}
+              onPress={async () => {await notify({ title: "Test", body: "Testing notification" })}}
+            >
+              <Text style={globalStyles.primaryBtnTxt}>Test Notification</Text>
             </Pressable>
           </Panel>
         ) : null}

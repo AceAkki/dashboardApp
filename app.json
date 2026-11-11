@@ -66,7 +66,7 @@
         {
           "icon": "./assets/images/notification-icon.png",
           "color": "#00E5FF",
-          "sounds": ["./assets/sounds/ctos_alert.wav"]
+          "sounds": ["./assets/sounds/ctos_alert.wav", "./assets/sounds/ctos_chime.wav"]
         }
       ],
       ["expo-build-properties", { "android": { "usesCleartextTraffic": true } }],
