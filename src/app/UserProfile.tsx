@@ -7,6 +7,7 @@ import {
   ScrollView,
   Text,
   TextInput,
+  Image,
   View,
 } from "react-native";
 import Constants from "expo-constants";
@@ -33,9 +34,7 @@ import {
   useTaskStore,
   type TaskStore,
 } from "@/features/tasks/hooks/useTasksStore";
-import {
-  useToolsStore
-} from "@/features/tools/hooks/useToolsStore"
+import { useToolsStore } from "@/features/tools/hooks/useToolsStore";
 import useNotifications from "@/global/useNotifications";
 import { bootMap, dateFormat } from "@/global/globalFunctions";
 import { openExactAlarmSettings } from "@/global/exactAlarm";
@@ -58,8 +57,20 @@ const Row = ({ label, children }: { label: string; children: ReactNode }) => (
   </View>
 );
 
-const ButtonGroup = ({isColumn, children }: {isColumn?:boolean, children: ReactNode }) => (
-  <View style={[globalStyles.btnGrp, { marginVertical: spacing.md }, isColumn && {flexDirection:"column"}]}>
+const ButtonGroup = ({
+  isColumn,
+  children,
+}: {
+  isColumn?: boolean;
+  children: ReactNode;
+}) => (
+  <View
+    style={[
+      globalStyles.btnGrp,
+      { marginVertical: spacing.md },
+      isColumn && { flexDirection: "column" },
+    ]}
+  >
     {children}
   </View>
 );
@@ -87,31 +98,29 @@ const UserProfile = () => {
       updateBootOption: s.updateBootOption,
     })),
   );
-  const {gitStatData, fetchTime, expiresAt, gitInvalidate} = useGitStore(
+  const { gitStatData, fetchTime, expiresAt, gitInvalidate } = useGitStore(
     useShallow((state: GitStore) => ({
-      gitInvalidate:state.invalidate,
-      fetchTime:state.fetchedAt,
-      expiresAt:state.expiresAt,
-      gitStatData:state.gitStatData
-    }))
+      gitInvalidate: state.invalidate,
+      fetchTime: state.fetchedAt,
+      expiresAt: state.expiresAt,
+      gitStatData: state.gitStatData,
+    })),
   );
   const weatherInvalidate = useWeatherStore(
     (state: WeatherStore) => state.invalidate,
   );
 
-  const {snippets, apps} = useToolsStore(
-    useShallow((s) => (
-      {
-        snippets:s.snippets,
-        apps:s.apps
-      }
-    ))
-  )
-  const {tasks, tasksPurge} = useTaskStore(
+  const { snippets, apps } = useToolsStore(
+    useShallow((s) => ({
+      snippets: s.snippets,
+      apps: s.apps,
+    })),
+  );
+  const { tasks, tasksPurge } = useTaskStore(
     useShallow((state: TaskStore) => ({
       tasksPurge: state.clearAllTasks,
-      tasks:state.tasks
-    }))
+      tasks: state.tasks,
+    })),
   );
   const { notify, cancelAll } = useNotifications();
 
@@ -177,29 +186,28 @@ const UserProfile = () => {
   };
 
   const confirmPurgeTasks = () => {
-    Alert.alert(
-      "Delete All Tasks?",
-      "This deletes all tasks on this device.",
-      [
-        {text:"Cancel", style:"cancel"},
-        {
-          text:"Purge Tasks", style:"destructive",
-          onPress:() => {
-             Alert.alert(
-              "Delete All Tasks?",
-              "This deletes all tasks on this device.",
-              [
-                {text:"Cancel", style:"cancel"},
-                {
-                  text:"Purge Tasks", style:"destructive",
-                  onPress:purgeTasks
-                }
-              ])                                
-          }
-        }
-      ]
-    )
-  }
+    Alert.alert("Delete All Tasks?", "This deletes all tasks on this device.", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Purge Tasks",
+        style: "destructive",
+        onPress: () => {
+          Alert.alert(
+            "Delete All Tasks?",
+            "This deletes all tasks on this device.",
+            [
+              { text: "Cancel", style: "cancel" },
+              {
+                text: "Purge Tasks",
+                style: "destructive",
+                onPress: purgeTasks,
+              },
+            ],
+          );
+        },
+      },
+    ]);
+  };
 
   const purgeAllData = () => {
     gitInvalidate();
@@ -208,24 +216,28 @@ const UserProfile = () => {
   };
 
   const confirmPurgeAllData = () => {
-    Alert.alert(
-      "Delete all data?",
-      "This deletes all data on this device.",
-      [
-        {text:"cancel", style:"cancel"},
-        {text:"Delete Data", style:"destructive", onPress:() => {
+    Alert.alert("Delete all data?", "This deletes all data on this device.", [
+      { text: "cancel", style: "cancel" },
+      {
+        text: "Delete Data",
+        style: "destructive",
+        onPress: () => {
           Alert.alert(
             "This will delete data!",
-             "This deletes all data on this device.",
+            "This deletes all data on this device.",
             [
-              {text:"cancel", style:"cancel"},
-              {text:"Delete Data", style:"destructive", onPress:purgeAllData}
-            ]
-          )
-        }}
-      ]
-    )
-  }
+              { text: "cancel", style: "cancel" },
+              {
+                text: "Delete Data",
+                style: "destructive",
+                onPress: purgeAllData,
+              },
+            ],
+          );
+        },
+      },
+    ]);
+  };
 
   // logging out wipes the tasks on this phone, so ask first
   const confirmLogOut = () =>
@@ -243,7 +255,7 @@ const UserProfile = () => {
           },
         },
       ],
-  );
+    );
 
   return (
     <CtosScreen nav>
@@ -409,59 +421,81 @@ const UserProfile = () => {
               </Pressable>
               <Pressable
                 style={[globalStyles.primaryBtn, { marginTop: 12 }]}
-                onPress={async () => {await notify({ title: "Test", body: "Testing notification" })}}
+                onPress={async () => {
+                  await notify({ title: "Test", body: "Testing notification" });
+                }}
               >
-                <Text style={globalStyles.primaryBtnTxt}>Test Notification</Text>
+                <Text style={globalStyles.primaryBtnTxt}>
+                  Test Notification
+                </Text>
               </Pressable>
-
             </ButtonGroup>
           </Panel>
         ) : null}
 
         <Panel title="User_Stats">
           <Row label="All_Tasks_Count">
-            <Text style={globalStyles.cardTitle}>
-              {tasks.length}
-            </Text>
+            <Text style={globalStyles.cardTitle}>{tasks.length}</Text>
           </Row>
           <Row label="All_Snippets_Count">
-            <Text style={globalStyles.cardTitle}>
-              {snippets.length}
-            </Text>
+            <Text style={globalStyles.cardTitle}>{snippets.length}</Text>
           </Row>
           <Row label="Core_Apps_Support">
-            <Text style={globalStyles.cardTitle}>
-              {apps ? apps.length : 0}
-            </Text>
+            <Text style={globalStyles.cardTitle}>{apps ? apps.length : 0}</Text>
           </Row>
         </Panel>
 
         <Panel title="Github_Stats">
-            <Row label="Connection_Status">
-              <Text style={globalStyles.cardTitle}>
-                 {gitStatData ? "GitHub Connected" : "Failed to connect!!"}
-              </Text>
-            </Row>
+          <Row label="Connection_Status">
+            <Text style={globalStyles.cardTitle}>
+              {gitStatData ? "GitHub Connected" : "Failed to connect!!"}
+            </Text>
+          </Row>
 
-            <Row label="Last_Fetch_Time">
-              <Text style={globalStyles.cardTitle}>
-                {fetchTime ? dateFormat({dateString:new Date(fetchTime).toLocaleString(), hasTime:true}) : "-"}
-              </Text>
-            </Row>
+          {gitStatData && (
+            <>
+            <View style={[loginStyles.imageBox, globalStyles.box]}>
+              <Image
+                source={{uri:gitStatData.avatar_url}}
+                style={globalStyles.image}
+                resizeMode="contain"
+              />
 
-            <Row label="Expires_Time">
-              <Text style={globalStyles.cardTitle}>
-                {expiresAt ? dateFormat({dateString:new Date(expiresAt).toLocaleString(), hasTime:true}) : "-"}
-              </Text>
-            </Row>
 
-           <ButtonGroup>
-              <Pressable style={globalStyles.primaryBtnStart} onPress={gitInvalidate}>
-                <Text style={globalStyles.primaryBtnTxt}>Refresh GitHub</Text>
-              </Pressable>
-             
-            </ButtonGroup>
-            
+            </View>
+
+              <Row label="Last_Fetch_Time">
+                <Text style={globalStyles.cardTitle}>
+                  {fetchTime
+                    ? dateFormat({
+                        dateString: new Date(fetchTime).toLocaleString(),
+                        hasTime: true,
+                      })
+                    : "-"}
+                </Text>
+              </Row>
+
+              <Row label="Expires_Time">
+                <Text style={globalStyles.cardTitle}>
+                  {expiresAt
+                    ? dateFormat({
+                        dateString: new Date(expiresAt).toLocaleString(),
+                        hasTime: true,
+                      })
+                    : "-"}
+                </Text>
+              </Row>
+            </>
+          )}
+
+          <ButtonGroup>
+            <Pressable
+              style={globalStyles.primaryBtnStart}
+              onPress={gitInvalidate}
+            >
+              <Text style={globalStyles.primaryBtnTxt}>Refresh GitHub</Text>
+            </Pressable>
+          </ButtonGroup>
         </Panel>
 
         <Panel title="App_Data">
@@ -472,7 +506,7 @@ const UserProfile = () => {
           </Row>
 
           <Row label="Boot_Screen">
-            <View style={[globalStyles.chips, {paddingHorizontal:0}]}>
+            <View style={[globalStyles.chips, { paddingHorizontal: 0 }]}>
               {Object.keys(bootMap).map((key) => (
                 <Pressable
                   key={key}
@@ -501,14 +535,12 @@ const UserProfile = () => {
                 style={globalStyles.primaryBtnStart}
                 onPress={() => updateBootOption(bootName)}
               >
-                <Text style={globalStyles.primaryBtnTxt}>Change Boot Screen</Text>
+                <Text style={globalStyles.primaryBtnTxt}>
+                  Change Boot Screen
+                </Text>
               </Pressable>
             </ButtonGroup>
           </Row>
-
-          
-
-         
 
           <Row label="Backup_Data">
             <ButtonGroup>
@@ -551,7 +583,6 @@ const UserProfile = () => {
             </ButtonGroup>
           </Row>
         </Panel>
-
       </ScrollView>
     </CtosScreen>
   );

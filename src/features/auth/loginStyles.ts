@@ -78,6 +78,16 @@ const loginStyles = StyleSheet.create({
     alignSelf: "center",
     gap: 10,
   },
+
+  imageBox: {
+    width: 150,
+    height: 150,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    backgroundColor: Colors.secondarySoft,
+  },
 });
 
 export default loginStyles;
