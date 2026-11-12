@@ -289,7 +289,7 @@ const globalStyles = StyleSheet.create({
   chip: chipBase,
   chipActive: chipActiveBase,
 
-  btnGrp: { gap: 10, flexDirection: "row" },
+  btnGrp: { gap: 10, flexDirection: "row", marginVertical:5 },
 
   textDisplay: text.display,
   textHeading: text.heading,

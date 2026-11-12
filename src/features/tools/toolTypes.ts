@@ -1,5 +1,3 @@
-import {APPS} from "@/global/AppsConfig"
-
 export type StandupField = "yesterday" | "today" | "blocked";
 
 export interface snippetType {

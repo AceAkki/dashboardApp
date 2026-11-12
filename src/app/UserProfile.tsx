@@ -615,14 +615,18 @@ const UserProfile = () => {
                   </Pressable>
                 ))}
               </View>
-              {bootChanged ? (
-                <Btn
-                  label="Use this boot screen"
-                  onPress={() => updateBootOption(bootName)}
-                />
-              ) : (
-                <Text style={globalStyles.textMuted}>ACTIVE: {BootOption}</Text>
-              )}
+
+              <BtnRow>
+                {bootChanged ? (
+                  <Btn
+                    label="Use this boot screen"
+                    onPress={() => updateBootOption(bootName)}
+                  />
+
+                ) : (
+                  <Text style={globalStyles.textMuted}>ACTIVE: {BootOption}</Text>
+                )}
+              </BtnRow>
             </Block>
           </View>
         </Panel>
