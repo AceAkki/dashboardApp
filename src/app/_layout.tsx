@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
+import { useShallow } from "zustand/shallow";
+// new ------------------------
+import * as SplashScreen from "expo-splash-screen";
+
+import { Colors } from "@/constants/Colors";
+
 import { useUserStore } from "@/features/auth/useAuthStore";
 import { TOOL_ROUTES } from "@/features/tools/toolRoutes";
 import useTaskReminders from "@/features/tasks/hooks/useTaskReminders";
-import {bootMap, type BootMapKey} from "@/global/globalFunctions"
-import { Colors } from "@/constants/Colors";
 
-// new ------------------------
-import * as SplashScreen from "expo-splash-screen";
-import { useShallow } from "zustand/shallow";
-
+import {bootMap, type BootMapKey} from "@/global/bootMap"
 
 export default function RootLayout() {
-  const {isLoggedIn, BootOption } = useUserStore(
+  const {username, isLoggedIn, BootOption } = useUserStore(
     useShallow((s) => ({
+      username:s.username,
       isLoggedIn :  s.username.length > 0,
       BootOption: s.BootOption
     })));
@@ -44,7 +46,7 @@ export default function RootLayout() {
 
   if (!ready) return null;
   // boot screen
-  if (!booted) return <BootScreen onDone={() => setBooted(true)} />;
+  if (!booted) return <BootScreen onDone={() => setBooted(true)} username={username} />;
 
   return (
     <Stack

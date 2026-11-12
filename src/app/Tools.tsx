@@ -18,7 +18,7 @@ import SslPanel from "@/features/tools/components/SslPanel";
 import TimestampPanel from "@/features/tools/components/TimestampPanel";
 import UrlPanel from "@/features/tools/components/UrlPanel";
 import UuidPanel from "@/features/tools/components/UuidPanel";
-import { APP_TAG } from "@/global/globalFunctions";
+import { APP_TAG } from "@/global/appInfo";
 
 import toolsStyles from "@/features/tools/toolsStyles";
 

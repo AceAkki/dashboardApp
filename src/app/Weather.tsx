@@ -18,7 +18,7 @@ import type { WeatherData } from "@/features/weather/weatherType";
 import CtosScreen from "@/components/ctos/CtosScreen";
 import CtosText from "@/components/CtosText";
 import globalStyles from "@/style/globalStyles";
-import { APP_TAG } from "@/global/globalFunctions";
+import { APP_TAG } from "@/global/appInfo";
 // keys that are shown elsewhere (card / hourly) and don't get a tile
 const hiddenKeys = ["time", "interval", "is_day", "temperature_2m", "weather_code"];
 

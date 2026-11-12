@@ -22,7 +22,7 @@ import globalStyles from "@/style/globalStyles";
 import { useUserStore } from "@/features/auth/useAuthStore";
 import loginStyles from "@/features/auth/loginStyles";
 import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
-import { appName } from "@/global/globalFunctions";
+import { appName } from "@/global/appInfo";
 
 // The logo shown above the form. Set it to null to show the ">_" text instead.
 // (A missing file is a build error, so it can't be "detected" while the app runs.)

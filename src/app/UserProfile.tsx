@@ -2,25 +2,35 @@ import { type ReactNode, useState } from "react";
 import { useShallow } from "zustand/shallow";
 import {
   Alert,
+  Image,
   Platform,
   Pressable,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
-  Image,
   View,
+  type StyleProp,
+  type ViewStyle,
 } from "react-native";
 import Constants from "expo-constants";
-import { Ionicons } from "@expo/vector-icons";
 
+import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "@/constants/Colors";
+import { Typography } from "@/constants/Typography";
+import globalStyles, {
+  hudDNG,
+  spacing,
+  text,
+  glowDangerBase,
+} from "@/style/globalStyles";
+
+// components
 import CtosScreen from "@/components/ctos/CtosScreen";
 import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
-import { Colors } from "@/constants/Colors";
-import globalStyles, { spacing, text } from "@/style/globalStyles";
-import loginStyles from "@/features/auth/loginStyles";
-import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
 
+// stores
 import { useUserStore } from "@/features/auth/useAuthStore";
 import {
   useGitStore,
@@ -35,10 +45,20 @@ import {
   type TaskStore,
 } from "@/features/tasks/hooks/useTasksStore";
 import { useToolsStore } from "@/features/tools/hooks/useToolsStore";
+import { usePomodoroStore } from "@/features/pomodoro/hooks/pomodoroStore";
+
+// functions
+import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
+import { exportToClipboard, exportToFile, importBackup } from "@/global/backup";
 import useNotifications from "@/global/useNotifications";
-import { bootMap, dateFormat } from "@/global/globalFunctions";
+import { dateFormat } from "@/global/globalFunctions";
 import { openExactAlarmSettings } from "@/global/exactAlarm";
-import { APP_TAG } from "@/global/globalFunctions";
+import { APP_TAG } from "@/global/appInfo";
+import { bootMap } from "@/global/bootMap";
+
+// style
+import loginStyles from "@/features/auth/loginStyles";
+import Corners from "@/components/ctos/Corners";
 
 // only Android 14+ has the "Alarms & reminders" switch
 const hasAlarmSetting =
@@ -46,37 +66,105 @@ const hasAlarmSetting =
 
 type Errors = { name?: string; git?: string; lat?: string; lon?: string };
 
-// one label + value (or input) with a divider under it
-const Row = ({ label, children }: { label: string; children: ReactNode }) => (
-  <View style={{ marginVertical: 5 }}>
-    <View style={{ gap: 8 }}>
-      <Text style={globalStyles.textCaption}>{label}</Text>
-      {children}
-    </View>
-    <View style={globalStyles.divider} />
+// ───────────────────────────── small pieces ─────────────────────────────
+
+// label on the left, value on the right, in an inset tile
+const InfoRow = ({ label, value }: { label: string; value: string }) => (
+  <View style={[globalStyles.inset, s.infoRow]}>
+    <Text style={globalStyles.textCaption}>{label}</Text>
+    <Text style={[globalStyles.cardTitle, s.infoVal]} numberOfLines={1}>
+      {value}
+    </Text>
   </View>
 );
 
-const ButtonGroup = ({
-  isColumn,
+// big number + caption
+const StatTile = ({ label, value }: { label: string; value: number }) => (
+  <View style={[globalStyles.inset, s.stat]}>
+    <Text style={globalStyles.textReadout}>{value}</Text>
+    <Text style={globalStyles.textCaption}>{label}</Text>
+  </View>
+);
+
+// a label, a hint line and the controls under it, inside an inset tile
+const Block = ({
+  label,
+  style,
+  hint,
   children,
 }: {
-  isColumn?: boolean;
-  children: ReactNode;
+  label: string;
+  style?: StyleProp<ViewStyle>;
+  hint?: string;
+  children?: ReactNode;
 }) => (
-  <View
-    style={[
-      globalStyles.btnGrp,
-      { marginVertical: spacing.md },
-      isColumn && { flexDirection: "column" },
-    ]}
-  >
+  <View style={[globalStyles.inset, s.block, style]}>
+    <Text style={globalStyles.textCaption}>{label}</Text>
+    {hint ? <Text style={s.hint}>{hint}</Text> : null}
     {children}
   </View>
 );
 
-const Err = ({ text }: { text?: string }) =>
-  text ? <Text style={loginStyles.errTxt}>{text}</Text> : null;
+const BtnRow = ({ children }: { children: ReactNode }) => (
+  <View style={globalStyles.btnGrp}>{children}</View>
+);
+
+// filled = the main action, outlined = everything secondary
+const Btn = ({
+  label,
+  onPress,
+  outlined,
+  danger,
+  icon,
+  flex,
+}: {
+  label: string;
+  onPress: () => void;
+  outlined?: boolean;
+  danger?: boolean;
+  icon?: keyof typeof Ionicons.glyphMap;
+  flex?: boolean;
+}) => {
+  const tone = danger ? Colors.danger : Colors.primary;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={[
+        outlined
+          ? [s.outBtn, { borderColor: tone }]
+          : danger
+            ? globalStyles.dangerBtn
+            : globalStyles.primaryBtn,
+        flex && { flex: 1 },
+        s.btnRow,
+      ]}
+    >
+      {icon ? (
+        <Ionicons
+          name={icon}
+          size={15}
+          color={outlined ? tone : Colors.textOnPrimary}
+        />
+      ) : null}
+      <Text style={outlined ? [s.outTxt, { color: tone }] : s.btnTxt}>
+        {label}
+      </Text>
+    </Pressable>
+  );
+};
+
+const Err = ({ text: t }: { text?: string }) =>
+  t ? <Text style={loginStyles.errTxt}>{t}</Text> : null;
+
+const Field = ({ label, children }: { label: string; children: ReactNode }) => (
+  <View style={{ gap: 6 }}>
+    <Text style={globalStyles.textCaption}>{label}</Text>
+    {children}
+  </View>
+);
+
+// ───────────────────────────── screen ─────────────────────────────
 
 const UserProfile = () => {
   const {
@@ -88,14 +176,14 @@ const UserProfile = () => {
     BootOption,
     updateBootOption,
   } = useUserStore(
-    useShallow((s) => ({
-      username: s.username,
-      userID: s.userID,
-      location: s.location,
-      logOutUser: s.logOutUser,
-      updateUser: s.updateUser,
-      BootOption: s.BootOption,
-      updateBootOption: s.updateBootOption,
+    useShallow((st) => ({
+      username: st.username,
+      userID: st.userID,
+      location: st.location,
+      logOutUser: st.logOutUser,
+      updateUser: st.updateUser,
+      BootOption: st.BootOption,
+      updateBootOption: st.updateBootOption,
     })),
   );
   const { gitStatData, fetchTime, expiresAt, gitInvalidate } = useGitStore(
@@ -109,13 +197,8 @@ const UserProfile = () => {
   const weatherInvalidate = useWeatherStore(
     (state: WeatherStore) => state.invalidate,
   );
-
-  const { snippets, apps } = useToolsStore(
-    useShallow((s) => ({
-      snippets: s.snippets,
-      apps: s.apps,
-    })),
-  );
+  const snippetCount = useToolsStore((st) => st.snippets.length);
+  const sessions = usePomodoroStore((st) => st.completedSessions);
   const { tasks, tasksPurge } = useTaskStore(
     useShallow((state: TaskStore) => ({
       tasksPurge: state.clearAllTasks,
@@ -131,6 +214,7 @@ const UserProfile = () => {
   const [latitude, setLatitude] = useState(String(location.latitude));
   const [longitude, setLongitude] = useState(String(location.longitude));
   const [errors, setErrors] = useState<Errors>({});
+  const [avatarFailed, setAvatarFailed] = useState(false);
 
   // every time editing starts, the fields show what is saved right now
   const startEdit = () => {
@@ -186,57 +270,60 @@ const UserProfile = () => {
   };
 
   const confirmPurgeTasks = () => {
-    Alert.alert("Delete All Tasks?", "This deletes all tasks on this device.", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Purge Tasks",
-        style: "destructive",
-        onPress: () => {
-          Alert.alert(
-            "Delete All Tasks?",
-            "This deletes all tasks on this device.",
-            [
-              { text: "Cancel", style: "cancel" },
-              {
-                text: "Purge Tasks",
-                style: "destructive",
-                onPress: purgeTasks,
-              },
-            ],
-          );
+    Alert.alert(
+      "Delete all tasks?",
+      "This deletes every task on this device.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Continue",
+          style: "destructive",
+          onPress: () =>
+            Alert.alert(
+              "Are you sure?",
+              "This can't be undone. Export a backup first if you might need them.",
+              [
+                { text: "Cancel", style: "cancel" },
+                {
+                  text: "Delete tasks",
+                  style: "destructive",
+                  onPress: purgeTasks,
+                },
+              ],
+            ),
         },
-      },
-    ]);
+      ],
+    );
   };
 
+  // tasks and cached weather / GitHub data. Profile, snippets and notes stay.
   const purgeAllData = () => {
     gitInvalidate();
     weatherInvalidate();
     purgeTasks();
   };
 
-  const confirmPurgeAllData = () => {
-    Alert.alert("Delete all data?", "This deletes all data on this device.", [
-      { text: "cancel", style: "cancel" },
-      {
-        text: "Delete Data",
-        style: "destructive",
-        onPress: () => {
-          Alert.alert(
-            "This will delete data!",
-            "This deletes all data on this device.",
-            [
-              { text: "cancel", style: "cancel" },
-              {
-                text: "Delete Data",
-                style: "destructive",
-                onPress: purgeAllData,
-              },
-            ],
-          );
+  const confirmReset = () => {
+    Alert.alert(
+      "Reset tasks and cache?",
+      "This deletes all tasks and the cached weather and GitHub data. Your profile, snippets and notes are kept.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Continue",
+          style: "destructive",
+          onPress: () =>
+            Alert.alert(
+              "Are you sure?",
+              "The tasks can't be brought back unless you have a backup.",
+              [
+                { text: "Cancel", style: "cancel" },
+                { text: "Reset", style: "destructive", onPress: purgeAllData },
+              ],
+            ),
         },
-      },
-    ]);
+      ],
+    );
   };
 
   // logging out wipes the tasks on this phone, so ask first
@@ -257,6 +344,9 @@ const UserProfile = () => {
       ],
     );
 
+  const avatar = gitStatData?.avatar_url;
+  const bootChanged = bootName !== BootOption;
+
   return (
     <CtosScreen nav>
       <View style={globalStyles.header}>
@@ -269,20 +359,76 @@ const UserProfile = () => {
       <ScrollView
         contentContainerStyle={{ padding: 18, gap: 18 }}
         keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets
       >
+        {/* identity */}
+        <Panel>
+          <View style={s.idRow}>
+            <View style={s.avatar}>
+              {avatar && !avatarFailed ? (
+                <>
+                <Image
+                  source={{ uri: avatar }}
+                  style={s.avatarImg}
+                  onError={() => setAvatarFailed(true)}
+                />
+                <Corners />
+                
+                </>
+              ) : (
+                <Text style={loginStyles.logoTxt}>
+                  {(username.trim()[0] ?? ">").toUpperCase()}
+                </Text>
+              )}
+            </View>
+            <View style={{ flex: 1, gap: 4 }}>
+              <CtosText style={globalStyles.textTitle}>
+                {username || "—"}
+              </CtosText>
+              <Text style={[globalStyles.textSmall, { color: Colors.primary }]}>
+                {userID ? `@${userID}` : "no github id"}
+              </Text>
+              <Text style={globalStyles.textMuted}>
+                v{Constants.expoConfig?.version ?? "1.0.0"}
+              </Text>
+            </View>
+          </View>
+          <View style={s.statRow}>
+            <StatTile label="TASKS" value={tasks.length} />
+            <StatTile label="SNIPPETS" value={snippetCount} />
+            <StatTile label="SESSIONS" value={sessions} />
+          </View>
+        </Panel>
+
+        {/* details */}
         <Panel
-          title="User Details"
+          title="Operator"
           right={
             isEditMode ? (
               <Text style={globalStyles.sectionLabel}>EDITING</Text>
-            ) : null
+            ) : (
+              <Pressable
+                onPress={startEdit}
+                hitSlop={10}
+                accessibilityLabel="Edit profile"
+              >
+                <Ionicons
+                  name="create-outline"
+                  size={18}
+                  color={Colors.primary}
+                />
+              </Pressable>
+            )
           }
         >
-          <Row label="User_Name">
-            {isEditMode ? (
-              <>
+          {isEditMode ? (
+            <View style={{ gap: 14 }}>
+              <Field label="User_Name">
                 <TextInput
-                  style={loginStyles.input}
+                  style={[
+                    loginStyles.input,
+                    !!errors.name && loginStyles.inputError,
+                  ]}
                   placeholder="Name"
                   placeholderTextColor={Colors.textMuted}
                   value={name}
@@ -290,15 +436,9 @@ const UserProfile = () => {
                   autoCapitalize="words"
                 />
                 <Err text={errors.name} />
-              </>
-            ) : (
-              <Text style={globalStyles.cardTitle}>{username}</Text>
-            )}
-          </Row>
+              </Field>
 
-          <Row label="Git_ID">
-            {isEditMode ? (
-              <>
+              <Field label="Git_ID">
                 <TextInput
                   style={[
                     loginStyles.input,
@@ -312,20 +452,16 @@ const UserProfile = () => {
                   autoCorrect={false}
                 />
                 <Err text={errors.git} />
-              </>
-            ) : (
-              <Text style={globalStyles.cardTitle}>{userID || "—"}</Text>
-            )}
-          </Row>
+              </Field>
 
-          <Row label="Coordinates">
-            {isEditMode ? (
-              <>
-                <View style={{ flexDirection: "row", gap: 10 }}>
-                  <View style={{ flex: 1, gap: 6 }}>
-                    <Text style={globalStyles.sectionPara}>Latitude</Text>
+              <View style={{ flexDirection: "row", gap: 10 }}>
+                <View style={{ flex: 1 }}>
+                  <Field label="Latitude">
                     <TextInput
-                      style={loginStyles.input}
+                      style={[
+                        loginStyles.input,
+                        !!errors.lat && loginStyles.inputError,
+                      ]}
                       placeholder="28.61"
                       placeholderTextColor={Colors.textMuted}
                       value={latitude}
@@ -333,11 +469,15 @@ const UserProfile = () => {
                       keyboardType="numbers-and-punctuation"
                     />
                     <Err text={errors.lat} />
-                  </View>
-                  <View style={{ flex: 1, gap: 6 }}>
-                    <Text style={globalStyles.sectionPara}>Longitude</Text>
+                  </Field>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Field label="Longitude">
                     <TextInput
-                      style={loginStyles.input}
+                      style={[
+                        loginStyles.input,
+                        !!errors.lon && loginStyles.inputError,
+                      ]}
                       placeholder="77.20"
                       placeholderTextColor={Colors.textMuted}
                       value={longitude}
@@ -345,243 +485,205 @@ const UserProfile = () => {
                       keyboardType="numbers-and-punctuation"
                     />
                     <Err text={errors.lon} />
-                  </View>
+                  </Field>
                 </View>
-                <Pressable
-                  style={[globalStyles.primaryBtn, loginStyles.locationBtn]}
-                  onPress={grabLocation}
-                >
-                  <Ionicons
-                    name="location-outline"
-                    size={16}
-                    color={Colors.textOnPrimary}
-                  />
-                  <Text style={globalStyles.primaryBtnTxt}>
-                    Use my location
-                  </Text>
-                </Pressable>
-              </>
-            ) : (
-              <View style={{ flexDirection: "row", gap: 24 }}>
-                <Text style={globalStyles.sectionPara}>
-                  LAT{" "}
-                  <Text style={globalStyles.cardTitle}>
-                    {location.latitude}
-                  </Text>
-                </Text>
-                <Text style={globalStyles.sectionPara}>
-                  LON{" "}
-                  <Text style={globalStyles.cardTitle}>
-                    {location.longitude}
-                  </Text>
-                </Text>
               </View>
-            )}
-          </Row>
 
-          <ButtonGroup>
-            {isEditMode ? (
-              <>
-                <Pressable
-                  style={[globalStyles.primaryBtn, { flex: 1 }]}
-                  onPress={save}
-                >
-                  <Text style={globalStyles.primaryBtnTxt}>Save</Text>
-                </Pressable>
-                <Pressable
-                  style={[globalStyles.primaryBtn, { flex: 1 }]}
-                  onPress={cancelEdit}
-                >
-                  <Text style={globalStyles.primaryBtnTxt}>Cancel</Text>
-                </Pressable>
-              </>
-            ) : (
-              <Pressable
-                style={globalStyles.primaryBtnStart}
-                onPress={startEdit}
-              >
-                <Text style={globalStyles.primaryBtnTxt}>Edit</Text>
-              </Pressable>
-            )}
-          </ButtonGroup>
+              <Btn
+                outlined
+                icon="location-outline"
+                label="Use my location"
+                onPress={grabLocation}
+              />
+
+              <BtnRow>
+                <Btn flex label="Save" onPress={save} />
+                <Btn flex outlined label="Cancel" onPress={cancelEdit} />
+              </BtnRow>
+            </View>
+          ) : (
+            <View style={{ gap: 6 }}>
+              <InfoRow label="NAME" value={username || "—"} />
+              <InfoRow label="GIT_ID" value={userID || "—"} />
+              <InfoRow label="LATITUDE" value={String(location.latitude)} />
+              <InfoRow label="LONGITUDE" value={String(location.longitude)} />
+            </View>
+          )}
         </Panel>
 
+        {/* github */}
+        <Panel
+          title="Github"
+          right={
+            <View style={s.status}>
+              <View
+                style={[
+                  s.dot,
+                  {
+                    backgroundColor: gitStatData
+                      ? Colors.success
+                      : Colors.danger,
+                  },
+                ]}
+              />
+              <Text style={globalStyles.textCaption}>
+                {gitStatData ? "CONNECTED" : "OFFLINE"}
+              </Text>
+            </View>
+          }
+        >
+          <View style={{ gap: 6 }}>
+            <InfoRow
+              label="LAST_FETCH"
+              value={
+                fetchTime
+                  ? dateFormat({ dateString: fetchTime, hasTime: true })
+                  : "-"
+              }
+            />
+            <InfoRow
+              label="EXPIRES"
+              value={
+                expiresAt
+                  ? dateFormat({ dateString: expiresAt, hasTime: true })
+                  : "-"
+              }
+            />
+          </View>
+          <View style={{ marginTop: spacing.md }}>
+            <Btn
+              outlined
+              icon="refresh-outline"
+              label="Refresh GitHub"
+              onPress={gitInvalidate}
+            />
+          </View>
+        </Panel>
+
+        {/* data */}
+        <Panel title="Data">
+          <View style={{ gap: 8 }}>
+            <Block
+              label="BACKUP"
+              hint="Tasks, snippets, notes, profile and Pomodoro count. Log Out and uninstalling erase them, so keep a copy somewhere safe."
+            >
+              <BtnRow>
+                <Btn
+                  flex
+                  icon="download-outline"
+                  label="Export File"
+                  onPress={exportToFile}
+                />
+                <Btn outlined label="Copy" onPress={exportToClipboard} />
+              </BtnRow>
+              <BtnRow>
+                <Btn
+                  flex
+                  icon="push-outline"
+                  label="Import File"
+                  onPress={() => importBackup("file")}
+                />
+                <Btn
+                  outlined
+                  label="Paste"
+                  onPress={() => importBackup("clipboard")}
+                />
+              </BtnRow>
+            </Block>
+
+            <Block label="BOOT_SCREEN">
+              <View style={s.chips}>
+                {Object.keys(bootMap).map((key) => (
+                  <Pressable
+                    key={key}
+                    style={[
+                      globalStyles.chip,
+                      bootName === key && globalStyles.chipActive,
+                    ]}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: bootName === key }}
+                    onPress={() => setBootName(key)}
+                  >
+                    <Text
+                      style={[
+                        globalStyles.textSmall,
+                        bootName === key && { color: Colors.primary },
+                      ]}
+                    >
+                      {key}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+              {bootChanged ? (
+                <Btn
+                  label="Use this boot screen"
+                  onPress={() => updateBootOption(bootName)}
+                />
+              ) : (
+                <Text style={globalStyles.textMuted}>ACTIVE: {BootOption}</Text>
+              )}
+            </Block>
+          </View>
+        </Panel>
+
+        {/* system */}
         {hasAlarmSetting ? (
           <Panel title="Reminders">
-            <Text style={globalStyles.sectionPara}>
+            <Text style={s.hint}>
               Allow "Alarms & reminders" so task reminders arrive on the minute,
               not a few minutes late.
             </Text>
-            <ButtonGroup>
-              <Pressable
-                style={[globalStyles.primaryBtn, { marginTop: 12 }]}
-                onPress={() => openExactAlarmSettings()}
-              >
-                <Text style={globalStyles.primaryBtnTxt}>Open Settings</Text>
-              </Pressable>
-              <Pressable
-                style={[globalStyles.primaryBtn, { marginTop: 12 }]}
-                onPress={async () => {
-                  await notify({ title: "Test", body: "Testing notification" });
-                }}
-              >
-                <Text style={globalStyles.primaryBtnTxt}>
-                  Test Notification
-                </Text>
-              </Pressable>
-            </ButtonGroup>
+            <View style={{ marginTop: spacing.md }}>
+              <BtnRow>
+                <Btn
+                  flex
+                  outlined
+                  label="Open Settings"
+                  onPress={() => openExactAlarmSettings()}
+                />
+                <Btn
+                  flex
+                  outlined
+                  label="Test"
+                  onPress={async () => {
+                    await notify({
+                      title: "Test",
+                      body: "Testing notification",
+                    });
+                  }}
+                />
+              </BtnRow>
+            </View>
           </Panel>
         ) : null}
 
-        <Panel title="User_Stats">
-          <Row label="All_Tasks_Count">
-            <Text style={globalStyles.cardTitle}>{tasks.length}</Text>
-          </Row>
-          <Row label="All_Snippets_Count">
-            <Text style={globalStyles.cardTitle}>{snippets.length}</Text>
-          </Row>
-          <Row label="Core_Apps_Support">
-            <Text style={globalStyles.cardTitle}>{apps ? apps.length : 0}</Text>
-          </Row>
-        </Panel>
-
-        <Panel title="Github_Stats">
-          <Row label="Connection_Status">
-            <Text style={globalStyles.cardTitle}>
-              {gitStatData ? "GitHub Connected" : "Failed to connect!!"}
-            </Text>
-          </Row>
-
-          {gitStatData && (
-            <>
-            <View style={[loginStyles.imageBox, globalStyles.box]}>
-              <Image
-                source={{uri:gitStatData.avatar_url}}
-                style={globalStyles.image}
-                resizeMode="contain"
-              />
-
-
-            </View>
-
-              <Row label="Last_Fetch_Time">
-                <Text style={globalStyles.cardTitle}>
-                  {fetchTime
-                    ? dateFormat({
-                        dateString: new Date(fetchTime).toLocaleString(),
-                        hasTime: true,
-                      })
-                    : "-"}
-                </Text>
-              </Row>
-
-              <Row label="Expires_Time">
-                <Text style={globalStyles.cardTitle}>
-                  {expiresAt
-                    ? dateFormat({
-                        dateString: new Date(expiresAt).toLocaleString(),
-                        hasTime: true,
-                      })
-                    : "-"}
-                </Text>
-              </Row>
-            </>
-          )}
-
-          <ButtonGroup>
-            <Pressable
-              style={globalStyles.primaryBtnStart}
-              onPress={gitInvalidate}
+        {/* danger */}
+        <Panel
+          title="Danger_Zone"
+          style={{ borderTopColor: Colors.danger, ...glowDangerBase }}
+          titleStyle={{ color: Colors.danger }}
+          isDanger={true}
+        >
+          <View style={{ gap: 8 }}>
+            <Block
+              label="PURGE_DATA"
+              style={{ borderLeftColor: hudDNG.edge }}
+              hint="Deletes tasks. Reset also clears the weather and GitHub cache."
             >
-              <Text style={globalStyles.primaryBtnTxt}>Refresh GitHub</Text>
-            </Pressable>
-          </ButtonGroup>
-        </Panel>
-
-        <Panel title="App_Data">
-          <Row label="App_Version">
-            <Text style={globalStyles.cardTitle}>
-              v{Constants.expoConfig?.version ?? "1.0.0"}
-            </Text>
-          </Row>
-
-          <Row label="Boot_Screen">
-            <View style={[globalStyles.chips, { paddingHorizontal: 0 }]}>
-              {Object.keys(bootMap).map((key) => (
-                <Pressable
-                  key={key}
-                  style={[
-                    globalStyles.chip,
-                    bootName === key && globalStyles.chipActive,
-                  ]}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: bootName === key }}
-                  onPress={() => setBootName(key)}
-                >
-                  <Text
-                    style={[
-                      globalStyles.sectionPara,
-                      BootOption === key && { color: Colors.primary },
-                    ]}
-                  >
-                    {key}
-                  </Text>
-                </Pressable>
-              ))}
-            </View>
-
-            <ButtonGroup>
-              <Pressable
-                style={globalStyles.primaryBtnStart}
-                onPress={() => updateBootOption(bootName)}
-              >
-                <Text style={globalStyles.primaryBtnTxt}>
-                  Change Boot Screen
-                </Text>
-              </Pressable>
-            </ButtonGroup>
-          </Row>
-
-          <Row label="Backup_Data">
-            <ButtonGroup>
-              <Pressable style={globalStyles.primaryBtnStart}>
-                <Text style={globalStyles.primaryBtnTxt}>Export Data</Text>
-              </Pressable>
-              <Pressable style={globalStyles.primaryBtnStart}>
-                <Text style={globalStyles.primaryBtnTxt}>Import Data</Text>
-              </Pressable>
-            </ButtonGroup>
-          </Row>
-        </Panel>
-
-        <Panel title="Danger_Zone">
-          <Row label="Purge_Data">
-            <ButtonGroup>
-              <Pressable
-                style={globalStyles.dangerBtnStart}
-                onPress={confirmPurgeTasks}
-              >
-                <Text style={globalStyles.primaryBtnTxt}>Tasks</Text>
-              </Pressable>
-              <Pressable
-                style={globalStyles.dangerBtnStart}
-                onPress={confirmPurgeAllData}
-              >
-                <Text style={globalStyles.primaryBtnTxt}>Reset</Text>
-              </Pressable>
-            </ButtonGroup>
-          </Row>
-
-          <Row label="User_Session">
-            <ButtonGroup>
-              <Pressable
-                style={globalStyles.dangerBtnStart}
-                onPress={confirmLogOut}
-              >
-                <Text style={globalStyles.primaryBtnTxt}>Log Out</Text>
-              </Pressable>
-            </ButtonGroup>
-          </Row>
+              <BtnRow>
+                <Btn flex danger label="Tasks" onPress={confirmPurgeTasks} />
+                <Btn flex danger label="Reset" onPress={confirmReset} />
+              </BtnRow>
+            </Block>
+            <Block
+              label="USER_SESSION"
+              style={{ borderLeftColor: hudDNG.edge }}
+              hint="Logging out also deletes your tasks."
+            >
+              <Btn danger outlined label="Log Out" onPress={confirmLogOut} />
+            </Block>
+          </View>
         </Panel>
       </ScrollView>
     </CtosScreen>
@@ -589,3 +691,51 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+
+const s = StyleSheet.create({
+  idRow: { flexDirection: "row", alignItems: "center", gap: 14 },
+  avatar: {
+    width: 100,
+    height: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderColor: Colors.secondarySoft,
+    backgroundColor: Colors.secondarySoft,
+    overflow: "hidden",
+  },
+  avatarImg: { width: "100%", height: "100%" },
+  statRow: { flexDirection: "row", gap: 8, marginTop: spacing.lg },
+  stat: { flex: 1, paddingVertical: 10, paddingHorizontal: 10, gap: 2 },
+
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+    padding: 10,
+  },
+  infoVal: { flexShrink: 1, textAlign: "right" },
+
+  block: { padding: 10, gap: 8 },
+  hint: { ...text.small, textTransform: "none", lineHeight: 17 },
+  chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+
+  status: { flexDirection: "row", alignItems: "center", gap: 6 },
+  dot: { width: 8, height: 8, borderRadius: 4 },
+
+  btnRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  btnTxt: { ...text.btn, fontSize: 12, letterSpacing: 2 },
+  outBtn: { paddingVertical: 8, paddingHorizontal: 14, borderWidth: 1 },
+  outTxt: {
+    fontFamily: Typography.primary_bold,
+    fontSize: 12,
+    letterSpacing: 2,
+    textTransform: "uppercase",
+  },
+});

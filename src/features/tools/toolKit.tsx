@@ -17,7 +17,8 @@ import CtosScreen from "@/components/ctos/CtosScreen";
 import Panel from "@/components/ctos/Panel";
 import CtosText from "@/components/CtosText";
 import { Colors } from "@/constants/Colors";
-import { writeClipboardText, APP_TAG } from "@/global/globalFunctions";
+import { writeClipboardText } from "@/global/globalFunctions";
+import { APP_TAG } from "@/global/appInfo";
 import globalStyles, { text } from "@/style/globalStyles";
 import kit from "./toolKitStyles";
 

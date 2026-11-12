@@ -71,9 +71,9 @@ const GitStats = () => {
               : { color: Colors.primary },]}>
           {data?.lastPushDate &&
             dateFormat({
-              dateString:(data?.lastPushDate).replace(/\/|\-/g, "."),
+              dateString:(data.lastPushDate),
               hasTime:false
-            })}
+            }).replace(/\/|\-/g, ".")}
         </CtosText>
 
         <Text style={globalStyles.sectionLabel}>Needs Update</Text>

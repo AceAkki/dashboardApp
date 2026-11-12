@@ -2,24 +2,9 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Clipboard from "expo-clipboard";
 import NetInfo from "@react-native-community/netinfo";
-import Constants from "expo-constants";
+
 import { useRouter } from "expo-router";
 import { userKey } from "./storageKeys";
-
-import BootScreen from "@/components/BootScreen";
-import BootAnimation from "@/components/BootAnimation";
-import BootSequence from "@/components/BootSequence";
-
-export const bootMap = {
-  Linux : BootScreen,
-  CTOS : BootAnimation,
-  QCK : BootSequence
-} as const
-export type BootMapKey = keyof typeof bootMap;
-
-const appCleanName = (Constants.expoConfig?.name ?? "terminaldeck");
-export const appName = appCleanName.toUpperCase();
-export const APP_TAG = `~/${appCleanName}/`;
 
 export const fetchData = async (apiURL: string) => {
   try {
@@ -34,8 +19,9 @@ export const fetchData = async (apiURL: string) => {
   }
 };
 
-export const dateFormat = ({dateString, hasTime}:{dateString:string, hasTime:boolean}) => {
-   let option:Intl.DateTimeFormatOptions  = hasTime ? {
+export const dateFormat = ({dateString, hasTime}:{dateString:string|number, hasTime:boolean}) => {
+  let formatDate =  new Date(dateString);
+  let option:Intl.DateTimeFormatOptions  = hasTime ? {
     day: "numeric",
     year: "numeric",
     month: "2-digit",
@@ -47,8 +33,7 @@ export const dateFormat = ({dateString, hasTime}:{dateString:string, hasTime:boo
     year: "numeric",
     month: "2-digit",
   };
-
-  return new Date(dateString).toLocaleString("sv-SE", option);
+  return formatDate.toLocaleString("sv-SE", option);
 };
 
 export async function writeClipboardText(text: string) {

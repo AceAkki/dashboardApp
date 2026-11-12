@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Pressable, View, type StyleProp, type ViewStyle } from "react-native";
+import { Pressable, View, type StyleProp, type ViewStyle, type TextStyle } from "react-native";
 
 import CtosText from "@/components/CtosText";
 import globalStyles from "@/style/globalStyles";
@@ -12,27 +12,40 @@ type Props = {
   right?: ReactNode;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
+  titleStyle?: StyleProp<TextStyle>;
+  isDanger?: boolean;
   children?: ReactNode;
 };
 
 // The standard ctOS panel: square card, HUD top line, corner marks and optional "// TITLE" header.
-export default function Panel({ title, right, onPress, style, children }: Props) {
-  const header = title || right ? (
-    <View style={[globalStyles.cardHead, { marginBottom: 8 }]}>
-      {title ? (
-        <CtosText style={globalStyles.sectionLabel}>{`// ${title}`}</CtosText>
-      ) : (
-        <View />
-      )}
-      {right}
-    </View>
-  ) : null;
+export default function Panel({
+  title,
+  right,
+  onPress,
+  style,
+  titleStyle,
+  isDanger,
+  children,
+}: Props) {
+  const header =
+    title || right ? (
+      <View style={[globalStyles.cardHead, { marginBottom: 8 }]}>
+        {title ? (
+          <CtosText
+            style={[globalStyles.sectionLabel, titleStyle]}
+          >{`// ${title}`}</CtosText>
+        ) : (
+          <View />
+        )}
+        {right}
+      </View>
+    ) : null;
 
   const body = (
     <>
       {header}
       {children}
-      <Corners />
+      <Corners isDanger={isDanger} />
     </>
   );
 

@@ -28,6 +28,12 @@ export const hud = {
 const hudEdge = hud.edge;
 const hudFaint = hud.faint;
 
+export const hudDNG = {
+  edge: Colors.danger + "80", // 50%
+  faint: Colors.danger + "33", // 20%
+  bracket: Colors.danger, // corner marks
+} as const;
+
 // soft cyan glow (iOS + web; Android cannot tint shadows)
 export const glowBase = {
   shadowColor: Colors.primary,
@@ -35,6 +41,14 @@ export const glowBase = {
   shadowRadius: 10,
   shadowOffset: { width: 0, height: 0 },
 } as const;
+
+export const glowDangerBase = {
+  shadowColor: Colors.danger,
+  shadowOpacity: 0.35,
+  shadowRadius: 10,
+  shadowOffset: { width: 0, height: 0 },
+} as const;
+
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 };
 export const fontSize = {
   xs: 10,
@@ -121,7 +135,8 @@ export const primaryBtnBase = {
 
 export const dangerBtnBase = {
   ...primaryBtnBase,
-  backgroundColor: Colors.danger 
+  backgroundColor: Colors.danger,
+  ...glowDangerBase,
 } as const;
 
 // square tag used for tabs, filters and engine chips (+ its selected state)
@@ -234,7 +249,6 @@ export const text = {
 //   <View style={globalStyles.card}><Text style={globalStyles.cardTitle}>…
 // ─────────────────────────────────────────────────────────────────────────────
 const globalStyles = StyleSheet.create({
-  
   containerFull: {
     flex: 1,
   },
@@ -243,13 +257,13 @@ const globalStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  
+
   divider: {
     height: 1,
     marginVertical: 10,
     backgroundColor: hudFaint,
   },
-  
+
   scene: { flex: 1, paddingHorizontal: 16, paddingBottom: 16 },
   screen: screenBase,
   card: cardBase,
@@ -260,13 +274,21 @@ const globalStyles = StyleSheet.create({
   primaryBtn: primaryBtnBase,
   primaryBtnTxt: text.btn,
   dangerBtn: dangerBtnBase,
-  primaryBtnStart: { ...primaryBtnBase, alignSelf:"flex-start"},
-  dangerBtnStart:{ ...dangerBtnBase,  alignSelf:"flex-start"},
-  
-  chips: { flexDirection: "row", gap: 8, paddingHorizontal: 16, paddingVertical: 12 },
+  primaryBtnStart: { ...primaryBtnBase, alignSelf: "flex-start" },
+  dangerBtnStart: {
+    ...dangerBtnBase,
+    alignSelf: "flex-start",
+  },
+
+  chips: {
+    flexDirection: "row",
+    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
   chip: chipBase,
   chipActive: chipActiveBase,
-  
+
   btnGrp: { gap: 10, flexDirection: "row" },
 
   textDisplay: text.display,

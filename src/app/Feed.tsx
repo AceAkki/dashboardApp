@@ -13,7 +13,7 @@ import ReleasesPanel from "@/features/devfeed/components/ReleasesPanel";
 import StoryRow from "@/features/devfeed/components/StoryRow";
 import { useStories } from "@/features/devfeed/hooks";
 import { SOURCE_LABEL } from "@/features/devfeed/utils";
-import { APP_TAG } from "@/global/globalFunctions";
+import { APP_TAG } from "@/global/appInfo";
 import type { StorySource } from "@/features/devfeed/devTypes";
 
 const SOURCES: StorySource[] = ["hn", "dev", "lobsters"];

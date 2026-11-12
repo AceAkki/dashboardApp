@@ -14,7 +14,7 @@ import TaskForm from "@/features/tasks/components/TaskForm";
 import TaskTabs from "@/features/tasks/components/TaskTabs";
 import TasksMain from "@/features/tasks/components/TasksMain";
 import EditTaskForm from "@/features/tasks/components/EditTaskForm";
-import { APP_TAG } from "@/global/globalFunctions";
+import { APP_TAG } from "@/global/appInfo";
 
 import { useTaskStore } from "@/features/tasks/hooks/useTasksStore";
 import useTaskMain from "@/features/tasks/hooks/useTaskMain";

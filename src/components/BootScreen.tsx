@@ -5,8 +5,7 @@ import CtosText from "@/components/CtosText";
 import { Colors } from "@/constants/Colors";
 import { spacing, text } from "@/style/globalStyles";
 import CtosScreen from "@/components/ctos/CtosScreen";
-import { useUserStore } from "@/features/auth/useAuthStore";
-import { appName } from "@/global/globalFunctions";
+import { appName } from "@/global/appInfo";
 
 // The "Fast Boot" button skips it
 const LINE_DELAY = 600; // ms between lines
@@ -15,8 +14,7 @@ const HOLD = 2500; // ms to hold after the last line
 const warnTag = "[ WARN ]"
 const infoTag = "[ INFO ]"
 
-export default function BootScreen({ onDone }: { onDone: () => void }) {
-  const username = useUserStore((s) => s.username);
+export default function BootScreen({ onDone, username }: { onDone: () => void, username:string }) {
   const mod = appName.toLowerCase();
   const lines = [
     `[    0.000000] ${mod} kernel 1.0.0 #1 SMP PREEMPT`,

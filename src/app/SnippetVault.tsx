@@ -11,7 +11,7 @@ import SnippetForm from "@/features/tools/components/SnippetForm";
 import globalStyles from "@/style/globalStyles";
 import styles from "@/features/tools/toolsStyles";
 import { useShallow } from "zustand/shallow";
-import { APP_TAG } from "@/global/globalFunctions";
+import { APP_TAG } from "@/global/appInfo";
 
 export default function SnippetVault() {
   const { snippets, isPopupOpen, toggleIsPopupOpen } = useToolsStore(
