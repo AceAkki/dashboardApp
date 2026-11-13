@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { TASK_EXAMPLE, runCommand } from "../terminalCommands";
 
 import { Colors } from "@/constants/Colors";
+import { feedback } from "@/global/useFeedback";
 import styles from "../toolsStyles";
 
 export default function TerminalPanel() {
@@ -16,7 +17,10 @@ export default function TerminalPanel() {
 
   const submit = () => {
     if (!value.trim()) return;
-    setResult(runCommand(value, (path) => router.replace(path as never)));
+    const r = runCommand(value, (path) => router.replace(path as never));
+    setResult(r);
+    if (r.ok) feedback.success();
+    else feedback.error();
     setValue("");
   };
 

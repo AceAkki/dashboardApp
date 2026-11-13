@@ -4,6 +4,7 @@ export interface snippetType {
   id: string;
   title: string;
   code: string;
+  tag?: string;
 }
 
 export type appsType =  {
@@ -26,7 +27,8 @@ export interface ToolsState {
   appendToday: (line: string) => void;
 
   snippets: snippetType[];
-  addSnippet: (title: string, code: string) => void;
+  addSnippet: (title: string, code: string, tag?: string) => void;
+  updateSnippet: (id: string, title: string, code: string, tag?: string) => void;
   deleteSnippet: (id: string) => void;
   snippetID: string | null;
   setSnippetID: (id: string|null) => void;

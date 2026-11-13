@@ -1,4 +1,6 @@
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+
+import CtosPressable from "@/components/ctos/CtosPressable";
 
 import type { RouteType } from "../taskTypes";
 import { ALL_TAB } from "../taskTypeUtils";
@@ -22,8 +24,10 @@ export default function TaskTabs({ routes, index, onChange, counts }: Props) {
       {routes.map((route, i) => {
         const on = i === index;
         return (
-          <Pressable
+          <CtosPressable
             key={route.key}
+            haptic="select"
+            pressedStyle={{ opacity: 0.6 }}
             style={taskManagerStyles.tabItem}
             onPress={() => onChange(i)}
             accessibilityRole="tab"
@@ -46,7 +50,7 @@ export default function TaskTabs({ routes, index, onChange, counts }: Props) {
               {route.key === ALL_TAB ? "ALL" : route.key.toUpperCase()}
             </Text>
             {on ? <View style={taskManagerStyles.tabUnderline} /> : null}
-          </Pressable>
+          </CtosPressable>
         );
       })}
     </View>

@@ -16,6 +16,8 @@ import {
 } from "@/features/tasks/taskTypeUtils";
 import type { TaskActionData } from "@/features/tasks/taskTypes";
 import type { StandupField, snippetType } from "@/features/tools/toolTypes";
+import { feedback } from "@/global/useFeedback";
+import { cleanTag } from "@/features/tools/snippetTags";
 
 // Backup of the data that lives only on this phone: tasks, snippets, standup notes, the profile (name, GitHub ID, coordinates) and the Pomodoro session count.
 // NOT included: weather and GitHub caches (they refetch by themselves) and the running timer.
@@ -151,7 +153,8 @@ export function parseBackup(raw: string): ParseResult {
       continue;
     }
     snippetIds.add(id);
-    snippets.push({ id, title, code });
+    const tag = isObj(s) ? cleanTag(s.tag) : undefined;
+    snippets.push(tag ? { id, title, code, tag } : { id, title, code });
   }
 
   const standup: Standup = { yesterday: "", today: "", blocked: "" };
@@ -282,8 +285,10 @@ export function applyBackup(b: Backup, mode: "merge" | "replace") {
 
 // ───────────────────────────── export ─────────────────────────────
 
-const fail = (title: string, e: unknown) =>
+const fail = (title: string, e: unknown) => {
+  feedback.error("BACKUP FAILED");
   Alert.alert(title, e instanceof Error ? e.message : "Something went wrong.");
+};
 const cancelled = (e: unknown) =>
   e instanceof Error && /cancel/i.test(e.message);
 
@@ -298,6 +303,7 @@ export async function exportToFile() {
       "application/json",
     );
     file.write(JSON.stringify(b, null, 2));
+    feedback.success("BACKUP SAVED");
     Alert.alert("Backup saved", `${summary(b)} saved as ${file.name}.`);
   } catch (e) {
     if (!cancelled(e)) fail("Couldn't save the backup", e);
@@ -308,6 +314,7 @@ export async function exportToClipboard() {
   try {
     const b = buildBackup();
     await Clipboard.setStringAsync(JSON.stringify(b));
+    feedback.success("BACKUP COPIED");
     Alert.alert(
       "Backup copied",
       `${summary(b)} copied. Paste it somewhere safe (notes, email): the clipboard is wiped when you copy something else.`,
@@ -337,6 +344,7 @@ export async function importBackup(source: "file" | "clipboard") {
 
     const res = parseBackup(raw);
     if (!res.ok) {
+      feedback.error("NOT A VALID BACKUP");
       Alert.alert("Can't import", res.error);
       return;
     }
@@ -358,6 +366,7 @@ export async function importBackup(source: "file" | "clipboard") {
           text: "Merge",
           onPress: () => {
             const n = applyBackup(backup, "merge");
+            feedback.success("BACKUP MERGED");
             Alert.alert("Merged", `Added ${counts(n.tasks, n.snippets)}.`);
           },
         },
@@ -366,6 +375,7 @@ export async function importBackup(source: "file" | "clipboard") {
           style: "destructive",
           onPress: () => {
             const n = applyBackup(backup, "replace");
+            feedback.success("BACKUP RESTORED");
             Alert.alert("Restored", `${counts(n.tasks, n.snippets)} restored.`);
           },
         },

@@ -2,11 +2,8 @@ import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
 import {
-  cardHeadBase,
   chipActiveBase,
   chipBase,
-  cardBase,
-  glowBase,
   fieldBase,
   fontSize,
   hud,
@@ -27,29 +24,38 @@ const kit = StyleSheet.create({
   },
   backTxt: { ...text.caption, color: Colors.primary },
 
-  editModalForm: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,4,6,0.8)",
-  },
-  editModalContent: {
-    ...cardBase,
-    ...glowBase,
-    overflow: "visible",
-    width: "85%",
-    gap: 16,
-    padding: 16,
-  },
-
-  toolGroup: {
+  // Tools tab
+  groupHead: {
     flexDirection: "row",
-    flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 20,
+    paddingBottom: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.secondary,
   },
-  toolPanel: { ...cardHeadBase, justifyContent: "flex-start", gap: 10 },
+  groupCount: { ...text.muted, fontSize: fontSize.xs },
+  toolGroup: { flexDirection: "row", flexWrap: "wrap", gap: 10 },
+  tile: {
+    ...insetBase,
+    height: 112,
+    padding: 14,
+    overflow: "hidden",
+    borderLeftWidth: 2,
+    borderLeftColor: Colors.primary,
+  },
+  tileMark: { position: "absolute", right: -14, bottom: -20, opacity: 0.07 },
+  tileIcon: {
+    marginBottom: 8,
+    textShadowColor: Colors.primary,
+    textShadowRadius: 12,
+    textShadowOffset: { width: 0, height: 0 },
+  },
+  tileTitle: {
+    fontFamily: Typography.primary_bold,
+    color: Colors.textPrimary,
+    fontSize: fontSize.md,
+  },
+  tileBlurb: { ...text.muted, fontSize: fontSize.xs, marginTop: 2 },
 
   // inside a panel
   stack: { gap: 12 },

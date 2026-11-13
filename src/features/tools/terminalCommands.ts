@@ -21,12 +21,14 @@ export const GO_ROUTES = {
   me: "/UserProfile",
   vault: "/SnippetVault",
 
-  json: "/JsonFormatter",
-  regex: "/RegexTester",
-  diff: "/DiffChecker",
-  encrypt: "/Encryption",
-  status: "/HttpStatus",
-  git: "/GitCheatsheet",
+  json: "/Tool?id=json",
+  regex: "/Tool?id=regex",
+  diff: "/Tool?id=diff",
+  encrypt: "/Tool?id=encrypt",
+  status: "/Tool?id=http",
+  git: "/Tool?id=git",
+  js: "/Tool?id=js",
+  py: "/Tool?id=python",
 } as const;
 const routesGo = Object.keys(GO_ROUTES);
 

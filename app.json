@@ -69,7 +69,17 @@
           "sounds": ["./assets/sounds/ctos_alert.wav", "./assets/sounds/ctos_chime.wav"]
         }
       ],
-      ["expo-build-properties", { "android": { "usesCleartextTraffic": true } }],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true,
+            "enableMinifyInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "useLegacyPackaging": true
+          }
+        }
+      ],
       [
       "./plugins/withPackageQueries"
     ],

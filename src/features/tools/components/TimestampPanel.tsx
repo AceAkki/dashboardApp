@@ -1,21 +1,14 @@
 import { useMemo, useState } from "react";
 
 import { describeTime, parseTimeInput } from "../logic/timestamp";
-import {
-  ActionButton,
-  Field,
-  Hint,
-  ResultRow,
-  Status,
-  ToolPanel,
-} from "../toolKit";
+import { ActionButton, Field, Hint, ResultRow, Status, Stack } from "../toolKit";
 
 export default function TimestampPanel() {
   const [input, setInput] = useState("");
   const date = useMemo(() => parseTimeInput(input), [input]);
 
   return (
-    <ToolPanel title="TIMESTAMP CONVERTER" iconName="time-outline">
+    <Stack>
       <Field
         label="UNIX TIME OR DATE"
         value={input}
@@ -42,6 +35,6 @@ export default function TimestampPanel() {
           MILLISECONDS IS DETECTED.
         </Hint>
       ) : null}
-    </ToolPanel>
+    </Stack>
   );
 }

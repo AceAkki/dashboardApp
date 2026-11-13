@@ -1,14 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { makeUuids, type UuidVersion } from "../logic/uuid";
-import {
-  ActionButton,
-  Chip,
-  ChipRow,
-  Hint,
-  OutputBlock,
-  ToolPanel,
-} from "../toolKit";
+import { ActionButton, Chip, ChipRow, Hint, OutputBlock, Stack } from "../toolKit";
 
 const COUNTS = [1, 5, 10];
 
@@ -26,7 +19,7 @@ export default function UuidPanel() {
   useEffect(generate, [generate]);
 
   return (
-    <ToolPanel title="UUID GENERATOR" iconName="barcode-outline">
+    <Stack>
       <ChipRow>
         <Chip
           label="V4 · RANDOM"
@@ -55,6 +48,6 @@ export default function UuidPanel() {
         DATABASE KEYS.
       </Hint>
       <ActionButton label="GENERATE" onPress={generate} />
-    </ToolPanel>
+    </Stack>
   );
 }

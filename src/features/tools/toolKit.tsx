@@ -1,10 +1,7 @@
 import { ComponentProps, useState, type ReactNode } from "react";
 import {
-  Modal,
-  Pressable,
   ScrollView,
   Text,
-  TextInput,
   View,
   useWindowDimensions,
   type TextInputProps,
@@ -14,10 +11,13 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 
 import CtosScreen from "@/components/ctos/CtosScreen";
-import Panel from "@/components/ctos/Panel";
 import CtosText from "@/components/CtosText";
 import { Colors } from "@/constants/Colors";
 import { writeClipboardText } from "@/global/globalFunctions";
+import { feedback } from "@/global/useFeedback";
+import useAsciiSpinner from "@/global/useAsciiSpinner";
+import CtosPressable from "@/components/ctos/CtosPressable";
+import FocusInput from "@/components/ctos/FocusInput";
 import { APP_TAG } from "@/global/appInfo";
 import globalStyles, { text } from "@/style/globalStyles";
 import kit from "./toolKitStyles";
@@ -32,67 +32,58 @@ export const Stack = ({ children }: { children: ReactNode }) => (
   <View style={kit.stack}>{children}</View>
 );
 
-// A panel that starts folded: tap the header to open it. Keeps a long list of tools short.
-export function ToolPanel({
+// A tile on the Tools tab: big icon, title, one line about it. Tap and the tool opens.
+export function ToolTile({
+  href,
   title,
+  blurb,
   iconName,
-  children,
 }: {
+  href: string;
   title: string;
+  blurb: string;
   iconName: IconName;
-  children: ReactNode;
 }) {
-  const [open, setOpen] = useState(false);
+  const router = useRouter();
   const { width } = useWindowDimensions();
+  // two per row: screen - screen padding (16 + 16) - gap (10)
+  const tileWidth = (width - 32 - 10) / 2;
 
   return (
-    <Panel style={{ width: width / 2 - 30 }}>
-      <Pressable
-        onPress={() => setOpen((o) => !o)}
-        style={[kit.toolPanel]}
-        accessibilityRole="button"
-        accessibilityState={{ expanded: open }}
-      >
-        <Ionicons name={iconName} size={25} color={Colors.primary} />
-        <CtosText style={globalStyles.sectionLabel}>{`${title}`}</CtosText>
-        {/*
-        <Ionicons
-          name={open ? "remove" : "add"}
-          size={16}
-          color={Colors.primary}
-        />
-        
-        */}
-      </Pressable>
-      {open ? (
-        <Modal transparent visible animationType="fade">
-          <Pressable
-            style={kit.editModalForm}
-            onPress={() => setOpen((o) => !o)}
-          >
-            <Pressable
-              style={kit.editModalContent}
-              onPress={(e) => e.stopPropagation()}
-            >
-              <Stack>{children}</Stack>
-            </Pressable>
-          </Pressable>
-        </Modal>
-      ) : null}
-    </Panel>
+    <CtosPressable
+      onPress={() => router.push(href as never)}
+      style={[kit.tile, { width: tileWidth }]}
+      accessibilityRole="button"
+      accessibilityLabel={`${title}. ${blurb}`}
+    >
+      {/* big faint copy of the icon, cut off by the tile edge */}
+      <Ionicons name={iconName} size={92} color={Colors.primary} style={kit.tileMark} />
+      <Ionicons name={iconName} size={30} color={Colors.primary} style={kit.tileIcon} />
+      <Text style={kit.tileTitle} numberOfLines={1}>
+        {title}
+      </Text>
+      <Text style={kit.tileBlurb} numberOfLines={2}>
+        {blurb}
+      </Text>
+    </CtosPressable>
   );
 }
 
 export function ToolGroup({
   title,
+  count,
   children,
 }: {
   title: string;
+  count?: number;
   children: ReactNode;
 }) {
   return (
     <View style={kit.stack}>
-      <Text style={globalStyles.sectionLabel}>{`// ${title}`}</Text>
+      <View style={kit.groupHead}>
+        <Text style={globalStyles.sectionLabel}>{`// ${title}`}</Text>
+        {count !== undefined ? <Text style={kit.groupCount}>{count}</Text> : null}
+      </View>
       <View style={kit.toolGroup}>{children}</View>
     </View>
   );
@@ -118,10 +109,10 @@ export function ToolScreen({
         automaticallyAdjustKeyboardInsets
       >
         <View>
-          <Pressable onPress={goBack} style={kit.back} hitSlop={8}>
+          <CtosPressable onPress={goBack} style={kit.back} hitSlop={8} pressedStyle={{ opacity: 0.6 }}>
             <Ionicons name="chevron-back" size={14} color={Colors.primary} />
             <Text style={kit.backTxt}>TOOLS</Text>
-          </Pressable>
+          </CtosPressable>
           {/* Text style={globalStyles.sectionLabel}>{}</Text> */}
           <View style={globalStyles.header}>
             <Text style={globalStyles.sectionLabel}>{`${APP_TAG}Main`}</Text>
@@ -177,19 +168,21 @@ export function Field({
         <Text style={text.caption}>{label}</Text>
         <View style={kit.fieldActions}>
           {secure ? (
-            <Pressable onPress={() => setHidden((h) => !h)} hitSlop={8}>
+            <CtosPressable haptic="select" pressedStyle={{ opacity: 0.5 }} onPress={() => setHidden((h) => !h)} hitSlop={8}>
               <Text style={kit.action}>{hidden ? "SHOW" : "HIDE"}</Text>
-            </Pressable>
+            </CtosPressable>
           ) : null}
-          <Pressable
+          <CtosPressable
+            haptic="select"
+            pressedStyle={{ opacity: 0.5 }}
             onPress={value ? () => onChangeText("") : paste}
             hitSlop={8}
           >
             <Text style={kit.action}>{value ? "CLEAR" : "PASTE"}</Text>
-          </Pressable>
+          </CtosPressable>
         </View>
       </View>
-      <TextInput
+      <FocusInput
         style={[kit.input, multiline && kit.inputMulti]}
         value={value}
         onChangeText={onChangeText}
@@ -222,14 +215,15 @@ export function Chip({
   onPress: () => void;
 }) {
   return (
-    <Pressable
+    <CtosPressable
+      haptic="select"
       onPress={onPress}
       style={[kit.chip, active && kit.chipOn]}
       accessibilityRole="button"
       accessibilityState={{ selected: active }}
     >
       <Text style={[kit.chipTxt, active && kit.chipTxtOn]}>{label}</Text>
-    </Pressable>
+    </CtosPressable>
   );
 }
 
@@ -253,8 +247,9 @@ export function ActionButton({
   ghost?: boolean;
 }) {
   const off = busy || disabled;
+  const spin = useAsciiSpinner(busy);
   return (
-    <Pressable
+    <CtosPressable
       onPress={onPress}
       disabled={off}
       accessibilityRole="button"
@@ -262,11 +257,12 @@ export function ActionButton({
         ghost ? kit.btnGhost : [globalStyles.primaryBtn, kit.btn],
         off && kit.btnOff,
       ]}
+      pressedStyle={ghost ? undefined : { opacity: 0.7 }}
     >
       <Text style={ghost ? kit.btnGhostTxt : globalStyles.primaryBtnTxt}>
-        {busy ? "WORKING…" : label}
+        {busy ? `${spin} WORKING` : label}
       </Text>
-    </Pressable>
+    </CtosPressable>
   );
 }
 
@@ -274,26 +270,43 @@ export function CopyButton({ text: value }: { text: string }) {
   const [done, setDone] = useState(false);
   const press = async () => {
     await writeClipboardText(value);
+    feedback.success();
     setDone(true);
     setTimeout(() => setDone(false), 1500);
   };
   return (
-    <Pressable onPress={press} hitSlop={8}>
+    <CtosPressable haptic="none" pressedStyle={{ opacity: 0.5 }} onPress={press} hitSlop={8}>
       <Text style={kit.action}>{done ? "COPIED" : "COPY"}</Text>
-    </Pressable>
+    </CtosPressable>
   );
 }
 
 // ---------- results ----------
 
 // one line: LABEL  value  COPY
-export function ResultRow({ label, value }: { label: string; value: string }) {
+// reveal: the value types itself in (scramble). Only for results that appear once, after a button
+// press; leave it off where the value changes while typing.
+export function ResultRow({
+  label,
+  value,
+  reveal = false,
+}: {
+  label: string;
+  value: string;
+  reveal?: boolean;
+}) {
   return (
     <View style={kit.row}>
       <Text style={kit.rowLabel}>{label}</Text>
-      <Text style={kit.rowValue} selectable>
-        {value}
-      </Text>
+      {reveal && value.length <= 64 ? (
+        <CtosText style={kit.rowValue} selectable duration={450}>
+          {value}
+        </CtosText>
+      ) : (
+        <Text style={kit.rowValue} selectable>
+          {value}
+        </Text>
+      )}
       <CopyButton text={value} />
     </View>
   );

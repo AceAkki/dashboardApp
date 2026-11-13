@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { notesKey } from "@/global/storageKeys";
 import type { ToolsState} from "../toolTypes"
+import { cleanTag } from "../snippetTags";
 
 const makeId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -23,16 +24,23 @@ export const useToolsStore = create<ToolsState>()(
         })),
 
       snippets: [
-        { id: "seed-1", title: "clear metro cache", code: "npx expo start -c" },
+        { id: "seed-1", title: "clear metro cache", code: "npx expo start -c", tag: "expo" },
         {
           id: "seed-2",
           title: "tidy local branches",
           code: "git branch --merged | xargs git branch -d",
+          tag: "git",
         },
       ],
-      addSnippet: (title, code) =>
+      addSnippet: (title, code, tag) =>
         set((s) => ({
-          snippets: [...s.snippets, { id: makeId(), title, code }],
+          snippets: [...s.snippets, { id: makeId(), title, code, tag: cleanTag(tag) }],
+        })),
+      updateSnippet: (id, title, code, tag) =>
+        set((s) => ({
+          snippets: s.snippets.map((x) =>
+            x.id === id ? { ...x, title, code, tag: cleanTag(tag) } : x,
+          ),
         })),
       deleteSnippet: (id) =>
         set((s) => ({ snippets: s.snippets.filter((x) => x.id !== id) })),

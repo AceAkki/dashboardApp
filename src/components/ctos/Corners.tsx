@@ -1,12 +1,13 @@
 import { StyleSheet, View } from "react-native";
 
+import { Colors } from "@/constants/Colors";
 import { hud, hudDNG } from "@/style/globalStyles";
 
 const LEN = 10;
 
 // Corner marks for a panel: bright top-right, dim bottom-left.
 // Drop it as the LAST child of any card: <View style={card}>...<Corners /></View>
-export default function Corners({isDanger=false}:{isDanger?:boolean}) {
+export default function Corners({isDanger=false, flash=false}:{isDanger?:boolean; flash?:boolean}) {
   return (
     <>
       <View
@@ -15,6 +16,7 @@ export default function Corners({isDanger=false}:{isDanger?:boolean}) {
           styles.mark,
           styles.topRight,
           isDanger && { borderColor: hudDNG.bracket },
+          flash && styles.flash,
         ]}
       />
       <View
@@ -23,6 +25,7 @@ export default function Corners({isDanger=false}:{isDanger?:boolean}) {
           styles.mark,
           styles.bottomLeft,
           isDanger && { borderColor: hudDNG.edge },
+          flash && styles.flash,
         ]}
       />
     </>
@@ -30,6 +33,8 @@ export default function Corners({isDanger=false}:{isDanger?:boolean}) {
 }
 
 const styles = StyleSheet.create({
+  // a short green pulse after something saved
+  flash: { borderColor: Colors.success, borderWidth: 2 },
   mark: { position: "absolute", width: LEN, height: LEN },
   topRight: {
     top: 0,

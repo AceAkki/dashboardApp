@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
-import { Pressable, View, type StyleProp, type ViewStyle, type TextStyle } from "react-native";
+import { useEffect, useState, type ReactNode } from "react";
+import { View, type StyleProp, type ViewStyle, type TextStyle } from "react-native";
 
 import CtosText from "@/components/CtosText";
+import CtosPressable from "@/components/ctos/CtosPressable";
 import globalStyles from "@/style/globalStyles";
 import Corners from "./Corners";
 
@@ -14,6 +15,8 @@ type Props = {
   style?: StyleProp<ViewStyle>;
   titleStyle?: StyleProp<TextStyle>;
   isDanger?: boolean;
+  /** change this value (a counter, a timestamp) to flash the corner marks green once, e.g. after a save */
+  pulseKey?: string | number;
   children?: ReactNode;
 };
 
@@ -25,8 +28,21 @@ export default function Panel({
   style,
   titleStyle,
   isDanger,
+  pulseKey,
   children,
 }: Props) {
+  const [seenKey, setSeenKey] = useState(pulseKey);
+  const [flash, setFlash] = useState(false);
+  if (pulseKey !== seenKey) {
+    setSeenKey(pulseKey);
+    setFlash(true);
+  }
+  useEffect(() => {
+    if (!flash) return;
+    const t = setTimeout(() => setFlash(false), 700);
+    return () => clearTimeout(t);
+  }, [flash]);
+
   const header =
     title || right ? (
       <View style={[globalStyles.cardHead, { marginBottom: 8 }]}>
@@ -45,14 +61,14 @@ export default function Panel({
     <>
       {header}
       {children}
-      <Corners isDanger={isDanger} />
+      <Corners isDanger={isDanger} flash={flash} />
     </>
   );
 
   return onPress ? (
-    <Pressable style={[globalStyles.card, style]} onPress={onPress}>
+    <CtosPressable style={[globalStyles.card, style]} onPress={onPress}>
       {body}
-    </Pressable>
+    </CtosPressable>
   ) : (
     <View style={[globalStyles.card, style]}>{body}</View>
   );

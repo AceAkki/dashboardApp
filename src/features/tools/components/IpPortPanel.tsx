@@ -2,15 +2,7 @@ import { useEffect, useState } from "react";
 
 import useAsyncAction from "@/global/useAsyncAction";
 import { checkPort, lookupIp } from "../logic/network";
-import {
-  ActionButton,
-  Field,
-  Hint,
-  ResultRow,
-  Status,
-  Sub,
-  ToolPanel,
-} from "../toolKit";
+import { ActionButton, Field, Hint, ResultRow, Status, Sub, Stack } from "../toolKit";
 
 function IpSection() {
   const [target, setTarget] = useState("");
@@ -34,10 +26,10 @@ function IpSection() {
       {error ? <Status tone="error">{error}</Status> : null}
       {data ? (
         <>
-          <ResultRow label="IP" value={data.ip} />
-          <ResultRow label="PLACE" value={data.place || "UNKNOWN"} />
-          <ResultRow label="ISP" value={data.isp} />
-          <ResultRow label="TIMEZONE" value={data.timezone} />
+          <ResultRow reveal label="IP" value={data.ip} />
+          <ResultRow reveal label="PLACE" value={data.place || "UNKNOWN"} />
+          <ResultRow reveal label="ISP" value={data.isp} />
+          <ResultRow reveal label="TIMEZONE" value={data.timezone} />
         </>
       ) : null}
     </>
@@ -100,9 +92,9 @@ function PortSection() {
 
 export default function IpPortPanel() {
   return (
-    <ToolPanel title="IP & PORT CHECK" iconName="wifi-outline">
+    <Stack>
       <IpSection />
       <PortSection />
-    </ToolPanel>
+    </Stack>
   );
 }

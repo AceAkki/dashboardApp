@@ -3,9 +3,7 @@ import { useShallow } from "zustand/shallow";
 import {
   Modal,
   Platform,
-  Pressable,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import DateTimePicker, {
@@ -13,6 +11,9 @@ import DateTimePicker, {
 } from "@react-native-community/datetimepicker";
 
 import { Colors } from "@/constants/Colors";
+import CtosPressable from "@/components/ctos/CtosPressable";
+import FocusInput from "@/components/ctos/FocusInput";
+import { feedback } from "@/global/useFeedback";
 import editStyles from "./editTaskFormStyles";
 import { useTaskStore } from "../hooks/useTasksStore";
 import type { TaskActionData } from "../taskTypes";
@@ -85,6 +86,7 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
     if (!canSave) return;
     editTask({ id: taskObject.id, newTask: name });
     editRemind({ id: taskObject.id, newTime });
+    feedback.success("TASK UPDATED");
   };
 
   return (
@@ -96,7 +98,8 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
     >
       <View style={editStyles.editTaskForm}>
         <View style={editStyles.editTaskContent}>
-          <TextInput
+          <FocusInput
+            error={!name}
             value={newTaskTxt}
             onChangeText={setNewTaskTxt}
             style={editStyles.taskEdit}
@@ -105,14 +108,14 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
           />
 
           {remind === null ? (
-            <Pressable
+            <CtosPressable
               style={editStyles.taskEdit}
               onPress={addReminder}
               accessibilityRole="button"
               accessibilityLabel="Add reminder"
             >
               <Text style={editStyles.fieldTxt}>+ Add reminder</Text>
-            </Pressable>
+            </CtosPressable>
           ) : (
             <View style={editStyles.reminderBlock}>
               {Platform.OS === "ios" ? (
@@ -122,23 +125,25 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
                   onChange={onPickerChange}
                 />
               ) : (
-                <Pressable
+                <CtosPressable
                   style={editStyles.taskEdit}
                   onPress={() => setPickerMode("date")}
                 >
                   <Text style={editStyles.fieldTxt}>
                     {remind.toLocaleString()}
                   </Text>
-                </Pressable>
+                </CtosPressable>
               )}
-              <Pressable
+              <CtosPressable
+                haptic="select"
+                pressedStyle={{ opacity: 0.5 }}
                 onPress={clearReminder}
                 hitSlop={8}
                 accessibilityRole="button"
                 accessibilityLabel="Clear reminder"
               >
                 <Text style={editStyles.clearTxt}>Clear reminder</Text>
-              </Pressable>
+              </CtosPressable>
             </View>
           )}
           {Platform.OS === "android" && pickerMode && (
@@ -152,7 +157,9 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
           {hint ? <Text style={editStyles.errorTxt}>{hint}</Text> : null}
 
           <View style={editStyles.btnWrap}>
-            <Pressable
+            <CtosPressable
+              haptic="none"
+              pressedStyle={{ opacity: 0.7 }}
               onPress={confirm}
               disabled={!canSave}
               accessibilityState={{ disabled: !canSave }}
@@ -163,13 +170,14 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
               ]}
             >
               <Text>Confirm</Text>
-            </Pressable>
-            <Pressable
+            </CtosPressable>
+            <CtosPressable
+              pressedStyle={{ opacity: 0.7 }}
               onPress={() => toggleEditMode()}
               style={[editStyles.btn, editStyles.cancelBtn]}
             >
               <Text>Cancel</Text>
-            </Pressable>
+            </CtosPressable>
           </View>
         </View>
       </View>

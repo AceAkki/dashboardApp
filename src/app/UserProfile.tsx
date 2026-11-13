@@ -4,11 +4,10 @@ import {
   Alert,
   Image,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
-  TextInput,
   View,
   type StyleProp,
   type ViewStyle,
@@ -29,6 +28,8 @@ import globalStyles, {
 import CtosScreen from "@/components/ctos/CtosScreen";
 import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
+import CtosPressable from "@/components/ctos/CtosPressable";
+import FocusInput from "@/components/ctos/FocusInput";
 
 // stores
 import { useUserStore } from "@/features/auth/useAuthStore";
@@ -54,6 +55,8 @@ import useNotifications from "@/global/useNotifications";
 import { dateFormat } from "@/global/globalFunctions";
 import { openExactAlarmSettings } from "@/global/exactAlarm";
 import { APP_TAG } from "@/global/appInfo";
+import { feedback } from "@/global/useFeedback";
+import { useSettingsStore } from "@/global/useSettingsStore";
 import { bootMap } from "@/global/bootMap";
 
 // style
@@ -127,7 +130,7 @@ const Btn = ({
 }) => {
   const tone = danger ? Colors.danger : Colors.primary;
   return (
-    <Pressable
+    <CtosPressable
       accessibilityRole="button"
       onPress={onPress}
       style={[
@@ -139,6 +142,7 @@ const Btn = ({
         flex && { flex: 1 },
         s.btnRow,
       ]}
+      pressedStyle={outlined ? undefined : { opacity: 0.7 }}
     >
       {icon ? (
         <Ionicons
@@ -150,7 +154,7 @@ const Btn = ({
       <Text style={outlined ? [s.outTxt, { color: tone }] : s.btnTxt}>
         {label}
       </Text>
-    </Pressable>
+    </CtosPressable>
   );
 };
 
@@ -208,6 +212,9 @@ const UserProfile = () => {
   const { notify, cancelAll } = useNotifications();
 
   const [isEditMode, setIsEditMode] = useState(false);
+  const [pulse, setPulse] = useState(0); // flashes the Operator panel corners after a save
+  const haptics = useSettingsStore((st) => st.haptics);
+  const setHaptics = useSettingsStore((st) => st.setHaptics);
   const [name, setName] = useState(username);
   const [newUserID, setNewUserID] = useState(userID);
   const [bootName, setBootName] = useState<string>(BootOption);
@@ -245,7 +252,10 @@ const UserProfile = () => {
     if (lon === null) next.lon = "Number from -180 to 180";
     setErrors(next);
     // stay in edit mode so the user can fix it
-    if (Object.keys(next).length > 0 || lat === null || lon === null) return;
+    if (Object.keys(next).length > 0 || lat === null || lon === null) {
+      feedback.error("CHECK THE FIELDS");
+      return;
+    }
 
     const id = newUserID.trim();
     const moved = lat !== location.latitude || lon !== location.longitude;
@@ -254,6 +264,8 @@ const UserProfile = () => {
     if (moved) weatherInvalidate();
     if (id !== userID) gitInvalidate();
     setIsEditMode(false);
+    setPulse((p) => p + 1);
+    feedback.success("PROFILE SAVED");
   };
 
   const grabLocation = async () => {
@@ -267,9 +279,11 @@ const UserProfile = () => {
   const purgeTasks = () => {
     tasksPurge();
     cancelAll();
+    feedback.warn("TASKS DELETED");
   };
 
   const confirmPurgeTasks = () => {
+    feedback.warn();
     Alert.alert(
       "Delete all tasks?",
       "This deletes every task on this device.",
@@ -304,6 +318,7 @@ const UserProfile = () => {
   };
 
   const confirmReset = () => {
+    feedback.warn();
     Alert.alert(
       "Reset tasks and cache?",
       "This deletes all tasks and the cached weather and GitHub data. Your profile, snippets and notes are kept.",
@@ -402,12 +417,14 @@ const UserProfile = () => {
 
         {/* details */}
         <Panel
+          pulseKey={pulse}
           title="Operator"
           right={
             isEditMode ? (
               <Text style={globalStyles.sectionLabel}>EDITING</Text>
             ) : (
-              <Pressable
+              <CtosPressable
+                pressedStyle={{ opacity: 0.5 }}
                 onPress={startEdit}
                 hitSlop={10}
                 accessibilityLabel="Edit profile"
@@ -417,14 +434,15 @@ const UserProfile = () => {
                   size={18}
                   color={Colors.primary}
                 />
-              </Pressable>
+              </CtosPressable>
             )
           }
         >
           {isEditMode ? (
             <View style={{ gap: 14 }}>
               <Field label="User_Name">
-                <TextInput
+                <FocusInput
+                  error={!!errors.name}
                   style={[
                     loginStyles.input,
                     !!errors.name && loginStyles.inputError,
@@ -439,7 +457,8 @@ const UserProfile = () => {
               </Field>
 
               <Field label="Git_ID">
-                <TextInput
+                <FocusInput
+                  error={!!errors.git}
                   style={[
                     loginStyles.input,
                     !!errors.git && loginStyles.inputError,
@@ -457,7 +476,8 @@ const UserProfile = () => {
               <View style={{ flexDirection: "row", gap: 10 }}>
                 <View style={{ flex: 1 }}>
                   <Field label="Latitude">
-                    <TextInput
+                    <FocusInput
+                  error={!!errors.lat}
                       style={[
                         loginStyles.input,
                         !!errors.lat && loginStyles.inputError,
@@ -473,7 +493,8 @@ const UserProfile = () => {
                 </View>
                 <View style={{ flex: 1 }}>
                   <Field label="Longitude">
-                    <TextInput
+                    <FocusInput
+                  error={!!errors.lon}
                       style={[
                         loginStyles.input,
                         !!errors.lon && loginStyles.inputError,
@@ -594,7 +615,8 @@ const UserProfile = () => {
             <Block label="BOOT_SCREEN">
               <View style={s.chips}>
                 {Object.keys(bootMap).map((key) => (
-                  <Pressable
+                  <CtosPressable
+                    haptic="select"
                     key={key}
                     style={[
                       globalStyles.chip,
@@ -612,7 +634,7 @@ const UserProfile = () => {
                     >
                       {key}
                     </Text>
-                  </Pressable>
+                  </CtosPressable>
                 ))}
               </View>
 
@@ -620,7 +642,10 @@ const UserProfile = () => {
                 {bootChanged ? (
                   <Btn
                     label="Use this boot screen"
-                    onPress={() => updateBootOption(bootName)}
+                    onPress={() => {
+                  updateBootOption(bootName);
+                  feedback.success("BOOT SCREEN SET");
+                }}
                   />
 
                 ) : (
@@ -629,6 +654,28 @@ const UserProfile = () => {
               </BtnRow>
             </Block>
           </View>
+        </Panel>
+
+        {/* feedback */}
+        <Panel title="Feedback">
+          <Block
+            label="HAPTICS"
+            hint="Short vibrations on taps and results. Turn it off to save battery."
+          >
+            <View style={s.switchRow}>
+              <Text style={globalStyles.textSmall}>{haptics ? "ON" : "OFF"}</Text>
+              <Switch
+                value={haptics}
+                onValueChange={(on) => {
+                  setHaptics(on);
+                  if (on) feedback.tap(); // a sample, so you feel what it does
+                }}
+                trackColor={{ false: Colors.secondary, true: "#00E5FF55" }}
+                thumbColor={haptics ? Colors.primary : Colors.textMuted}
+                accessibilityLabel="Haptics"
+              />
+            </View>
+          </Block>
         </Panel>
 
         {/* system */}
@@ -723,6 +770,7 @@ const s = StyleSheet.create({
 
   block: { padding: 10, gap: 8 },
   hint: { ...text.small, textTransform: "none", lineHeight: 17 },
+  switchRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
 
   status: { flexDirection: "row", alignItems: "center", gap: 6 },

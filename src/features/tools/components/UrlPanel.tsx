@@ -1,15 +1,7 @@
 import { useMemo, useState } from "react";
 
 import { decodeUrl, encodeUrl, type UrlScope } from "../logic/urlCodec";
-import {
-  Chip,
-  ChipRow,
-  Field,
-  Hint,
-  OutputBlock,
-  Status,
-  ToolPanel,
-} from "../toolKit";
+import { Chip, ChipRow, Field, Hint, OutputBlock, Status, Stack } from "../toolKit";
 
 export default function UrlPanel() {
   const [mode, setMode] = useState<"encode" | "decode">("encode");
@@ -29,7 +21,7 @@ export default function UrlPanel() {
   }, [input, mode, scope]);
 
   return (
-    <ToolPanel title="URL ENCODE / DECODE" iconName="link-outline">
+    <Stack>
       <ChipRow>
         <Chip
           label="ENCODE"
@@ -73,6 +65,6 @@ export default function UrlPanel() {
         PART: ENCODES / ? & = # TOO (FOR A QUERY VALUE). WHOLE: KEEPS THEM SO
         THE URL STILL WORKS.
       </Hint>
-    </ToolPanel>
+    </Stack>
   );
 }

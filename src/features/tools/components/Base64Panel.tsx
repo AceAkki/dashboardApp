@@ -1,14 +1,7 @@
 import { useMemo, useState } from "react";
 
 import { decodeBase64, encodeBase64 } from "../logic/base64";
-import {
-  Chip,
-  ChipRow,
-  Field,
-  OutputBlock,
-  Status,
-  ToolPanel,
-} from "../toolKit";
+import { Chip, ChipRow, Field, OutputBlock, Status, Stack } from "../toolKit";
 
 export default function Base64Panel() {
   const [mode, setMode] = useState<"encode" | "decode">("encode");
@@ -31,7 +24,7 @@ export default function Base64Panel() {
   }, [input, mode, urlSafe]);
 
   return (
-    <ToolPanel title="BASE64" iconName="aperture-outline">
+    <Stack>
       <ChipRow>
         <Chip
           label="ENCODE"
@@ -62,6 +55,6 @@ export default function Base64Panel() {
       {result?.out !== undefined ? (
         <OutputBlock label="RESULT" value={result.out} />
       ) : null}
-    </ToolPanel>
+    </Stack>
   );
 }

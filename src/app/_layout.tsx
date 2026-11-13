@@ -1,3 +1,4 @@
+import StatusStrip from "@/components/ctos/StatusStrip";
 import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
 import { useShallow } from "zustand/shallow";
@@ -7,7 +8,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { Colors } from "@/constants/Colors";
 
 import { useUserStore } from "@/features/auth/useAuthStore";
-import { TOOL_ROUTES } from "@/features/tools/toolRoutes";
 import useTaskReminders from "@/features/tasks/hooks/useTaskReminders";
 
 import {bootMap, type BootMapKey} from "@/global/bootMap"
@@ -49,81 +49,81 @@ export default function RootLayout() {
   if (!booted) return <BootScreen onDone={() => setBooted(true)} username={username} />;
 
   return (
-    <Stack
-      screenOptions={{
-        animation: "fade",
-        contentStyle: { backgroundColor: Colors.background },
-      }}
-    >
-      <Stack.Protected guard={isLoggedIn}>
-        <Stack.Screen
-          name="index"
-          options={{
-            title: "Home",
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="UserProfile"
-          options={{
-            title: "User Profile",
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="TaskManager"
-          options={{
-            title: "Task Manager",
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Weather"
-          options={{
-            title: "Weather",
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Feed"
-          options={{
-            title: "Feed",
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Tools"
-          options={{
-            title: "Tools",
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="SnippetVault"
-          options={{
-            title: "Snippet Vault",
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Pomodoro"
-          options={{
-            title: "Pomodoro",
-            headerShown: false,
-          }}
-        />
-        {TOOL_ROUTES.map((r) => (
+    <>
+      <Stack
+        screenOptions={{
+          animation: "fade",
+          contentStyle: { backgroundColor: Colors.background },
+        }}
+      >
+        <Stack.Protected guard={isLoggedIn}>
           <Stack.Screen
-            key={r.name}
-            name={r.name}
-            options={{ title: r.title, headerShown: false }}
+            name="index"
+            options={{
+              title: "Home",
+              headerShown: false,
+            }}
           />
-        ))}
-      </Stack.Protected>
+          <Stack.Screen
+            name="UserProfile"
+            options={{
+              title: "User Profile",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="TaskManager"
+            options={{
+              title: "Task Manager",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Weather"
+            options={{
+              title: "Weather",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Feed"
+            options={{
+              title: "Feed",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Tools"
+            options={{
+              title: "Tools",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="SnippetVault"
+            options={{
+              title: "Snippet Vault",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Pomodoro"
+            options={{
+              title: "Pomodoro",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Tool"
+            options={{ title: "Tool", headerShown: false }}
+          />
+        </Stack.Protected>
 
-      <Stack.Protected guard={!isLoggedIn}>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      </Stack.Protected>
-    </Stack>
+        <Stack.Protected guard={!isLoggedIn}>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        </Stack.Protected>
+      </Stack>
+      <StatusStrip />
+    </>
   );
 }

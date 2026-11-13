@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import useAsyncAction from "@/global/useAsyncAction";
 import { checkSsl } from "../logic/network";
-import { ActionButton, Field, ResultRow, Status, ToolPanel } from "../toolKit";
+import { ActionButton, Field, ResultRow, Status, Stack } from "../toolKit";
 
 export default function SslPanel() {
   const [host, setHost] = useState("");
@@ -12,7 +12,7 @@ export default function SslPanel() {
   const tone = days < 0 || days <= 7 ? "error" : days <= 30 ? "warn" : "ok";
 
   return (
-    <ToolPanel title="SSL EXPIRY" iconName="lock-closed">
+    <Stack>
       <Field
         label="DOMAIN"
         value={host}
@@ -33,12 +33,12 @@ export default function SslPanel() {
               ? `EXPIRED ${-days} DAYS AGO`
               : `VALID · ${days} DAYS LEFT`}
           </Status>
-          <ResultRow label="EXPIRES" value={data.validTo.slice(0, 10)} />
-          <ResultRow label="ISSUED BY" value={data.issuedBy} />
-          <ResultRow label="ISSUED TO" value={data.issuedTo} />
-          <ResultRow label="NAMES" value={data.names.join(", ")} />
+          <ResultRow reveal label="EXPIRES" value={data.validTo.slice(0, 10)} />
+          <ResultRow reveal label="ISSUED BY" value={data.issuedBy} />
+          <ResultRow reveal label="ISSUED TO" value={data.issuedTo} />
+          <ResultRow reveal label="NAMES" value={data.names.join(", ")} />
         </>
       ) : null}
-    </ToolPanel>
+    </Stack>
   );
 }

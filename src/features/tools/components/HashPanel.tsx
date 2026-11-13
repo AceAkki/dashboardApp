@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { hashAll, type HashRow } from "../logic/hash";
-import { Field, Hint, ResultRow, ToolPanel } from "../toolKit";
+import { Field, Hint, ResultRow, Stack } from "../toolKit";
 
 export default function HashPanel() {
   const [input, setInput] = useState("");
@@ -21,7 +21,7 @@ export default function HashPanel() {
   }, [input]);
 
   return (
-    <ToolPanel title="HASH GENERATOR" iconName="code-working-outline">
+    <Stack>
       <Field
         label="TEXT"
         value={input}
@@ -35,6 +35,6 @@ export default function HashPanel() {
       <Hint>
         MD5 AND SHA-1 ARE BROKEN FOR SECURITY. USE THEM FOR CHECKSUMS ONLY.
       </Hint>
-    </ToolPanel>
+    </Stack>
   );
 }

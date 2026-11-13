@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import useAsyncAction from "@/global/useAsyncAction";
 import { DNS_TYPE_LIST, lookupDns, type DnsType } from "../logic/network";
-import { ActionButton, Chip, ChipRow, Field, ResultRow, Status, ToolPanel } from "../toolKit";
+import { ActionButton, Chip, ChipRow, Field, ResultRow, Status, Stack } from "../toolKit";
 
 export default function DnsPanel() {
   const [domain, setDomain] = useState("");
@@ -10,7 +10,7 @@ export default function DnsPanel() {
   const { busy, data, error, run } = useAsyncAction(lookupDns);
 
   return (
-    <ToolPanel title="DNS LOOKUP" iconName="globe-outline">
+    <Stack>
       <Field label="DOMAIN" value={domain} onChangeText={setDomain} placeholder="example.com" />
       <ChipRow>
         {DNS_TYPE_LIST.map((t) => (
@@ -21,8 +21,8 @@ export default function DnsPanel() {
       {error ? <Status tone="error">{error}</Status> : null}
       {data && data.length === 0 ? <Status tone="warn">NO {type} RECORDS</Status> : null}
       {data?.map((r, i) => (
-        <ResultRow key={i} label={`${r.type} · ${r.ttl}S`} value={r.data} />
+        <ResultRow reveal key={i} label={`${r.type} · ${r.ttl}S`} value={r.data} />
       ))}
-    </ToolPanel>
+    </Stack>
   );
 }

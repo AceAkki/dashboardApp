@@ -1,4 +1,7 @@
-import { Pressable, Text } from "react-native";
+import { Text } from "react-native";
+
+import CtosPressable from "@/components/ctos/CtosPressable";
+import { feedback } from "@/global/useFeedback";
 
 import type { MoveBtnsProps, TasksTypes } from "../taskTypes";
 import optionsStyles from "../components/optionsStyles";
@@ -19,19 +22,19 @@ function MoveBtns({
   return (
     <>
       {typesArr.map((targetType) => (
-        <Pressable
+        <CtosPressable
           key={targetType}
-          style={({ pressed }) => [
-            optionsStyles.optionBtn,
-            pressed && optionsStyles.optionBtnPressed,
-          ]}
-          onPress={() =>
+          haptic="none"
+          style={optionsStyles.optionBtn}
+          pressedStyle={optionsStyles.optionBtnPressed}
+          onPress={() => {
             moveTask({
               id: taskObject.id,
               currentType,
               targetType,
-            })
-          }
+            });
+            feedback.success(`MOVED TO ${targetType.toUpperCase()}`);
+          }}
         >
           {({ pressed }) => (
             <Text
@@ -43,7 +46,7 @@ function MoveBtns({
               {targetType}
             </Text>
           )}
-        </Pressable>
+        </CtosPressable>
       ))}
     </>
   );

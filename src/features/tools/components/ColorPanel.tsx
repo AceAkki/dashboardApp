@@ -3,14 +3,14 @@ import { View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { parseColor, toHex, toHslString, toRgbString } from "../logic/color";
-import { Field, ResultRow, Status, ToolPanel } from "../toolKit";
+import { Field, ResultRow, Status, Stack } from "../toolKit";
 
 export default function ColorPanel() {
   const [input, setInput] = useState("#1E90FF");
   const rgb = parseColor(input);
 
   return (
-    <ToolPanel title="COLOR CONVERTER" iconName="color-fill-outline">
+    <Stack>
       <Field
         label="HEX · RGB · HSL"
         value={input}
@@ -36,6 +36,6 @@ export default function ColorPanel() {
           TRY #1E90FF · rgb(30, 144, 255) · hsl(210, 100%, 56%)
         </Status>
       ) : null}
-    </ToolPanel>
+    </Stack>
   );
 }

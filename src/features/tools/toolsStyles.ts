@@ -39,6 +39,28 @@ const toolsStyles = StyleSheet.create({
   },
   output: { ...text.caption, marginTop: 8 },
 
+  // header + filter
+  headRow: { flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" },
+  count: { ...text.muted, fontSize: fontSize.xs, marginBottom: 6 },
+  search: {
+    ...fieldBase,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 0,
+    height: 44,
+    borderLeftWidth: 2,
+    borderLeftColor: Colors.primary,
+  },
+  searchInput: {
+    flex: 1,
+    fontFamily: Typography.primary,
+    color: Colors.textPrimary,
+    fontSize: fontSize.md,
+    paddingVertical: 0,
+  },
+  empty: { ...text.muted, textAlign: "center", paddingVertical: 24 },
+
   // standup
   standupRow: {
     flexDirection: "row",
@@ -72,6 +94,9 @@ const toolsStyles = StyleSheet.create({
     fontSize: fontSize.sm + 0.5,
     lineHeight: 17,
   },
+  snippetTag: { ...text.caption, color: Colors.primary, marginBottom: 4 },
+  tagChips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  vaultScroll: { paddingHorizontal: 16, paddingBottom: 32, gap: 12 },
   snippetActions: { flexDirection: "row", gap: 14 },
   snippetAct: { ...text.caption, color: Colors.primary },
   snippetDel: { ...text.caption, color: Colors.danger },

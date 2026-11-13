@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useShallow } from "zustand/shallow";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, View } from "react-native";
+
+import CtosPressable from "@/components/ctos/CtosPressable";
+import { feedback } from "@/global/useFeedback";
 
 import { writeClipboardText } from "@/global/globalFunctions";
 import { useToolsStore } from "../hooks/useToolsStore";
@@ -22,6 +25,7 @@ export const Snippet = ({ sData }:{sData:snippetType}) => {
 
   const copy = async (id: string, snippetCode: string) => {
     await writeClipboardText(snippetCode);
+    feedback.success();
     setCopied(id);
     setTimeout(() => setCopied((c) => (c === id ? null : c)), 1500);
   };
@@ -31,7 +35,7 @@ export const Snippet = ({ sData }:{sData:snippetType}) => {
       <View style={styles.snippetHead}>
         <Text style={styles.snippetTitle}># {sData.title}</Text>
         <View style={styles.snippetActions}>
-          <Pressable
+          <CtosPressable
             onPress={() => {
               setSnippetID(sData.id);
               toggleIsPopupOpen();
@@ -41,17 +45,25 @@ export const Snippet = ({ sData }:{sData:snippetType}) => {
             <Text style={styles.snippetAct}>
               {snippetID === sData.id ? "Editing" : "Edit"}
             </Text>
-          </Pressable>
-          <Pressable onPress={() => copy(sData.id, sData.code)} hitSlop={8}>
+          </CtosPressable>
+          <CtosPressable haptic="none" onPress={() => copy(sData.id, sData.code)} hitSlop={8}>
             <Text style={styles.snippetAct}>
               {copied === sData.id ? "COPIED" : "COPY"}
             </Text>
-          </Pressable>
-          <Pressable onPress={() => deleteSnippet(sData.id)} hitSlop={8}>
+          </CtosPressable>
+          <CtosPressable
+            haptic="none"
+            onPress={() => {
+              deleteSnippet(sData.id);
+              feedback.warn("SNIPPET DELETED");
+            }}
+            hitSlop={8}
+          >
             <Text style={styles.snippetDel}>DEL</Text>
-          </Pressable>
+          </CtosPressable>
         </View>
       </View>
+      {sData.tag ? <Text style={styles.snippetTag}>#{sData.tag}</Text> : null}
       <Text style={styles.snippetCode} selectable>
         {sData.code}
       </Text>

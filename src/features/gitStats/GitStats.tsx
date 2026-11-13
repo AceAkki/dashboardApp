@@ -66,13 +66,17 @@ const GitStats = () => {
         </CtosText>
 
         <Text style={globalStyles.sectionLabel}>Last Update</Text>
-        <CtosText style={[globalStyles.sectionSubTitle, { marginVertical: 5 }, needsUpdate
-              ? { color: Colors.danger }
-              : { color: Colors.primary },]}>
+        <CtosText
+          style={[
+            globalStyles.sectionSubTitle,
+            { marginVertical: 5 },
+            needsUpdate ? { color: Colors.danger } : { color: Colors.primary },
+          ]}
+        >
           {data?.lastPushDate &&
             dateFormat({
-              dateString:(data.lastPushDate),
-              hasTime:false
+              dateString: data.lastPushDate,
+              hasTime: false,
             }).replace(/\/|\-/g, ".")}
         </CtosText>
 
@@ -92,8 +96,7 @@ const GitStats = () => {
 
       {storageTime ? (
         <Text style={globalStyles.expiry}>
-          Expiry Time :{" "}
-          { dateFormat({dateString:new Date(storageTime).toLocaleString(), hasTime:true})}
+          Expiry Time : {dateFormat({ dateString: storageTime, hasTime: true })}
         </Text>
       ) : null}
       <Corners />

@@ -1,7 +1,6 @@
-export type GitCommand = { cmd: string; note: string };
-export type GitSection = { title: string; items: GitCommand[] };
+import type { CheatSection } from "./cheatsheet";
 
-export const GIT_SECTIONS: GitSection[] = [
+export const GIT_SECTIONS: CheatSection[] = [
   {
     title: "Setup",
     items: [
@@ -85,13 +84,3 @@ export const GIT_SECTIONS: GitSection[] = [
     ],
   },
 ];
-
-// matches the command or its note; sections with no match are dropped
-export function searchGit(query: string): GitSection[] {
-  const q = query.trim().toLowerCase();
-  if (!q) return GIT_SECTIONS;
-  return GIT_SECTIONS.map((s) => ({
-    ...s,
-    items: s.items.filter((i) => i.cmd.toLowerCase().includes(q) || i.note.toLowerCase().includes(q)),
-  })).filter((s) => s.items.length > 0);
-}

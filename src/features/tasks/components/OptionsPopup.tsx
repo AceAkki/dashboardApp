@@ -8,6 +8,9 @@ import {
 } from "react-native";
 import { useState } from "react";
 
+import CtosPressable from "@/components/ctos/CtosPressable";
+import { feedback } from "@/global/useFeedback";
+
 import { taskTypesArr } from "../taskTypeUtils";
 import useOptions from "../hooks/useOptions";
 import { useTaskStore } from "../hooks/useTasksStore";
@@ -61,11 +64,9 @@ export default function OptionsPopup({
               taskObject={taskObject}
               currentType={currentType}
             />
-            <Pressable
-              style={({ pressed }) => [
-                optionsStyles.optionBtn,
-                pressed && optionsStyles.optionBtnPressed,
-              ]}
+            <CtosPressable
+              style={optionsStyles.optionBtn}
+              pressedStyle={optionsStyles.optionBtnPressed}
               onPress={handleToggleEdit}
             >
               {({ pressed }) => (
@@ -78,12 +79,10 @@ export default function OptionsPopup({
                   Remind Me
                 </Text>
               )}
-            </Pressable>
-            <Pressable
-              style={({ pressed }) => [
-                optionsStyles.optionBtn,
-                pressed && optionsStyles.optionBtnPressed,
-              ]}
+            </CtosPressable>
+            <CtosPressable
+              style={optionsStyles.optionBtn}
+              pressedStyle={optionsStyles.optionBtnPressed}
               onPress={handleToggleEdit}
             >
               {({ pressed }) => (
@@ -96,13 +95,15 @@ export default function OptionsPopup({
                   Edit Task
                 </Text>
               )}
-            </Pressable>
-            <Pressable
-              style={({ pressed }) => [
-                optionsStyles.optionBtn,
-                pressed && optionsStyles.optionBtnPressed,
-              ]}
-              onPress={() => deleteTask(taskObject.id)}
+            </CtosPressable>
+            <CtosPressable
+              haptic="none"
+              style={optionsStyles.optionBtn}
+              pressedStyle={optionsStyles.optionBtnPressed}
+              onPress={() => {
+                deleteTask(taskObject.id);
+                feedback.warn("TASK DELETED");
+              }}
             >
               {({ pressed }) => (
                 <Text
@@ -114,7 +115,7 @@ export default function OptionsPopup({
                   Delete Task
                 </Text>
               )}
-            </Pressable>
+            </CtosPressable>
           </View>
         </View>
       </Pressable>

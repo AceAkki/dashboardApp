@@ -6,15 +6,7 @@ import {
   generateToken,
   type CharsetKey,
 } from "../logic/password";
-import {
-  ActionButton,
-  Chip,
-  ChipRow,
-  Hint,
-  OutputBlock,
-  Sub,
-  ToolPanel,
-} from "../toolKit";
+import { ActionButton, Chip, ChipRow, Hint, OutputBlock, Sub, Stack } from "../toolKit";
 
 type Mode = "password" | "hex" | "base64url";
 
@@ -68,7 +60,7 @@ export default function PasswordPanel() {
     );
 
   return (
-    <ToolPanel title="PASSWORD / TOKEN" iconName="shield-checkmark-outline">
+    <Stack>
       <ChipRow>
         {MODES.map((m) => (
           <Chip
@@ -127,6 +119,6 @@ export default function PasswordPanel() {
         RANDOMNESS · MADE ON THIS PHONE, NEVER SENT ANYWHERE
       </Hint>
       <ActionButton label="GENERATE" onPress={generate} />
-    </ToolPanel>
+    </Stack>
   );
 }

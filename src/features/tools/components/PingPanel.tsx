@@ -2,14 +2,14 @@ import { useState } from "react";
 
 import useAsyncAction from "@/global/useAsyncAction";
 import { pingSite } from "../logic/network";
-import { ActionButton, Field, ResultRow, Status, ToolPanel } from "../toolKit";
+import { ActionButton, Field, ResultRow, Status, Stack } from "../toolKit";
 
 export default function PingPanel() {
   const [url, setUrl] = useState("");
   const { busy, data, error, run } = useAsyncAction(pingSite);
 
   return (
-    <ToolPanel title="SERVER PING" iconName="radio-outline">
+    <Stack>
       <Field
         label="URL"
         value={url}
@@ -40,10 +40,10 @@ export default function PingPanel() {
                 : `${data.status} ${data.statusText}`.trim()
             }
           />
-          <ResultRow label="TIME" value={`${data.ms} MS`} />
-          <ResultRow label="URL" value={data.url} />
+          <ResultRow reveal label="TIME" value={`${data.ms} MS`} />
+          <ResultRow reveal label="URL" value={data.url} />
         </>
       ) : null}
-    </ToolPanel>
+    </Stack>
   );
 }

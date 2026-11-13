@@ -1,7 +1,8 @@
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Colors } from "@/constants/Colors";
+import CtosPressable from "@/components/ctos/CtosPressable";
 import { text } from "@/style/globalStyles";
 import { useTaskStore } from "../hooks/useTasksStore";
 import CtosText from "@/components/CtosText";
@@ -51,8 +52,9 @@ const Task = ({ taskTxt, showType = true }: Props) => {
         ) : null}
       </View>
 
-      <Pressable
+      <CtosPressable
         style={taskStyles.taskBtn}
+        pressedStyle={{ opacity: 0.5 }}
         hitSlop={10}
         accessibilityRole="button"
         accessibilityLabel={`Options for ${taskTxt.taskName}`}
@@ -65,7 +67,7 @@ const Task = ({ taskTxt, showType = true }: Props) => {
         }}
       >
         <Ionicons name="options-outline" size={20} color={Colors.primary} />
-      </Pressable>
+      </CtosPressable>
     </View>
   );
 };
