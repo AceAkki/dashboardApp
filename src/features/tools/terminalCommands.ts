@@ -8,11 +8,15 @@ import {
 import { useTaskStore } from "@/features/tasks/hooks/useTasksStore";
 import { usePomodoroStore } from "@/features/pomodoro/hooks/pomodoroStore";
 import { useToolsStore } from "./hooks/useToolsStore";
+import {toolIDs} from "./toolPanels"
 import { launchApp } from "@/global/launcher";
 import { appsIDs } from "@/global/AppsConfig";
 
 export type CommandResult = { ok: boolean; message: string };
 
+const toolRoutes = Object.fromEntries(toolIDs.map(toolName => {
+  return [toolName, `/Tool?id=${toolName}`]
+}))
 export const GO_ROUTES = {
   home: "/",
   tasks: "/TaskManager",
@@ -20,15 +24,19 @@ export const GO_ROUTES = {
   tools: "/Tools",
   me: "/UserProfile",
   vault: "/SnippetVault",
-
-  json: "/Tool?id=json",
-  regex: "/Tool?id=regex",
-  diff: "/Tool?id=diff",
-  encrypt: "/Tool?id=encrypt",
-  status: "/Tool?id=http",
-  git: "/Tool?id=git",
-  js: "/Tool?id=js",
-  py: "/Tool?id=python",
+  ...toolRoutes
+  // json: "/Tool?id=json",
+  // regex: "/Tool?id=regex",
+  // diff: "/Tool?id=diff",
+  // encrypt: "/Tool?id=encrypt",
+  // status: "/Tool?id=http",
+  // git: "/Tool?id=git",
+  // js: "/Tool?id=js",
+  // py: "/Tool?id=python",
+  // ip: "/Tool?id=ip",
+  // ping: "/Tool?id=ping",
+  // ssl: "/Tool?id=ssl",
+  // ssl: "/Tool?id=ssl",
 } as const;
 const routesGo = Object.keys(GO_ROUTES);
 

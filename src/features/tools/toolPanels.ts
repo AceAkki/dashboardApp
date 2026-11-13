@@ -60,5 +60,7 @@ export const TOOL_PANELS: ToolPanelEntry[] = [
   { id: "python", title: "PYTHON CHEATSHEET", blurb: "Tap a snippet to copy", icon: "logo-python", group: "Reference", Component: PythonCheatsheetPanel },
 ];
 
+export const toolIDs = Object.values(TOOL_PANELS).map(obj => obj.id);
+
 export const findToolPanel = (id: string | undefined) =>
   TOOL_PANELS.find((t) => t.id === id);
