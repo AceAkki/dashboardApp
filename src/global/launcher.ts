@@ -1,8 +1,8 @@
 import { Linking, Platform } from 'react-native';
 import { RNLauncherKitHelper } from 'react-native-launcher-kit';
-import { appObject } from './AppsConfig';
+import { checkedApps } from '@/features/tools/toolTypes';
 
-export async function isInstalled(app: appObject) {
+export async function isInstalled(app: checkedApps) {
   try {
     if (Platform.OS === 'android' && app.androidPackage) {
       return await RNLauncherKitHelper.checkIfPackageInstalled(app.androidPackage);
@@ -16,7 +16,7 @@ export async function isInstalled(app: appObject) {
   return false;
 }
 
-export async function launchApp(app:appObject) {
+export async function launchApp(app:checkedApps) {
   try {
     if (await isInstalled(app)) {
       if (Platform.OS === 'android' && app.androidPackage) {
@@ -25,7 +25,7 @@ export async function launchApp(app:appObject) {
         if (app.scheme) await Linking.openURL(app.scheme);
       }
     } else {
-      await Linking.openURL(app.fallbackUrl); // store or website
+      if (app.fallbackUrl) await Linking.openURL(app.fallbackUrl); // store or website
     }
   } catch (e) {
     console.warn('launchApp failed', app.id, e);
