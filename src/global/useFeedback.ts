@@ -14,8 +14,7 @@ import { useSettingsStore } from "./useSettingsStore";
 //   fb.error("BAD FILE");               // something failed
 //
 // `feedback` is the same object without the hook, for code outside components
-// (stores, terminal commands, backup.ts). Vibrations are skipped when the Haptics switch
-// in Profile is off, but the status strip still shows.
+// (stores, terminal commands, backup.ts). Vibrations are skipped when the Haptics switc in Profile is off, but the status strip still shows.
 
 export type StatusTone = "ok" | "warn" | "err";
 
