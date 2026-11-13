@@ -1,7 +1,8 @@
 import { Linking, Platform } from 'react-native';
 import { RNLauncherKitHelper } from 'react-native-launcher-kit';
+import { appObject } from './AppsConfig';
 
-export async function isInstalled(app) {
+export async function isInstalled(app: appObject) {
   try {
     if (Platform.OS === 'android' && app.androidPackage) {
       return await RNLauncherKitHelper.checkIfPackageInstalled(app.androidPackage);
@@ -15,13 +16,13 @@ export async function isInstalled(app) {
   return false;
 }
 
-export async function launchApp(app) {
+export async function launchApp(app:appObject) {
   try {
     if (await isInstalled(app)) {
       if (Platform.OS === 'android' && app.androidPackage) {
         RNLauncherKitHelper.launchApplication(app.androidPackage);
       } else {
-        await Linking.openURL(app.scheme);
+        if (app.scheme) await Linking.openURL(app.scheme);
       }
     } else {
       await Linking.openURL(app.fallbackUrl); // store or website

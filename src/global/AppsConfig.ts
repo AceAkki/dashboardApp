@@ -2,6 +2,15 @@
 // scheme: URL scheme used with Linking.canOpenURL / openURL (null = none known)
 // androidPackage: used to check/launch on Android via a native module
 // verified: false = guessed from memory, test on a device before shipping
+export type appObject =  {
+    id: string,
+    name: string,
+    scheme: string | null,
+    androidPackage: string | null,
+    fallbackUrl: string,
+    platforms: string[],
+    verified: boolean,
+  }
 
 export const APPS = [
   {
