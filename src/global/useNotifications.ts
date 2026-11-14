@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Linking, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 
+import type { ReminderTrigger } from "@/features/tasks/taskRepeat";
+
 // Local notifications (the phone shows them itself, no server needed).
 //
 //   const { notify, schedule, cancel, permission, requestPermission, openSettings } = useNotifications();
@@ -22,18 +24,22 @@ export type NotificationInput = {
   title: string;
   body?: string;
   data?: Record<string, unknown>; // anything you want back when the user taps it
+  categoryIdentifier?: string; // the buttons under the notification (see global/snoozeTask.ts)
 };
+
+// the buttons (+10 MIN / +1 HOUR / TOMORROW) that task reminders carry
+export const TASK_CATEGORY = "task-reminder";
 
 // Your custom sound: the file name listed under "sounds" in app.json.
 // Use "default" for the phone's normal sound.
-const SOUND = "ctos_alert.wav";
+export const SOUND = "ctos_alert.wav";
 
 // Android 8+ shows every notification through a "channel", and the sound belongs to the
 // channel. A notification only uses this channel if it names it (see channelId below),
 // otherwise expo-notifications falls back to its own built-in one.
 // A channel's settings are frozen once it exists: to change SOUND later, use a NEW id here (e.g. "reminders2") or reinstall the app.
 // updated after first build
-const CHANNEL_ID = "reminders2";
+export const CHANNEL_ID = "reminders2";
 
 // scheduling does not exist on web
 const supported = Platform.OS !== "web";
@@ -138,6 +144,48 @@ export default function useNotifications() {
     [ensurePermission],
   );
 
+  // a notification that comes back by itself: every day, or every week on one weekday.
+  // Same id rule as schedule(): scheduling twice with one id leaves ONE notification.
+  const scheduleRepeat = useCallback(
+    async (
+      input: NotificationInput,
+      trigger: Exclude<ReminderTrigger, { kind: "date" }>,
+      id?: string,
+    ) => {
+      if (!(await ensurePermission())) return null;
+      return Notifications.scheduleNotificationAsync({
+        identifier: id,
+        content: { ...input, sound: SOUND },
+        trigger:
+          trigger.kind === "daily"
+            ? {
+                type: Notifications.SchedulableTriggerInputTypes.DAILY,
+                hour: trigger.hour,
+                minute: trigger.minute,
+                channelId: CHANNEL_ID,
+              }
+            : {
+                type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+                weekday: trigger.weekday,
+                hour: trigger.hour,
+                minute: trigger.minute,
+                channelId: CHANNEL_ID,
+              },
+      });
+    },
+    [ensurePermission],
+  );
+
+  // what is waiting on the phone for a task: [{ id, taskId }] (notifications without a taskId are not listed)
+  const listScheduled = useCallback(async () => {
+    if (!supported) return [];
+    const all = await Notifications.getAllScheduledNotificationsAsync();
+    return all.flatMap((n) => {
+      const taskId = n.content.data?.taskId;
+      return typeof taskId === "string" ? [{ id: n.identifier, taskId }] : [];
+    });
+  }, []);
+
   const cancel = useCallback(async (id: string) => {
     if (supported) await Notifications.cancelScheduledNotificationAsync(id);
   }, []);
@@ -155,6 +203,8 @@ export default function useNotifications() {
     requestPermission: ensurePermission,
     notify,
     schedule,
+    scheduleRepeat,
+    listScheduled,
     cancel,
     cancelAll,
     openSettings,

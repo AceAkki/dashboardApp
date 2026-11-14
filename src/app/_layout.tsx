@@ -1,3 +1,6 @@
+// the reminder buttons (+10 MIN / +1 HOUR / TOMORROW): must load at app start
+import "@/global/snoozeTask";
+import AlertHost from "@/components/ctos/AlertHost";
 import StatusStrip from "@/components/ctos/StatusStrip";
 import { useEffect, useState } from "react";
 import { Stack } from "expo-router";
@@ -124,6 +127,7 @@ export default function RootLayout() {
         </Stack.Protected>
       </Stack>
       <StatusStrip />
+      <AlertHost />
     </>
   );
 }

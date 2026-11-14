@@ -6,6 +6,7 @@ import type {
   TaskTab,
 } from "@/features/tasks/taskTypes";
 import { Colors } from "@/constants/Colors";
+import { repeatDue, type Repeat } from "./taskRepeat";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // THE one place task types are defined.
@@ -80,8 +81,9 @@ export const openCount = (counts: Record<TaskKind, number>) =>
 export const taskCode = (id: string) => `T-${id.slice(-4).toUpperCase()}`;
 
 // due-time label for a reminder ISO string; null when no reminder is set
-export const formatDue = (iso: string, now = Date.now()) => {
+export const formatDue = (iso: string, now = Date.now(), repeat?: Repeat) => {
   if (!iso) return null;
+  if (repeat) return repeatDue(iso, repeat);
   const t = new Date(iso).getTime();
   if (Number.isNaN(t)) return null;
   const diff = t - now;

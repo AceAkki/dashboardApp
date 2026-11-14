@@ -1,10 +1,19 @@
 import { Text } from "react-native";
 
 import CtosPressable from "@/components/ctos/CtosPressable";
-import { feedback } from "@/global/useFeedback";
+import { feedback, type StatusAction } from "@/global/useFeedback";
+import { useTaskStore } from "./useTasksStore";
 
 import type { MoveBtnsProps, TasksTypes } from "../taskTypes";
 import optionsStyles from "../components/optionsStyles";
+
+// the UNDO button on the status strip after a delete or a move
+export const UNDO_ACTION: StatusAction = {
+  label: "Undo",
+  run: () => {
+    if (useTaskStore.getState().undoLast()) feedback.success("TASK RESTORED");
+  },
+};
 
 export default function useOptions() {
   return {
@@ -33,7 +42,7 @@ function MoveBtns({
               currentType,
               targetType,
             });
-            feedback.success(`MOVED TO ${targetType.toUpperCase()}`);
+            feedback.success(`MOVED TO ${targetType.toUpperCase()}`, UNDO_ACTION);
           }}
         >
           {({ pressed }) => (

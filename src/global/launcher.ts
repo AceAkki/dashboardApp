@@ -1,8 +1,8 @@
 import { Linking, Platform } from 'react-native';
 import { RNLauncherKitHelper } from 'react-native-launcher-kit';
-import { checkedApps } from '@/features/tools/toolTypes';
+import { appsType, checkedApps } from '@/features/tools/toolTypes';
 
-export async function isInstalled(app: checkedApps) {
+export async function isInstalled(app: appsType) {
   try {
     if (Platform.OS === 'android' && app.androidPackage) {
       return await RNLauncherKitHelper.checkIfPackageInstalled(app.androidPackage);

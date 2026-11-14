@@ -1,7 +1,6 @@
 import { type ReactNode, useState } from "react";
 import { useShallow } from "zustand/shallow";
 import {
-  Alert,
   Image,
   Platform,
   ScrollView,
@@ -50,6 +49,7 @@ import { usePomodoroStore } from "@/features/pomodoro/hooks/pomodoroStore";
 
 // functions
 import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
+import { ctosAlert, ctosPrompt } from "@/global/ctosAlert";
 import { exportToClipboard, exportToFile, importBackup } from "@/global/backup";
 import useNotifications from "@/global/useNotifications";
 import { dateFormat } from "@/global/globalFunctions";
@@ -284,7 +284,7 @@ const UserProfile = () => {
 
   const confirmPurgeTasks = () => {
     feedback.warn();
-    Alert.alert(
+    ctosAlert(
       "Delete all tasks?",
       "This deletes every task on this device.",
       [
@@ -293,7 +293,7 @@ const UserProfile = () => {
           text: "Continue",
           style: "destructive",
           onPress: () =>
-            Alert.alert(
+            ctosAlert(
               "Are you sure?",
               "This can't be undone. Export a backup first if you might need them.",
               [
@@ -319,7 +319,7 @@ const UserProfile = () => {
 
   const confirmReset = () => {
     feedback.warn();
-    Alert.alert(
+    ctosAlert(
       "Reset tasks and cache?",
       "This deletes all tasks and the cached weather and GitHub data. Your profile, snippets and notes are kept.",
       [
@@ -327,15 +327,15 @@ const UserProfile = () => {
         {
           text: "Continue",
           style: "destructive",
-          onPress: () =>
-            Alert.alert(
-              "Are you sure?",
-              "The tasks can't be brought back unless you have a backup.",
-              [
-                { text: "Cancel", style: "cancel" },
-                { text: "Reset", style: "destructive", onPress: purgeAllData },
-              ],
-            ),
+          onPress: async () =>
+           {
+            const ok = await ctosPrompt("Delete everything?", "Type DELETE to confirm.", {
+            destructive: true,
+            okText: "Delete",
+            validate: (t) => (t === "DELETE" ? undefined : "Type DELETE exactly"),
+            });
+            if (ok !== null) purgeAllData();
+           }
         },
       ],
     );
@@ -343,7 +343,7 @@ const UserProfile = () => {
 
   // logging out wipes the tasks on this phone, so ask first
   const confirmLogOut = () =>
-    Alert.alert(
+    ctosAlert(
       "Log out?",
       "This deletes all tasks and reminders on this phone.",
       [

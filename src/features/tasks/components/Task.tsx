@@ -3,6 +3,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { Colors } from "@/constants/Colors";
 import CtosPressable from "@/components/ctos/CtosPressable";
+import Tag from "@/components/ctos/Tag";
 import { text } from "@/style/globalStyles";
 import { useTaskStore } from "../hooks/useTasksStore";
 import CtosText from "@/components/CtosText";
@@ -27,7 +28,7 @@ const Task = ({ taskTxt, showType = true }: Props) => {
   const kind = taskKindOf(taskTxt.type);
   const { taskColor: color, taskGlyph } = taskMain[kind];
   const done = isFinished(kind);
-  const due = done ? null : formatDue(taskTxt.remindTime);
+  const due = done ? null : formatDue(taskTxt.remindTime, Date.now(), taskTxt.repeat);
 
   return (
     <View style={[taskStyles.taskWrap, { borderLeftColor: color }]}>
@@ -45,10 +46,31 @@ const Task = ({ taskTxt, showType = true }: Props) => {
           {taskTxt.taskName}
         </Text>
 
-        {due ? (
-          <Text style={[text.caption, due.overdue && { color: Colors.danger }]}>
-            {due.label}
+        {taskTxt.note ? (
+          <Text style={taskStyles.noteTxt} numberOfLines={2}>
+            {taskTxt.note}
           </Text>
+        ) : null}
+
+        {taskTxt.tags?.length || due ? (
+          <View style={taskStyles.footRow}>
+            <View style={taskStyles.tagRow}>
+              {(taskTxt.tags ?? []).map((t) => (
+                <Tag key={t} label={`#${t}`} color={Colors.textSecondary} />
+              ))}
+            </View>
+            {due ? (
+              <Text
+                style={[
+                  text.caption,
+                  taskStyles.dueTxt,
+                  due.overdue && { color: Colors.danger },
+                ]}
+              >
+                {due.label}
+              </Text>
+            ) : null}
+          </View>
         ) : null}
       </View>
 

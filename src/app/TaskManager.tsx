@@ -6,24 +6,26 @@ import { TabView, SceneRendererProps } from "react-native-tab-view";
 import CtosScreen from "@/components/ctos/CtosScreen";
 import Tag from "@/components/ctos/Tag";
 import CtosText from "@/components/CtosText";
+import CutCornerButton from "@/components/ctos/CutCornerButton";
 
 import globalStyles from "@/style/globalStyles";
 import taskManagerStyles from "@/features/tasks/components/taskManagerStyles";
 import OptionsPopup from "@/features/tasks/components/OptionsPopup";
-import TaskForm from "@/features/tasks/components/TaskForm";
 import TaskTabs from "@/features/tasks/components/TaskTabs";
+import TaskFilters from "@/features/tasks/components/TaskFilters";
 import TasksMain from "@/features/tasks/components/TasksMain";
-import EditTaskForm from "@/features/tasks/components/EditTaskForm";
+import TaskSheet from "@/features/tasks/components/TaskSheet";
 import { APP_TAG } from "@/global/appInfo";
 
 import { useTaskStore } from "@/features/tasks/hooks/useTasksStore";
-import useTaskMain from "@/features/tasks/hooks/useTaskMain";
 import {
   ALL_TAB,
   TABS,
   countTasks,
   openCount,
 } from "@/features/tasks/taskTypeUtils";
+
+import { tagCounts } from "@/features/tasks/taskTags";
 
 import type { RouteType, TaskActionData } from "@/features/tasks/taskTypes";
 
@@ -43,8 +45,10 @@ export default function TaskManager() {
         taskPosition: state.taskPosition,
       })),
     );
-  const { taskInput, setTaskInput, submitTask } = useTaskMain(updateTasks);
+  const [adding, setAdding] = useState(false);
   const [index, setIndex] = useState(0);
+  const [query, setQuery] = useState("");
+  const [picked, setPicked] = useState<string | null>(null);
 
   const layout = useWindowDimensions();
 
@@ -55,12 +59,21 @@ export default function TaskManager() {
   };
   const open = openCount(kindCounts);
 
+  // tag chips cover every tab; a picked tag whose last task went away falls back to "all"
+  const tags = tagCounts(tasks);
+  const tag = tags.some((t) => t.tag === picked) ? picked : null;
+
   const renderScene = ({
     route,
   }: SceneRendererProps & { route: RouteType }) => {
     return (
       <View style={taskManagerStyles.scene}>
-        <TasksMain taskData={tasks} Type={route.key} />
+        <TasksMain
+          taskData={tasks}
+          Type={route.key}
+          tag={tag}
+          query={query}
+        />
       </View>
     );
   };
@@ -78,11 +91,6 @@ export default function TaskManager() {
           <CtosText style={globalStyles.textHeading}>Task Queue</CtosText>
           <Tag label={`${String(open).padStart(2, "0")} OPEN`} />
         </View>
-        <TaskForm
-          value={taskInput}
-          onChangeText={setTaskInput}
-          onSubmit={submitTask}
-        />
       </View>
 
       <TabView
@@ -92,17 +100,36 @@ export default function TaskManager() {
         onIndexChange={setIndex}
         initialLayout={{ width: layout.width }}
         renderTabBar={(props) => (
-          <TaskTabs
-            routes={routes}
-            index={props.navigationState.index}
-            onChange={(i) => props.jumpTo(routes[i].key)}
-            counts={counts}
-          />
+          <View>
+            <TaskTabs
+              routes={routes}
+              index={props.navigationState.index}
+              onChange={(i) => props.jumpTo(routes[i].key)}
+              counts={counts}
+            />
+            <TaskFilters
+              query={query}
+              onQuery={setQuery}
+              tags={tags}
+              total={tasks.length}
+              picked={tag}
+              onPick={setPicked}
+            />
+          </View>
         )}
       />
 
+      <CutCornerButton
+        icon="add"
+        floating
+        accessibilityLabel="Add task"
+        onPress={() => setAdding(true)}
+      />
+
+      {adding && <TaskSheet onClose={() => setAdding(false)} />}
+
       {editingTask && (
-        <EditTaskForm key={editingTask.id} taskObject={editingTask} />
+        <TaskSheet key={editingTask.id} taskObject={editingTask} />
       )}
       {isOpen && (
         <OptionsPopup

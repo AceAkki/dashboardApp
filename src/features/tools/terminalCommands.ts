@@ -25,18 +25,6 @@ export const GO_ROUTES = {
   me: "/UserProfile",
   vault: "/SnippetVault",
   ...toolRoutes
-  // json: "/Tool?id=json",
-  // regex: "/Tool?id=regex",
-  // diff: "/Tool?id=diff",
-  // encrypt: "/Tool?id=encrypt",
-  // status: "/Tool?id=http",
-  // git: "/Tool?id=git",
-  // js: "/Tool?id=js",
-  // py: "/Tool?id=python",
-  // ip: "/Tool?id=ip",
-  // ping: "/Tool?id=ping",
-  // ssl: "/Tool?id=ssl",
-  // ssl: "/Tool?id=ssl",
 } as const;
 const routesGo = Object.keys(GO_ROUTES);
 

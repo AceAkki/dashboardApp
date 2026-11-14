@@ -7,6 +7,7 @@ import {
   fontSize,
   glowBase,
   radius,
+  text,
 } from "@/style/globalStyles";
 
 const editTaskFormStyles = StyleSheet.create({
@@ -22,9 +23,13 @@ const editTaskFormStyles = StyleSheet.create({
     ...glowBase,
     overflow: "visible",
     width: "85%",
-    gap: 16,
+    maxHeight: "90%",
     padding: 16,
   },
+  // the form scrolls when the note + tags + keyboard do not fit
+  editScroll: { gap: 16 },
+  noteInput: { ...fieldBase, minHeight: 72, textAlignVertical: "top" },
+  fieldLabel: { ...text.caption },
   taskEdit: { ...fieldBase },
   // Text does not inherit colour or font from the field around it
   fieldTxt: {

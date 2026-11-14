@@ -1,5 +1,7 @@
-import { Alert, Linking } from "react-native";
+import { Linking } from "react-native";
 import * as Location from "expo-location";
+
+import { ctosAlert } from "@/global/ctosAlert";
 
 // Checks and location lookup shared by the Login and User Profile screens,
 // so a rule is fixed in one place.
@@ -28,7 +30,7 @@ export async function getCoords(): Promise<{
   try {
     const perm = await Location.requestForegroundPermissionsAsync();
     if (perm.status !== "granted") {
-      Alert.alert(
+      ctosAlert(
         "Permission needed",
         "Allow location access or type your coordinates.",
         // after "Don't ask again" the only way back is the phone's settings
@@ -55,7 +57,7 @@ export async function getCoords(): Promise<{
       longitude: round(pos.coords.longitude),
     };
   } catch (err: any) {
-    Alert.alert("Couldn't get location", err?.message ?? "Unknown error");
+    ctosAlert("Couldn't get location", err?.message ?? "Unknown error");
     return null;
   }
 }

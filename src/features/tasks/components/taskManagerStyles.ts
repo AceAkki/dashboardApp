@@ -5,7 +5,6 @@ import {
   fieldBase,
   fontSize,
   hud,
-  primaryBtnBase,
   text,
 } from "@/style/globalStyles";
 
@@ -45,15 +44,24 @@ const taskManagerStyles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
   },
 
-  form: {
+  // search box + tag chips under the tabs
+  filters: { marginHorizontal: 16, marginBottom: 10, gap: 10 },
+  search: {
+    ...fieldBase,
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
-    marginTop: 14,
+    gap: 10,
+    paddingVertical: 0,
+    height: 44,
   },
-  formInput: { ...fieldBase, flex: 1 },
-  formBtn: { ...primaryBtnBase, paddingVertical: 11, paddingHorizontal: 18 },
-  formBtnTxt: { ...text.btn, fontSize: 16, textAlign: "center" },
+  searchInput: {
+    flex: 1,
+    fontFamily: Typography.primary,
+    color: Colors.textPrimary,
+    fontSize: fontSize.md,
+    paddingVertical: 0,
+  },
+  chipRow: { gap: 8, paddingRight: 16 },
 });
 
 export default taskManagerStyles;

@@ -1,8 +1,9 @@
-import { Alert, Platform } from "react-native";
+import { Platform } from "react-native";
 import * as IntentLauncher from "expo-intent-launcher";
 import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { ctosAlert } from "./ctosAlert";
 import { exactAlarmKey } from "./storageKeys";
 
 // Android 14+ does not give a fresh install the "Alarms & reminders" setting, so reminders
@@ -28,7 +29,7 @@ export async function askExactAlarmOnce() {
   if (await AsyncStorage.getItem(exactAlarmKey)) return;
   await AsyncStorage.setItem(exactAlarmKey, "1"); // saved first: "Not now" is final
 
-  Alert.alert(
+  ctosAlert(
     "Reminders on time",
     'Android can delay reminders by a few minutes. On the next screen, allow "Alarms & reminders" for this app.',
     [

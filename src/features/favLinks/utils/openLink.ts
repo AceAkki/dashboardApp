@@ -1,4 +1,6 @@
-import { Alert, Linking } from "react-native";
+import { Linking } from "react-native";
+
+import { ctosAlert } from "@/global/ctosAlert";
 
 export const buildSearchUrl = (searchURL: string, query: string) =>
   `${searchURL}${encodeURIComponent(query.trim())}`;
@@ -9,7 +11,7 @@ export async function openLink(url: string, name: string): Promise<boolean> {
     await Linking.openURL(url);
     return true;
   } catch {
-    Alert.alert("Couldn't open link", name);
+    ctosAlert("Couldn't open link", name);
     return false;
   }
 }

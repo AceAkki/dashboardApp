@@ -24,6 +24,20 @@ const taskStyles = StyleSheet.create({
     textDecorationColor: hud.edge,
   },
   typeTag: { ...text.caption },
+  noteTxt: {
+    ...text.small,
+    textTransform: "none",
+    letterSpacing: 0,
+    lineHeight: 16,
+  },
+  footRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    gap: 8,
+  },
+  tagRow: { flex: 1, flexDirection: "row", flexWrap: "wrap", gap: 6 },
+  dueTxt: { flexShrink: 0, textAlign: "right", paddingTop: 3 },
   taskBtn: {
     width: 36,
     height: 36,

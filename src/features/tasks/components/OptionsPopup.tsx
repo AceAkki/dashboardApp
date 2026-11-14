@@ -12,7 +12,7 @@ import CtosPressable from "@/components/ctos/CtosPressable";
 import { feedback } from "@/global/useFeedback";
 
 import { taskTypesArr } from "../taskTypeUtils";
-import useOptions from "../hooks/useOptions";
+import useOptions, { UNDO_ACTION } from "../hooks/useOptions";
 import { useTaskStore } from "../hooks/useTasksStore";
 
 import type { optionPopupProps } from "../taskTypes";
@@ -102,7 +102,7 @@ export default function OptionsPopup({
               pressedStyle={optionsStyles.optionBtnPressed}
               onPress={() => {
                 deleteTask(taskObject.id);
-                feedback.warn("TASK DELETED");
+                feedback.warn("TASK DELETED", UNDO_ACTION);
               }}
             >
               {({ pressed }) => (

@@ -3,6 +3,7 @@ import { useShallow } from "zustand/shallow";
 import {
   Modal,
   Platform,
+  ScrollView,
   Text,
   View,
 } from "react-native";
@@ -15,7 +16,10 @@ import CtosPressable from "@/components/ctos/CtosPressable";
 import FocusInput from "@/components/ctos/FocusInput";
 import { feedback } from "@/global/useFeedback";
 import editStyles from "./editTaskFormStyles";
+import TagEditor, { useTagField } from "./TagEditor";
 import { useTaskStore } from "../hooks/useTasksStore";
+import { MAX_NOTE, cleanNote, tagCounts } from "../taskTags";
+import { getTaskTypes } from "../taskTypeUtils";
 import type { TaskActionData } from "../taskTypes";
 
 // a sensible starting point for a new reminder: one hour from now, on the minute
@@ -25,18 +29,35 @@ const inAnHour = () => {
   return d;
 };
 
-const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
-  const { editTask, toggleEditMode, editRemind } = useTaskStore(
+const makeId = () =>
+  `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+
+// One form for both: edit a task (taskObject given) or add a new one (no taskObject, onClose given).
+type Props = { taskObject?: TaskActionData; onClose?: () => void };
+
+const EditTaskForm = ({ taskObject, onClose }: Props) => {
+  const { editTask, toggleEditMode, editRemind, updateTasks } = useTaskStore(
     useShallow((state) => ({
       editTask: state.editTask,
       toggleEditMode: state.toggleEditMode,
       editRemind: state.editRemind,
+      updateTasks: state.updateTasks,
     })),
   );
-  const [newTaskTxt, setNewTaskTxt] = useState<string>(taskObject.taskName);
+  const close = () => (onClose ? onClose() : toggleEditMode());
+  const [newTaskTxt, setNewTaskTxt] = useState<string>(taskObject?.taskName ?? "");
+  // old tasks have neither: the note box starts empty and the tag list starts empty
+  const [note, setNote] = useState(taskObject?.note ?? "");
+  const tagField = useTagField(taskObject?.tags ?? []);
+  // tags used on OTHER tasks, offered as tap-to-add
+  const known = tagCounts(
+    useTaskStore.getState().tasks.filter((t) => t.id !== taskObject?.id),
+  )
+    .slice(0, 8)
+    .map((t) => t.tag);
   // null = no reminder. This is the whole truth about the reminder: add sets it, clear empties it, and confirm saves exactly this.
   const [remind, setRemind] = useState<Date | null>(
-    taskObject.remindTime ? new Date(taskObject.remindTime) : null,
+    taskObject?.remindTime ? new Date(taskObject.remindTime) : null,
   );
   // where the Android picker starts when there is no reminder yet
   const [suggested] = useState(inAnHour);
@@ -74,7 +95,7 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
   // An overdue reminder that was already there may stay (renaming must still work);
   // a reminder the user just picked has to be in the future.
   const pickedPast =
-    !!remind && newTime !== taskObject.remindTime && remind.getTime() <= Date.now();
+    !!remind && newTime !== (taskObject?.remindTime ?? "") && remind.getTime() <= Date.now();
   const hint = !name
     ? "TASK NAME CAN'T BE EMPTY"
     : pickedPast
@@ -84,9 +105,29 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
 
   const confirm = () => {
     if (!canSave) return;
-    editTask({ id: taskObject.id, newTask: name });
-    editRemind({ id: taskObject.id, newTime });
-    feedback.success("TASK UPDATED");
+    const n = cleanNote(note);
+    const tags = tagField.final;
+    if (taskObject) {
+      editTask({
+        id: taskObject.id,
+        newTask: name,
+        note: n ?? "",
+        tags,
+      });
+      editRemind({ id: taskObject.id, newTime });
+      feedback.success("TASK UPDATED");
+      return;
+    }
+    updateTasks({
+      id: makeId(),
+      taskName: name,
+      type: getTaskTypes(),
+      remindTime: newTime,
+      ...(n ? { note: n } : {}),
+      ...(tags.length ? { tags } : {}),
+    });
+    feedback.success("TASK ADDED");
+    close();
   };
 
   return (
@@ -94,11 +135,17 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
       transparent
       visible
       animationType="fade"
-      onRequestClose={() => toggleEditMode()}
+      onRequestClose={close}
     >
       <View style={editStyles.editTaskForm}>
         <View style={editStyles.editTaskContent}>
+         <ScrollView
+          contentContainerStyle={editStyles.editScroll}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+         >
           <FocusInput
+            autoFocus={!taskObject}
             error={!name}
             value={newTaskTxt}
             onChangeText={setNewTaskTxt}
@@ -106,6 +153,22 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
             placeholder="Task name"
             placeholderTextColor={Colors.textMuted}
           />
+
+          <View style={{ gap: 8 }}>
+            <Text style={editStyles.fieldLabel}>NOTE</Text>
+            <FocusInput
+              value={note}
+              onChangeText={setNote}
+              style={editStyles.noteInput}
+              placeholder="add a note…"
+              placeholderTextColor={Colors.textMuted}
+              maxLength={MAX_NOTE}
+              multiline
+              accessibilityLabel="Task note"
+            />
+          </View>
+
+          <TagEditor field={tagField} known={known} />
 
           {remind === null ? (
             <CtosPressable
@@ -169,16 +232,17 @@ const EditTaskForm = ({ taskObject }: { taskObject: TaskActionData }) => {
                 !canSave && editStyles.btnDisabled,
               ]}
             >
-              <Text>Confirm</Text>
+              <Text>{taskObject ? "Confirm" : "Add"}</Text>
             </CtosPressable>
             <CtosPressable
               pressedStyle={{ opacity: 0.7 }}
-              onPress={() => toggleEditMode()}
+              onPress={close}
               style={[editStyles.btn, editStyles.cancelBtn]}
             >
               <Text>Cancel</Text>
             </CtosPressable>
           </View>
+         </ScrollView>
         </View>
       </View>
     </Modal>

@@ -1,4 +1,4 @@
-import { Alert } from "react-native";
+import { ctosAlert } from "./ctosAlert";
 import * as Clipboard from "expo-clipboard";
 import { Directory, File } from "expo-file-system";
 
@@ -14,6 +14,8 @@ import {
   getTaskTypes,
   taskTypesArr,
 } from "@/features/tasks/taskTypeUtils";
+import { cleanNote, cleanTags } from "@/features/tasks/taskTags";
+import { cleanRepeat } from "@/features/tasks/taskRepeat";
 import type { TaskActionData } from "@/features/tasks/taskTypes";
 import type { StandupField, snippetType } from "@/features/tools/toolTypes";
 import { feedback } from "@/global/useFeedback";
@@ -132,11 +134,19 @@ export function parseBackup(raw: string): ParseResult {
     // rebuilt from the app's own task types, so a stray or missing key can't leak in
     const rawType = isObj(t.type) ? t.type : {};
     const kind = taskTypesArr.find((k) => rawType[k] === true) ?? DEFAULT_KIND;
+    // note and tags are optional (older backups have neither); both go through the same cleaning as the forms
+    const note = cleanNote(t.note);
+    const tags = cleanTags(t.tags);
+    // a repeat only makes sense with a reminder time to repeat at
+    const repeat = remind ? cleanRepeat(t.repeat) : undefined;
     tasks.push({
       id,
       taskName: name.trim(),
       remindTime: remind as string,
       type: getTaskTypes(kind),
+      ...(note ? { note } : {}),
+      ...(tags.length ? { tags } : {}),
+      ...(repeat ? { repeat } : {}),
     });
   }
 
@@ -287,7 +297,7 @@ export function applyBackup(b: Backup, mode: "merge" | "replace") {
 
 const fail = (title: string, e: unknown) => {
   feedback.error("BACKUP FAILED");
-  Alert.alert(title, e instanceof Error ? e.message : "Something went wrong.");
+  ctosAlert(title, e instanceof Error ? e.message : "Something went wrong.");
 };
 const cancelled = (e: unknown) =>
   e instanceof Error && /cancel/i.test(e.message);
@@ -304,7 +314,7 @@ export async function exportToFile() {
     );
     file.write(JSON.stringify(b, null, 2));
     feedback.success("BACKUP SAVED");
-    Alert.alert("Backup saved", `${summary(b)} saved as ${file.name}.`);
+    ctosAlert("Backup saved", `${summary(b)} saved as ${file.name}.`);
   } catch (e) {
     if (!cancelled(e)) fail("Couldn't save the backup", e);
   }
@@ -315,7 +325,7 @@ export async function exportToClipboard() {
     const b = buildBackup();
     await Clipboard.setStringAsync(JSON.stringify(b));
     feedback.success("BACKUP COPIED");
-    Alert.alert(
+    ctosAlert(
       "Backup copied",
       `${summary(b)} copied. Paste it somewhere safe (notes, email): the clipboard is wiped when you copy something else.`,
     );
@@ -345,7 +355,7 @@ export async function importBackup(source: "file" | "clipboard") {
     const res = parseBackup(raw);
     if (!res.ok) {
       feedback.error("NOT A VALID BACKUP");
-      Alert.alert("Can't import", res.error);
+      ctosAlert("Can't import", res.error);
       return;
     }
 
@@ -357,7 +367,7 @@ export async function importBackup(source: "file" | "clipboard") {
       skipped > 0
         ? `\n${skipped} damaged item${skipped === 1 ? "" : "s"} will be skipped.`
         : "";
-    Alert.alert(
+    ctosAlert(
       "Import backup?",
       `${summary(backup)}, saved ${when}.${note}\n\nMerge adds what's missing and keeps everything you have. Replace overwrites your tasks, snippets, notes, profile and Pomodoro count.`,
       [
@@ -367,7 +377,7 @@ export async function importBackup(source: "file" | "clipboard") {
           onPress: () => {
             const n = applyBackup(backup, "merge");
             feedback.success("BACKUP MERGED");
-            Alert.alert("Merged", `Added ${counts(n.tasks, n.snippets)}.`);
+            ctosAlert("Merged", `Added ${counts(n.tasks, n.snippets)}.`);
           },
         },
         {
@@ -376,7 +386,7 @@ export async function importBackup(source: "file" | "clipboard") {
           onPress: () => {
             const n = applyBackup(backup, "replace");
             feedback.success("BACKUP RESTORED");
-            Alert.alert("Restored", `${counts(n.tasks, n.snippets)} restored.`);
+            ctosAlert("Restored", `${counts(n.tasks, n.snippets)} restored.`);
           },
         },
       ],
