@@ -4,7 +4,6 @@ import Panel from "@/components/ctos/Panel";
 import { Status, ToolScreen } from "@/features/tools/toolKit";
 import { findToolPanel } from "@/features/tools/toolPanels";
 
-// One screen for all the small tools: /Tool?id=dns shows the DNS panel full screen.
 // The list of tools is in features/tools/toolPanels.ts.
 export default function Tool() {
   const { id } = useLocalSearchParams<{ id?: string }>();
