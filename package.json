@@ -24,6 +24,7 @@
     "expo-router": "~57.0.31",
     "expo-splash-screen": "~57.0.11",
     "expo-system-ui": "~57.0.4",
+    "expo-task-manager": "~57.0.23",
     "lottie-react-native": "~7.3.8",
     "react": "19.2.3",
     "react-dom": "19.2.3",
