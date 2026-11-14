@@ -35,8 +35,8 @@ export const useStatusStore = create<StatusStore>()((set, get) => ({
   },
 }));
 
-// Android: the system's own haptics (View.performHapticFeedback). expo-haptics' impactAsync /
-// selectionAsync play a 50 ms buzz at ~12% strength there, which most phone motors don't show.
+// Android: the system's own haptics (View.performHapticFeedback).
+// expo-haptics' impactAsync /selectionAsync play a 50 ms buzz at ~12% strength there, which most phone motors don't show.
 // These follow the phone's "touch feedback / vibration" setting and need no VIBRATE permission.
 // Confirm / Reject need Android 11+, so older phones keep the notification buzz.
 const android = (type: Haptics.AndroidHaptics) => () => Haptics.performAndroidHapticsAsync(type);
