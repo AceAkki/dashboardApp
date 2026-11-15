@@ -1,7 +1,6 @@
 // Launcher app config
 // scheme: URL scheme used with Linking.canOpenURL / openURL (null = none known)
 // androidPackage: used to check/launch on Android via a native module
-// verified: false = guessed from memory, test on a device before shipping
 
 export const APPS = [
   {
