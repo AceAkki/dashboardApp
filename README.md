@@ -4,7 +4,7 @@ A dev dashboard for Android that behaves like a terminal. It's the React Native 
 
 Everything is stored on the phone. No account, no server of mine.
 
-## The terminal
+## The terminal - feature that connects to all other features
 
 There's a command line built into the app. Type instead of tapping through menus:
 
