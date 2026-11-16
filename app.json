@@ -75,7 +75,7 @@
           "android": {
             "usesCleartextTraffic": true,
             "enableMinifyInReleaseBuilds": true,
-            "enableShrinkResourcesInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": false,
             "useLegacyPackaging": true
           }
         }
