@@ -33,7 +33,7 @@ help
 
 **Dev feed**: top stories from Hacker News, dev.to and Lobsters, status pages (GitHub, npm, Vercel, Netlify, Render, Docker, Cloudflare, AWS), latest package versions and releases.
 
-**GitHub stats** for your username.
+**GitHub stats** for yourself.
 
 **Weather** with hourly and daily forecast, air quality and animations (Open-Meteo, no API key).
 
