@@ -1,7 +1,8 @@
 import { useLocalSearchParams } from "expo-router";
 
 import Panel from "@/components/ctos/Panel";
-import { Status, ToolScreen } from "@/features/tools/toolKit";
+import Status from "@/components/ctos/Status";
+import { ToolScreen } from "@/features/tools/toolKit";
 import { findToolPanel } from "@/features/tools/toolPanels";
 
 // The list of tools is in features/tools/toolPanels.ts.
@@ -12,7 +13,7 @@ export default function Tool() {
   if (!tool) {
     return (
       <ToolScreen title="Unknown tool">
-        <Status tone="error">NO TOOL CALLED "{id ?? ""}"</Status>
+        <Status tone="err">NO TOOL CALLED "{id ?? ""}"</Status>
       </ToolScreen>
     );
   }

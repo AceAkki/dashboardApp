@@ -333,4 +333,156 @@ const globalStyles = StyleSheet.create({
   image: { width: "100%", height: "100%" },
 });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// SHARED UI TOKENS + BLOCKS (used by components/ctos/*: Button, Chip, Field, Sheet ...)
+// Added on top of the base tokens above, nothing above was changed.
+// ─────────────────────────────────────────────────────────────────────────────
+export const opacity = { pressed: 0.7, disabled: 0.4 } as const;
+export const screenPad = 16;
+export const iconSize = { sm: 14, md: 18, lg: 24 } as const;
+export const hitSlop = 8;
+export const duration = { fast: 160, shake: 45 } as const;
+export const letterSpacing = { tight: 1, normal: 1.5, wide: 2, widest: 3 } as const;
+
+// status colour + glyph; colour is never the only signal
+export const tone = {
+  ok: { color: Colors.success, glyph: "✓" },
+  warn: { color: Colors.warning, glyph: "▲" },
+  err: { color: Colors.danger, glyph: "✕" },
+  info: { color: Colors.info, glyph: "●" },
+} as const;
+export type Tone = keyof typeof tone;
+
+// dim layer behind sheets and dialogs
+export const backdropBase = { backgroundColor: "rgba(0,4,6,0.75)" } as const;
+
+// bottom sheet card
+export const sheetBase = {
+  backgroundColor: Colors.surface,
+  borderTopWidth: 1,
+  borderTopColor: Colors.primary,
+  padding: 20,
+  gap: spacing.md,
+} as const;
+
+// ── buttons ──────────────────────────────────────────────────────────────────
+export type ButtonVariant = "primary" | "secondary" | "danger" | "dangerLine" | "text";
+export type ButtonSize = "md" | "sm";
+
+const btnShell = {
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: spacing.sm,
+  borderRadius: radius.sm,
+  borderWidth: 1,
+  borderColor: "transparent",
+} as const;
+
+export const buttonLook: Record<
+  ButtonVariant,
+  { box: object; pressed: object; textColor: string }
+> = {
+  primary: {
+    box: { ...btnShell, backgroundColor: Colors.primary, borderColor: Colors.primary, ...glowBase },
+    pressed: { backgroundColor: Colors.primaryHover, borderColor: Colors.primaryHover },
+    textColor: Colors.textOnPrimary,
+  },
+  secondary: {
+    box: { ...btnShell, backgroundColor: Colors.secondarySoft, borderColor: hud.edge },
+    pressed: { backgroundColor: Colors.primarySoft, borderColor: Colors.primary },
+    textColor: Colors.textPrimary,
+  },
+  danger: {
+    box: { ...btnShell, backgroundColor: Colors.danger, borderColor: Colors.danger, ...glowDangerBase },
+    pressed: { opacity: 0.8 },
+    textColor: Colors.textOnPrimary,
+  },
+  dangerLine: {
+    box: { ...btnShell, backgroundColor: Colors.dangerSoft, borderColor: Colors.danger },
+    pressed: { opacity: 0.8 },
+    textColor: Colors.danger,
+  },
+  text: {
+    box: { ...btnShell },
+    pressed: { opacity: opacity.pressed },
+    textColor: Colors.primary,
+  },
+};
+
+export const buttonSize = {
+  md: { minHeight: 44, paddingHorizontal: spacing.lg },
+  sm: { minHeight: 32, paddingHorizontal: spacing.md },
+} as const;
+
+export const buttonText = {
+  fontFamily: Typography.primary_bold,
+  fontSize: fontSize.sm + 1, // 12
+  letterSpacing: letterSpacing.wide,
+  textTransform: "uppercase",
+} as const;
+
+// ── chips ────────────────────────────────────────────────────────────────────
+export const chipStyles = StyleSheet.create({
+  box: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    minHeight: 32,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.secondarySoft,
+  },
+  boxSm: { minHeight: 22, paddingHorizontal: 8, gap: 4 },
+  selected: chipActiveBase, // keeps the glow
+  pressed: { backgroundColor: Colors.primarySoft, borderColor: hud.edge },
+  disabled: { opacity: opacity.disabled },
+  label: {
+    fontFamily: Typography.primary,
+    fontSize: fontSize.sm,
+    letterSpacing: letterSpacing.tight,
+    color: Colors.textSecondary,
+    textTransform: "uppercase",
+  },
+  labelSelected: { color: Colors.primary },
+  count: { color: Colors.textMuted },
+  row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  wrap: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: spacing.sm },
+});
+
+// ── fields ───────────────────────────────────────────────────────────────────
+export const fieldStyles = StyleSheet.create({
+  wrap: { gap: 6 },
+  head: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", minHeight: 16 },
+  label: {
+    fontFamily: Typography.primary_bold,
+    fontSize: fontSize.xs,
+    letterSpacing: letterSpacing.wide,
+    color: Colors.textMuted,
+    textTransform: "uppercase",
+  },
+  input: { ...fieldBase, minHeight: 40 },
+  inputMulti: { minHeight: 88, textAlignVertical: "top" },
+  inputValid: { paddingRight: 30 },
+  inputError: { borderColor: Colors.danger, borderLeftColor: Colors.danger },
+  inputDisabled: { opacity: opacity.disabled },
+  box: { justifyContent: "center" },
+  mark: { position: "absolute", right: 10, color: Colors.success, fontSize: fontSize.md },
+  foot: { flexDirection: "row", justifyContent: "space-between", gap: spacing.sm, minHeight: 14 },
+  message: {
+    flexShrink: 1,
+    fontFamily: Typography.primary,
+    fontSize: fontSize.xs,
+    letterSpacing: letterSpacing.tight,
+    color: Colors.textMuted,
+  },
+  messageError: { color: Colors.danger },
+  counter: { fontFamily: Typography.primary, fontSize: fontSize.xs, color: Colors.textMuted },
+  search: { flexDirection: "row", alignItems: "center", gap: spacing.sm, ...fieldBase, paddingVertical: 0, minHeight: 40 },
+  searchSlash: { fontFamily: Typography.primary, fontSize: fontSize.md, color: Colors.primary },
+  searchInput: { flex: 1, fontFamily: Typography.primary, fontSize: fontSize.md, color: Colors.textPrimary, paddingVertical: spacing.sm },
+});
+
 export default globalStyles;

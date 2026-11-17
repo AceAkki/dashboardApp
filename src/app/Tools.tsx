@@ -3,10 +3,9 @@ import { ScrollView, Text, View } from "react-native";
 
 import CtosScreen from "@/components/ctos/CtosScreen";
 import EmptyState from "@/components/ctos/EmptyState";
-import FocusInput from "@/components/ctos/FocusInput";
+import SearchField from "@/components/ctos/SearchField";
 import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
-import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
 import TerminalPanel from "@/features/tools/components/TerminalPanel";
 import { ToolGroup, ToolTile } from "@/features/tools/toolKit";
@@ -56,29 +55,7 @@ export default function Tools() {
           <TerminalPanel />
         </Panel>
 
-        <View style={toolsStyles.search}>
-          <Text style={{ color: Colors.primary, fontSize: 16 }}>/</Text>
-          <FocusInput
-            style={toolsStyles.searchInput}
-            value={query}
-            onChangeText={setQuery}
-            placeholder="filter tools…"
-            placeholderTextColor={Colors.textMuted}
-            autoCapitalize="none"
-            autoCorrect={false}
-            returnKeyType="search"
-            accessibilityLabel="Filter tools"
-          />
-          {query ? (
-            <Text
-              style={{ color: Colors.primary, fontSize: 11, letterSpacing: 1 }}
-              onPress={() => setQuery("")}
-              suppressHighlighting
-            >
-              CLEAR
-            </Text>
-          ) : null}
-        </View>
+        <SearchField value={query} onChangeText={setQuery} placeholder="filter tools…" />
 
         {TOOL_GROUPS.map((group) => {
           const items = shown.filter((t) => t.group === group);

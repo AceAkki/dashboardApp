@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from "react";
+import { useState } from "react";
 import { useShallow } from "zustand/shallow";
 import {
   Image,
@@ -8,18 +8,14 @@ import {
   Switch,
   Text,
   View,
-  type StyleProp,
-  type ViewStyle,
 } from "react-native";
 import Constants from "expo-constants";
 
 import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
-import { Typography } from "@/constants/Typography";
 import globalStyles, {
   hudDNG,
   spacing,
-  text,
   glowDangerBase,
 } from "@/style/globalStyles";
 
@@ -28,7 +24,16 @@ import CtosScreen from "@/components/ctos/CtosScreen";
 import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
 import CtosPressable from "@/components/ctos/CtosPressable";
-import FocusInput from "@/components/ctos/FocusInput";
+import Block from "@/components/ctos/Block";
+import Button from "@/components/ctos/Button";
+import ButtonRow from "@/components/ctos/ButtonRow";
+import Chip from "@/components/ctos/Chip";
+import ChipRow from "@/components/ctos/ChipRow";
+import Field from "@/components/ctos/Field";
+import Hint from "@/components/ctos/Hint";
+import InfoRow from "@/components/ctos/InfoRow";
+import StatTile from "@/components/ctos/StatTile";
+import Status from "@/components/ctos/Status";
 
 // stores
 import { useUserStore } from "@/features/auth/useAuthStore";
@@ -68,105 +73,6 @@ const hasAlarmSetting =
   Platform.OS === "android" && Number(Platform.Version) >= 34;
 
 type Errors = { name?: string; git?: string; lat?: string; lon?: string };
-
-// ───────────────────────────── small pieces ─────────────────────────────
-
-// label on the left, value on the right, in an inset tile
-const InfoRow = ({ label, value }: { label: string; value: string }) => (
-  <View style={[globalStyles.inset, s.infoRow]}>
-    <Text style={globalStyles.textCaption}>{label}</Text>
-    <Text style={[globalStyles.cardTitle, s.infoVal]} numberOfLines={1}>
-      {value}
-    </Text>
-  </View>
-);
-
-// big number + caption
-const StatTile = ({ label, value }: { label: string; value: number }) => (
-  <View style={[globalStyles.inset, s.stat]}>
-    <Text style={globalStyles.textReadout}>{value}</Text>
-    <Text style={globalStyles.textCaption}>{label}</Text>
-  </View>
-);
-
-// a label, a hint line and the controls under it, inside an inset tile
-const Block = ({
-  label,
-  style,
-  hint,
-  children,
-}: {
-  label: string;
-  style?: StyleProp<ViewStyle>;
-  hint?: string;
-  children?: ReactNode;
-}) => (
-  <View style={[globalStyles.inset, s.block, style]}>
-    <Text style={globalStyles.textCaption}>{label}</Text>
-    {hint ? <Text style={s.hint}>{hint}</Text> : null}
-    {children}
-  </View>
-);
-
-const BtnRow = ({ children }: { children: ReactNode }) => (
-  <View style={globalStyles.btnGrp}>{children}</View>
-);
-
-// filled = the main action, outlined = everything secondary
-const Btn = ({
-  label,
-  onPress,
-  outlined,
-  danger,
-  icon,
-  flex,
-}: {
-  label: string;
-  onPress: () => void;
-  outlined?: boolean;
-  danger?: boolean;
-  icon?: keyof typeof Ionicons.glyphMap;
-  flex?: boolean;
-}) => {
-  const tone = danger ? Colors.danger : Colors.primary;
-  return (
-    <CtosPressable
-      accessibilityRole="button"
-      onPress={onPress}
-      style={[
-        outlined
-          ? [s.outBtn, { borderColor: tone }]
-          : danger
-            ? globalStyles.dangerBtn
-            : globalStyles.primaryBtn,
-        flex && { flex: 1 },
-        s.btnRow,
-      ]}
-      pressedStyle={outlined ? undefined : { opacity: 0.7 }}
-    >
-      {icon ? (
-        <Ionicons
-          name={icon}
-          size={15}
-          color={outlined ? tone : Colors.textOnPrimary}
-        />
-      ) : null}
-      <Text style={outlined ? [s.outTxt, { color: tone }] : s.btnTxt}>
-        {label}
-      </Text>
-    </CtosPressable>
-  );
-};
-
-const Err = ({ text: t }: { text?: string }) =>
-  t ? <Text style={loginStyles.errTxt}>{t}</Text> : null;
-
-const Field = ({ label, children }: { label: string; children: ReactNode }) => (
-  <View style={{ gap: 6 }}>
-    <Text style={globalStyles.textCaption}>{label}</Text>
-    {children}
-  </View>
-);
 
 // ───────────────────────────── screen ─────────────────────────────
 
@@ -329,7 +235,7 @@ const UserProfile = () => {
           style: "destructive",
           onPress: async () =>
            {
-            const ok = await ctosPrompt("Delete everything?", "Type DELETE to confirm.", {
+            const ok = await ctosPrompt("Delete tasks and cache?", "Type DELETE to confirm.", {
             destructive: true,
             okText: "Delete",
             validate: (t) => (t === "DELETE" ? undefined : "Type DELETE exactly"),
@@ -440,87 +346,55 @@ const UserProfile = () => {
         >
           {isEditMode ? (
             <View style={{ gap: 14 }}>
-              <Field label="User_Name">
-                <FocusInput
-                  error={!!errors.name}
-                  style={[
-                    loginStyles.input,
-                    !!errors.name && loginStyles.inputError,
-                  ]}
-                  placeholder="Name"
-                  placeholderTextColor={Colors.textMuted}
-                  value={name}
-                  onChangeText={setName}
-                  autoCapitalize="words"
-                />
-                <Err text={errors.name} />
-              </Field>
+              <Field
+                label="User_Name"
+                error={errors.name}
+                placeholder="Name"
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="words"
+              />
 
-              <Field label="Git_ID">
-                <FocusInput
-                  error={!!errors.git}
-                  style={[
-                    loginStyles.input,
-                    !!errors.git && loginStyles.inputError,
-                  ]}
-                  placeholder="GitHub userID"
-                  placeholderTextColor={Colors.textMuted}
-                  value={newUserID}
-                  onChangeText={setNewUserID}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-                <Err text={errors.git} />
-              </Field>
+              <Field
+                label="Git_ID"
+                error={errors.git}
+                placeholder="GitHub userID"
+                value={newUserID}
+                onChangeText={setNewUserID}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
 
-              <View style={{ flexDirection: "row", gap: 10 }}>
-                <View style={{ flex: 1 }}>
-                  <Field label="Latitude">
-                    <FocusInput
-                  error={!!errors.lat}
-                      style={[
-                        loginStyles.input,
-                        !!errors.lat && loginStyles.inputError,
-                      ]}
-                      placeholder="28.61"
-                      placeholderTextColor={Colors.textMuted}
-                      value={latitude}
-                      onChangeText={setLatitude}
-                      keyboardType="numbers-and-punctuation"
-                    />
-                    <Err text={errors.lat} />
-                  </Field>
+              <View style={s.pair}>
+                <View style={s.flex}>
+                  <Field
+                    label="Latitude"
+                    error={errors.lat}
+                    placeholder="28.61"
+                    value={latitude}
+                    onChangeText={setLatitude}
+                    keyboardType="numbers-and-punctuation"
+                  />
                 </View>
-                <View style={{ flex: 1 }}>
-                  <Field label="Longitude">
-                    <FocusInput
-                  error={!!errors.lon}
-                      style={[
-                        loginStyles.input,
-                        !!errors.lon && loginStyles.inputError,
-                      ]}
-                      placeholder="77.20"
-                      placeholderTextColor={Colors.textMuted}
-                      value={longitude}
-                      onChangeText={setLongitude}
-                      keyboardType="numbers-and-punctuation"
-                    />
-                    <Err text={errors.lon} />
-                  </Field>
+                <View style={s.flex}>
+                  <Field
+                    label="Longitude"
+                    error={errors.lon}
+                    placeholder="77.20"
+                    value={longitude}
+                    onChangeText={setLongitude}
+                    keyboardType="numbers-and-punctuation"
+                  />
                 </View>
               </View>
 
-              <Btn
-                outlined
-                icon="location-outline"
-                label="Use my location"
-                onPress={grabLocation}
-              />
+              <Button variant="secondary" icon="location-outline" label="Use my location"
+                onPress={grabLocation} />
 
-              <BtnRow>
-                <Btn flex label="Save" onPress={save} />
-                <Btn flex outlined label="Cancel" onPress={cancelEdit} />
-              </BtnRow>
+              <ButtonRow>
+                <Button style={s.flex} label="Save" onPress={save} />
+                <Button variant="secondary" style={s.flex} label="Cancel" onPress={cancelEdit} />
+              </ButtonRow>
             </View>
           ) : (
             <View style={{ gap: 6 }}>
@@ -536,21 +410,9 @@ const UserProfile = () => {
         <Panel
           title="Github"
           right={
-            <View style={s.status}>
-              <View
-                style={[
-                  s.dot,
-                  {
-                    backgroundColor: gitStatData
-                      ? Colors.success
-                      : Colors.danger,
-                  },
-                ]}
-              />
-              <Text style={globalStyles.textCaption}>
-                {gitStatData ? "CONNECTED" : "OFFLINE"}
-              </Text>
-            </View>
+            <Status tone={gitStatData ? "ok" : "err"}>
+              {gitStatData ? "CONNECTED" : "OFFLINE"}
+            </Status>
           }
         >
           <View style={{ gap: 6 }}>
@@ -572,12 +434,8 @@ const UserProfile = () => {
             />
           </View>
           <View style={{ marginTop: spacing.md }}>
-            <Btn
-              outlined
-              icon="refresh-outline"
-              label="Refresh GitHub"
-              onPress={gitInvalidate}
-            />
+            <Button variant="secondary" icon="refresh-outline" label="Refresh GitHub"
+              onPress={gitInvalidate} />
           </View>
         </Panel>
 
@@ -585,73 +443,46 @@ const UserProfile = () => {
         <Panel title="Data">
           <View style={{ gap: 8 }}>
             <Block
-              label="BACKUP"
+              title="BACKUP"
               hint="Tasks, snippets, notes, profile and Pomodoro count. Log Out and uninstalling erase them, so keep a copy somewhere safe."
             >
-              <BtnRow>
-                <Btn
-                  flex
-                  icon="download-outline"
-                  label="Export File"
-                  onPress={exportToFile}
-                />
-                <Btn outlined label="Copy" onPress={exportToClipboard} />
-              </BtnRow>
-              <BtnRow>
-                <Btn
-                  flex
-                  icon="push-outline"
-                  label="Import File"
-                  onPress={() => importBackup("file")}
-                />
-                <Btn
-                  outlined
-                  label="Paste"
-                  onPress={() => importBackup("clipboard")}
-                />
-              </BtnRow>
+              <ButtonRow>
+                <Button icon="download-outline" style={s.flex} label="Export File"
+                  onPress={exportToFile} />
+                <Button variant="secondary" label="Copy" onPress={exportToClipboard} />
+              </ButtonRow>
+              <ButtonRow>
+                <Button icon="push-outline" style={s.flex} label="Import File"
+                  onPress={() => importBackup("file")} />
+                <Button variant="secondary" label="Paste"
+                  onPress={() => importBackup("clipboard")} />
+              </ButtonRow>
             </Block>
 
-            <Block label="BOOT_SCREEN">
-              <View style={s.chips}>
+            <Block title="BOOT_SCREEN">
+              <ChipRow>
                 {Object.keys(bootMap).map((key) => (
-                  <CtosPressable
-                    haptic="select"
+                  <Chip
                     key={key}
-                    style={[
-                      globalStyles.chip,
-                      bootName === key && globalStyles.chipActive,
-                    ]}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: bootName === key }}
+                    label={key}
+                    selected={bootName === key}
                     onPress={() => setBootName(key)}
-                  >
-                    <Text
-                      style={[
-                        globalStyles.textSmall,
-                        bootName === key && { color: Colors.primary },
-                      ]}
-                    >
-                      {key}
-                    </Text>
-                  </CtosPressable>
+                  />
                 ))}
-              </View>
+              </ChipRow>
 
-              <BtnRow>
+              <ButtonRow>
                 {bootChanged ? (
-                  <Btn
-                    label="Use this boot screen"
+                  <Button label="Use this boot screen"
                     onPress={() => {
                   updateBootOption(bootName);
                   feedback.success("BOOT SCREEN SET");
-                }}
-                  />
+                }} />
 
                 ) : (
                   <Text style={globalStyles.textMuted}>ACTIVE: {BootOption}</Text>
                 )}
-              </BtnRow>
+              </ButtonRow>
             </Block>
           </View>
         </Panel>
@@ -659,7 +490,7 @@ const UserProfile = () => {
         {/* feedback */}
         <Panel title="Feedback">
           <Block
-            label="HAPTICS"
+            title="HAPTICS"
             hint="Short vibrations on taps and results. Turn it off to save battery."
           >
             <View style={s.switchRow}>
@@ -681,30 +512,22 @@ const UserProfile = () => {
         {/* system */}
         {hasAlarmSetting ? (
           <Panel title="Reminders">
-            <Text style={s.hint}>
+            <Hint>
               Allow "Alarms & reminders" so task reminders arrive on the minute,
               not a few minutes late.
-            </Text>
+            </Hint>
             <View style={{ marginTop: spacing.md }}>
-              <BtnRow>
-                <Btn
-                  flex
-                  outlined
-                  label="Open Settings"
-                  onPress={() => openExactAlarmSettings()}
-                />
-                <Btn
-                  flex
-                  outlined
-                  label="Test"
+              <ButtonRow>
+                <Button variant="secondary" style={s.flex} label="Open Settings"
+                  onPress={() => openExactAlarmSettings()} />
+                <Button variant="secondary" style={s.flex} label="Test"
                   onPress={async () => {
                     await notify({
                       title: "Test",
                       body: "Testing notification",
                     });
-                  }}
-                />
-              </BtnRow>
+                  }} />
+              </ButtonRow>
             </View>
           </Panel>
         ) : null}
@@ -718,21 +541,21 @@ const UserProfile = () => {
         >
           <View style={{ gap: 8 }}>
             <Block
-              label="PURGE_DATA"
+              title="PURGE_DATA"
               style={{ borderLeftColor: hudDNG.edge }}
               hint="Deletes tasks. Reset also clears the weather and GitHub cache."
             >
-              <BtnRow>
-                <Btn flex danger label="Tasks" onPress={confirmPurgeTasks} />
-                <Btn flex danger label="Reset" onPress={confirmReset} />
-              </BtnRow>
+              <ButtonRow>
+                <Button variant="danger" style={s.flex} label="Tasks" onPress={confirmPurgeTasks} />
+                <Button variant="danger" style={s.flex} label="Reset" onPress={confirmReset} />
+              </ButtonRow>
             </Block>
             <Block
-              label="USER_SESSION"
+              title="USER_SESSION"
               style={{ borderLeftColor: hudDNG.edge }}
               hint="Logging out also deletes your tasks."
             >
-              <Btn danger outlined label="Log Out" onPress={confirmLogOut} />
+              <Button variant="dangerLine" label="Log Out" onPress={confirmLogOut} />
             </Block>
           </View>
         </Panel>
@@ -757,37 +580,7 @@ const s = StyleSheet.create({
   },
   avatarImg: { width: "100%", height: "100%" },
   statRow: { flexDirection: "row", gap: 8, marginTop: spacing.lg },
-  stat: { flex: 1, paddingVertical: 10, paddingHorizontal: 10, gap: 2 },
-
-  infoRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 12,
-    padding: 10,
-  },
-  infoVal: { flexShrink: 1, textAlign: "right" },
-
-  block: { padding: 10, gap: 8 },
-  hint: { ...text.small, textTransform: "none", lineHeight: 17 },
+  flex: { flex: 1 },
+  pair: { flexDirection: "row", gap: 10 },
   switchRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-
-  status: { flexDirection: "row", alignItems: "center", gap: 6 },
-  dot: { width: 8, height: 8, borderRadius: 4 },
-
-  btnRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-  },
-  btnTxt: { ...text.btn, fontSize: 12, letterSpacing: 2 },
-  outBtn: { paddingVertical: 8, paddingHorizontal: 14, borderWidth: 1 },
-  outTxt: {
-    fontFamily: Typography.primary_bold,
-    fontSize: 12,
-    letterSpacing: 2,
-    textTransform: "uppercase",
-  },
 });

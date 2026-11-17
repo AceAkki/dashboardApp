@@ -6,8 +6,9 @@ import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
 import CtosPressable from "@/components/ctos/CtosPressable";
 import EmptyState from "@/components/ctos/EmptyState";
-import FocusInput from "@/components/ctos/FocusInput";
-import { Colors } from "@/constants/Colors";
+import Chip from "@/components/ctos/Chip";
+import ChipRow from "@/components/ctos/ChipRow";
+import SearchField from "@/components/ctos/SearchField";
 
 import { useToolsStore } from "@/features/tools/hooks/useToolsStore";
 import { Snippet } from "@/features/tools/components/Snippet";
@@ -55,57 +56,24 @@ export default function SnippetVault() {
         contentContainerStyle={styles.vaultScroll}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.search}>
-          <Text style={{ color: Colors.primary, fontSize: 16 }}>/</Text>
-          <FocusInput
-            style={styles.searchInput}
-            value={query}
-            onChangeText={setQuery}
-            placeholder="search title, text or tag…"
-            placeholderTextColor={Colors.textMuted}
-            autoCapitalize="none"
-            autoCorrect={false}
-            returnKeyType="search"
-            accessibilityLabel="Search snippets"
-          />
-          {query ? (
-            <Text
-              style={{ color: Colors.primary, fontSize: 11, letterSpacing: 1 }}
-              onPress={() => setQuery("")}
-              suppressHighlighting
-            >
-              CLEAR
-            </Text>
-          ) : null}
-        </View>
+        <SearchField
+          value={query}
+          onChangeText={setQuery}
+          placeholder="search title, text or tag…"
+        />
 
         {tags.length > 0 ? (
-          <View style={styles.tagChips}>
-            {[{ tag: null as string | null, count: snippets.length }, ...tags].map(
-              (t) => {
-                const active = t.tag === tag;
-                return (
-                  <CtosPressable
-                    haptic="select"
-                    key={t.tag ?? "all"}
-                    style={[globalStyles.chip, active && globalStyles.chipActive]}
-                    onPress={() => setPicked(t.tag)}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: active }}
-                  >
-                    <Text
-                      style={[
-                        globalStyles.textSmall,
-                        active && { color: Colors.primary },
-                      ]}
-                    >
-                      {t.tag ? `#${t.tag}` : "ALL"} {t.count}
-                    </Text>
-                  </CtosPressable>
-                );
-              },
-            )}
-          </View>
+          <ChipRow>
+            {[{ tag: null as string | null, count: snippets.length }, ...tags].map((t) => (
+              <Chip
+                key={t.tag ?? "all"}
+                label={t.tag ? `#${t.tag}` : "ALL"}
+                count={t.count}
+                selected={t.tag === tag}
+                onPress={() => setPicked(t.tag)}
+              />
+            ))}
+          </ChipRow>
         ) : null}
 
         {filtering ? (
