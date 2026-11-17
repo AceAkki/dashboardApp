@@ -1,10 +1,7 @@
-import { Text, View } from "react-native";
-
-import CtosPressable from "@/components/ctos/CtosPressable";
+import TabBar from "@/components/ctos/TabBar";
 
 import type { RouteType } from "../taskTypes";
 import { ALL_TAB } from "../taskTypeUtils";
-import taskManagerStyles from "./taskManagerStyles";
 
 type Props = {
   routes: RouteType[];
@@ -14,45 +11,12 @@ type Props = {
   counts: Record<string, number>;
 };
 
-const pad = (n: number) => String(n).padStart(2, "0");
-
-// Equal-width tabs: count over label, glowing underline on the active one.
-// Stretches over the full width, so there is no stray gap between tabs.
+// The task screen's tabs: the shared TabBar fed with the task routes.
 export default function TaskTabs({ routes, index, onChange, counts }: Props) {
-  return (
-    <View style={taskManagerStyles.tabsRow}>
-      {routes.map((route, i) => {
-        const on = i === index;
-        return (
-          <CtosPressable
-            key={route.key}
-            haptic="select"
-            pressedStyle={{ opacity: 0.6 }}
-            style={taskManagerStyles.tabItem}
-            onPress={() => onChange(i)}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: on }}
-          >
-            <Text
-              style={[
-                taskManagerStyles.tabCount,
-                on && taskManagerStyles.tabCountOn,
-              ]}
-            >
-              {pad(counts[route.key] ?? 0)}
-            </Text>
-            <Text
-              style={[
-                taskManagerStyles.tabLabel,
-                on && taskManagerStyles.tabLabelOn,
-              ]}
-            >
-              {route.key === ALL_TAB ? "ALL" : route.key.toUpperCase()}
-            </Text>
-            {on ? <View style={taskManagerStyles.tabUnderline} /> : null}
-          </CtosPressable>
-        );
-      })}
-    </View>
-  );
+  const tabs = routes.map((r) => ({
+    key: r.key,
+    label: r.key === ALL_TAB ? "ALL" : r.key,
+    count: counts[r.key] ?? 0,
+  }));
+  return <TabBar tabs={tabs} index={index} onChange={onChange} />;
 }

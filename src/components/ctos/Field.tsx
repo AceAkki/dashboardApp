@@ -1,5 +1,5 @@
-import { type ReactNode } from "react";
-import { Text, View, type TextInputProps } from "react-native";
+import { type ReactNode, type Ref } from "react";
+import { Text, TextInput, View, type TextInputProps } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { fieldStyles } from "@/style/globalStyles";
@@ -20,6 +20,8 @@ type Props = Omit<TextInputProps, "style"> & {
   headerRight?: ReactNode;
   multiline?: boolean;
   disabled?: boolean;
+  /** for "Next" on the keyboard: focus() the following field */
+  ref?: Ref<TextInput>;
 };
 
 // Label over a FocusInput, with state: error (shake + red), valid ✓, disabled, counter.

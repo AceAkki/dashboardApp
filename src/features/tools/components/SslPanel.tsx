@@ -2,14 +2,16 @@ import { useState } from "react";
 
 import useAsyncAction from "@/global/useAsyncAction";
 import { checkSsl } from "../logic/network";
-import { ActionButton, Field, ResultRow, Status, Stack } from "../toolKit";
+import ResultRow from "@/components/ctos/ResultRow";
+import Status from "@/components/ctos/Status";
+import { ActionButton, Field, Stack } from "../toolKit";
 
 export default function SslPanel() {
   const [host, setHost] = useState("");
   const { busy, data, error, run } = useAsyncAction(checkSsl);
 
   const days = data?.daysLeft ?? 0;
-  const tone = days < 0 || days <= 7 ? "error" : days <= 30 ? "warn" : "ok";
+  const tone = days < 0 || days <= 7 ? "err" : days <= 30 ? "warn" : "ok";
 
   return (
     <Stack>
@@ -25,7 +27,7 @@ export default function SslPanel() {
         disabled={!host.trim()}
         onPress={() => run(host)}
       />
-      {error ? <Status tone="error">{error}</Status> : null}
+      {error ? <Status tone="err">{error}</Status> : null}
       {data ? (
         <>
           <Status tone={tone}>

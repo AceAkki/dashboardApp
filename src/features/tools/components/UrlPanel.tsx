@@ -1,7 +1,11 @@
 import { useMemo, useState } from "react";
 
 import { decodeUrl, encodeUrl, type UrlScope } from "../logic/urlCodec";
-import { Chip, ChipRow, Field, Hint, OutputBlock, Status, Stack } from "../toolKit";
+import ChipRow from "@/components/ctos/ChipRow";
+import Hint from "@/components/ctos/Hint";
+import OutputBlock from "@/components/ctos/OutputBlock";
+import Status from "@/components/ctos/Status";
+import { Chip, Field, Stack } from "../toolKit";
 
 export default function UrlPanel() {
   const [mode, setMode] = useState<"encode" | "decode">("encode");
@@ -57,7 +61,7 @@ export default function UrlPanel() {
         }
         multiline
       />
-      {result?.error ? <Status tone="error">{result.error}</Status> : null}
+      {result?.error ? <Status tone="err">{result.error}</Status> : null}
       {result?.out !== undefined ? (
         <OutputBlock label="RESULT" value={result.out} />
       ) : null}

@@ -3,7 +3,9 @@ import { View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { parseColor, toHex, toHslString, toRgbString } from "../logic/color";
-import { Field, ResultRow, Status, Stack } from "../toolKit";
+import ResultRow from "@/components/ctos/ResultRow";
+import Status from "@/components/ctos/Status";
+import { Field, Stack } from "../toolKit";
 
 export default function ColorPanel() {
   const [input, setInput] = useState("#1E90FF");
@@ -32,7 +34,7 @@ export default function ColorPanel() {
           <ResultRow label="HSL" value={toHslString(rgb)} />
         </>
       ) : input.trim() ? (
-        <Status tone="error">
+        <Status tone="err">
           TRY #1E90FF · rgb(30, 144, 255) · hsl(210, 100%, 56%)
         </Status>
       ) : null}

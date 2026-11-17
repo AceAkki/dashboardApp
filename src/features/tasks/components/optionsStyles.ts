@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
-import { cardBase, glowBase, insetBase, text } from "@/style/globalStyles";
+import { cardBase, glowBase } from "@/style/globalStyles";
 
 const optionsStyles = StyleSheet.create({
   // full-screen transparent layer that closes the popup when tapped outside
@@ -21,19 +21,6 @@ const optionsStyles = StyleSheet.create({
     borderTopColor: Colors.primary,
     ...glowBase,
     elevation: 6,
-  },
-  optionBtn: {
-    ...insetBase,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    alignSelf: "stretch",
-  },
-  optionBtnPressed: {
-    backgroundColor: Colors.primary,
-  },
-  optionTxt: { ...text.small, color: Colors.textPrimary, letterSpacing: 2 },
-  optionTxtPressed: {
-    color: Colors.textOnPrimary,
   },
 });
 

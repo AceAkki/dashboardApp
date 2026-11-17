@@ -1,9 +1,8 @@
 import { Text, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
 import { Colors } from "@/constants/Colors";
-import CtosPressable from "@/components/ctos/CtosPressable";
-import Tag from "@/components/ctos/Tag";
+import IconButton from "@/components/ctos/IconButton";
+import Chip from "@/components/ctos/Chip";
 import { text } from "@/style/globalStyles";
 import { useTaskStore } from "../hooks/useTasksStore";
 import CtosText from "@/components/CtosText";
@@ -56,7 +55,7 @@ const Task = ({ taskTxt, showType = true }: Props) => {
           <View style={taskStyles.footRow}>
             <View style={taskStyles.tagRow}>
               {(taskTxt.tags ?? []).map((t) => (
-                <Tag key={t} label={`#${t}`} color={Colors.textSecondary} />
+                <Chip key={t} label={`#${t}`} size="sm" />
               ))}
             </View>
             {due ? (
@@ -74,12 +73,9 @@ const Task = ({ taskTxt, showType = true }: Props) => {
         ) : null}
       </View>
 
-      <CtosPressable
-        style={taskStyles.taskBtn}
-        pressedStyle={{ opacity: 0.5 }}
-        hitSlop={10}
-        accessibilityRole="button"
-        accessibilityLabel={`Options for ${taskTxt.taskName}`}
+      <IconButton
+        icon="options-outline"
+        label={`Options for ${taskTxt.taskName}`}
         onPress={(e) => {
           setOpenTask({
             id: taskTxt.id,
@@ -87,9 +83,7 @@ const Task = ({ taskTxt, showType = true }: Props) => {
             y: e.nativeEvent.pageY,
           });
         }}
-      >
-        <Ionicons name="options-outline" size={20} color={Colors.primary} />
-      </CtosPressable>
+      />
     </View>
   );
 };

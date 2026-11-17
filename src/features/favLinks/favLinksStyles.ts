@@ -23,57 +23,10 @@ const favLinksStyles = StyleSheet.create({
     justifyContent: "space-between",
   },
 
-  sectionLabel: { ...text.label, marginBottom: 8 },
-
-  // search bar
-  searchBar: {
-    ...fieldBase,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    paddingLeft: 12,
-    paddingRight: 6,
-    paddingVertical: 0,
-    height: 48,
-    borderRadius: radius.md,
-  },
-  searchBarFocused: {
-    borderColor: Colors.primary,
-    ...glowBase,
-  },
-  searchInput: {
-    flex: 1,
-    fontFamily: Typography.secondary,
-    color: Colors.textPrimary,
-    fontSize: fontSize.lg,
-    paddingVertical: 0,
-    width: "100%",
-  },
-  clearBtn: { padding: 4 },
-  goBtn: {
-    ...primaryBtnBase,
-    width: 25,
-    height: 25,
-    padding: 0,
-  },
-  goBtnDisabled: {
-    backgroundColor: Colors.secondary,
-    opacity: 0.5,
-  },
-
-  // engine chips
+  section: { gap: 8 },
   chipsList: { gap: 8, paddingRight: 8 },
-  chip: {
-    ...chipBase,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    paddingHorizontal: 10,
-  },
-  chipSelected: { ...chipActiveBase },
-  chipPressed: { opacity: 0.7 },
-  chipTxt: { ...text.small, fontSize: fontSize.md },
-  chipTxtSelected: { color: Colors.primary, fontFamily: Typography.primary_bold },
+
+
 
   // favicon with fallback
   icon: { width: 20, height: 20, borderRadius: radius.xs },

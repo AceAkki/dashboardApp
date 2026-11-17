@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { makeUuids, type UuidVersion } from "../logic/uuid";
-import { ActionButton, Chip, ChipRow, Hint, OutputBlock, Stack } from "../toolKit";
+import ChipRow from "@/components/ctos/ChipRow";
+import Hint from "@/components/ctos/Hint";
+import OutputBlock from "@/components/ctos/OutputBlock";
+import { ActionButton, Chip, Stack } from "../toolKit";
 
 const COUNTS = [1, 5, 10];
 

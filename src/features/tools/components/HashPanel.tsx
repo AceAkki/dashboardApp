@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 
 import { hashAll, type HashRow } from "../logic/hash";
-import { Field, Hint, ResultRow, Stack } from "../toolKit";
+import Hint from "@/components/ctos/Hint";
+import ResultRow from "@/components/ctos/ResultRow";
+import { Field, Stack } from "../toolKit";
 
 export default function HashPanel() {
   const [input, setInput] = useState("");

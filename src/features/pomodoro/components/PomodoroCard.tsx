@@ -9,6 +9,7 @@ import { MODE_LABEL } from "../hooks/pomodoroStore";
 import pomodoroStyles from "../pomodoroStyles";
 import { modeColor } from "../modeColor";
 import CtosText from "@/components/CtosText";
+import IconButton from "@/components/ctos/IconButton";
 import Corners from "@/components/ctos/Corners";
 
 // Compact dashboard version;
@@ -46,26 +47,14 @@ export default function PomodoroCard() {
       </View>
 
       <View style={pomodoroStyles.controls}>
-        <Pressable onPress={reset}>
-          <Ionicons name="refresh" size={18} color={Colors.textSecondary} />
-        </Pressable>
-        <Pressable
-          style={pomodoroStyles.playBtn}
+        <IconButton variant="plain" icon="refresh" label="Reset" onPress={reset} />
+        <IconButton
+          icon={running ? "pause" : "play"}
+          label={running ? "Pause" : "Start"}
+          size={40}
           onPress={running ? pause : start}
-        >
-          <Ionicons
-            name={running ? "pause" : "play"}
-            size={20}
-            color={Colors.textPrimary}
-          />
-        </Pressable>
-        <Pressable onPress={skip}>
-          <Ionicons
-            name="play-skip-forward"
-            size={18}
-            color={Colors.textSecondary}
-          />
-        </Pressable>
+        />
+        <IconButton variant="plain" icon="play-skip-forward" label="Skip" onPress={skip} />
       </View>
       <Corners />
     </View>

@@ -9,16 +9,11 @@ import {
   splitByMatches,
   type RegexFlag,
 } from "../logic/regex";
-import {
-  Chip,
-  ChipRow,
-  Field,
-  Hint,
-  ResultRow,
-  Stack,
-  Status,
-  Sub,
-} from "../toolKit";
+import ChipRow from "@/components/ctos/ChipRow";
+import Hint from "@/components/ctos/Hint";
+import ResultRow from "@/components/ctos/ResultRow";
+import Status from "@/components/ctos/Status";
+import { Chip, Field, Stack, Sub } from "../toolKit";
 import kit from "../toolKitStyles";
 
 const SHOWN_MATCHES = 30; // the list below the text; the highlighting shows all of them
@@ -55,7 +50,7 @@ export default function RegexTesterPanel() {
             ))}
           </ChipRow>
           <Hint>{flags.map((f) => `${f} = ${FLAG_HINT[f]}`).join(" · ") || "NO FLAGS: FIRST MATCH ONLY"}</Hint>
-          {result.error ? <Status tone="error">{result.error.toUpperCase()}</Status> : null}
+          {result.error ? <Status tone="err">{result.error.toUpperCase()}</Status> : null}
         </Stack>
       </Panel>
 

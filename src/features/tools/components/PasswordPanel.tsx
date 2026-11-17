@@ -6,7 +6,10 @@ import {
   generateToken,
   type CharsetKey,
 } from "../logic/password";
-import { ActionButton, Chip, ChipRow, Hint, OutputBlock, Sub, Stack } from "../toolKit";
+import ChipRow from "@/components/ctos/ChipRow";
+import Hint from "@/components/ctos/Hint";
+import OutputBlock from "@/components/ctos/OutputBlock";
+import { ActionButton, Chip, Sub, Stack } from "../toolKit";
 
 type Mode = "password" | "hex" | "base64url";
 

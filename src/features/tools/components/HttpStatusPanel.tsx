@@ -5,7 +5,9 @@ import Panel from "@/components/ctos/Panel";
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
 import { classOf, searchStatus, STATUS_CLASSES } from "../logic/httpStatus";
-import { Chip, ChipRow, Field, Hint, Stack } from "../toolKit";
+import ChipRow from "@/components/ctos/ChipRow";
+import Hint from "@/components/ctos/Hint";
+import { Chip, Field, Stack } from "../toolKit";
 import { fontSize, insetBase, text } from "@/style/globalStyles";
 
 export default function HttpStatusPanel() {

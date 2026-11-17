@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { FlatList, Pressable, RefreshControl, Text, View } from "react-native";
+import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 
 import CtosScreen from "@/components/ctos/CtosScreen";
+import Chip from "@/components/ctos/Chip";
+import ChipRow from "@/components/ctos/ChipRow";
+import LoadState from "@/components/ctos/LoadState";
 import Tag from "@/components/ctos/Tag";
 import CtosText from "@/components/CtosText";
 
@@ -44,22 +47,12 @@ export default function Feed() {
         </View>
       </View>
 
-      <View style={globalStyles.chips}>
-        {SOURCES.map((s) => (
-          <Pressable
-            key={s}
-            style={[globalStyles.chip, source === s && globalStyles.chipActive]}
-            onPress={() => setSource(s)}
-            accessibilityRole="button"
-            accessibilityState={{ selected: source === s }}
-          >
-            <Text
-              style={[text.small, source === s && { color: Colors.primary }]}
-            >
-              {SOURCE_LABEL[s]}
-            </Text>
-          </Pressable>
-        ))}
+      <View style={styles.chips}>
+        <ChipRow>
+          {SOURCES.map((s) => (
+            <Chip key={s} label={SOURCE_LABEL[s]} selected={source === s} onPress={() => setSource(s)} />
+          ))}
+        </ChipRow>
       </View>
 
       <FlatList
@@ -76,14 +69,7 @@ export default function Feed() {
           />
         }
         ListEmptyComponent={
-          <Text
-            style={[
-              globalStyles.textMuted,
-              { textAlign: "center", marginVertical: 24 },
-            ]}
-          >
-            {loading ? "LOADING FEED…" : (error ?? "NOTHING TO SHOW")}
-          </Text>
+          <LoadState loading={loading} error={error} notice="NOTHING TO SHOW" onRetry={refetch} />
         }
         ListFooterComponent={
           <View style={{ marginTop: 8 }}>
@@ -102,3 +88,7 @@ export default function Feed() {
     </CtosScreen>
   );
 }
+
+const styles = StyleSheet.create({
+  chips: { paddingHorizontal: 16, paddingVertical: 12 },
+});

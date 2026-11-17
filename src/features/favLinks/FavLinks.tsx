@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Keyboard, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import CtosText from "@/components/CtosText";
+import SectionLabel from "@/components/ctos/SectionLabel";
 import Corners from "@/components/ctos/Corners";
 import SearchLink from "./components/SearchLink";
 import SearchEngines from "./components/SearchEngines";
@@ -48,8 +48,8 @@ const FavLinks = () => {
 
   return (
     <View style={favLinksStyles.favLinks}>
-      <View>
-        <CtosText style={favLinksStyles.sectionLabel}>{"// Search"}</CtosText>
+      <View style={favLinksStyles.section}>
+        <SectionLabel>{"// Search"}</SectionLabel>
         <SearchLink
           search={search}
           setSearch={setSearch}
@@ -58,13 +58,13 @@ const FavLinks = () => {
         />
       </View>
 
-      <View>
-        <CtosText style={favLinksStyles.sectionLabel}>{"// Search engine"}</CtosText>
+      <View style={favLinksStyles.section}>
+        <SectionLabel>{"// Search engine"}</SectionLabel>
         <SearchEngines selected={search.engine} onSelect={selectEngine} />
       </View>
 
-      <View>
-        <CtosText style={favLinksStyles.sectionLabel}>{"// Quick links"}</CtosText>
+      <View style={favLinksStyles.section}>
+        <SectionLabel>{"// Quick links"}</SectionLabel>
         <QuickLinks />
       </View>
       <Corners />

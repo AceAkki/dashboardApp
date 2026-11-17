@@ -1,30 +1,20 @@
 import { useState } from "react";
+import { Platform, StyleSheet, View } from "react-native";
 import { useShallow } from "zustand/shallow";
-import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
 import DateTimePicker, {
   type DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
-import { Colors } from "@/constants/Colors";
-import CtosPressable from "@/components/ctos/CtosPressable";
-import FocusInput from "@/components/ctos/FocusInput";
+import Button from "@/components/ctos/Button";
+import ButtonRow from "@/components/ctos/ButtonRow";
+import Chip from "@/components/ctos/Chip";
+import ChipRow from "@/components/ctos/ChipRow";
+import Field from "@/components/ctos/Field";
+import FieldLabel from "@/components/ctos/FieldLabel";
+import Hint from "@/components/ctos/Hint";
+import Sheet from "@/components/ctos/Sheet";
+import Status from "@/components/ctos/Status";
 import { feedback } from "@/global/useFeedback";
-import { Typography } from "@/constants/Typography";
-import globalStyles, {
-  fieldBase,
-  fontSize,
-  primaryBtnBase,
-  text,
-} from "@/style/globalStyles";
 import { useTaskStore } from "../hooks/useTasksStore";
 import { getTaskTypes, taskCode } from "../taskTypeUtils";
 import { MAX_NOTE, cleanNote, tagCounts } from "../taskTags";
@@ -150,225 +140,91 @@ export default function TaskSheet({ taskObject, onClose }: Props) {
   };
 
   return (
-    <Modal transparent visible animationType="slide" onRequestClose={close}>
-      <KeyboardAvoidingView
-        style={s.root}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        <Pressable
-          style={s.backdrop}
-          onPress={close}
-          accessibilityLabel="Close"
-        />
-        <View style={s.sheet}>
-          <View style={s.handle} />
-          <View style={s.head}>
-            <Text style={s.headTxt}>
-              {taskObject
-                ? `// EDIT TASK · ${taskCode(taskObject.id)}`
-                : "// NEW TASK"}
-            </Text>
-            <CtosPressable haptic="select" hitSlop={10} onPress={close}>
-              <Text style={text.caption}>CLOSE</Text>
-            </CtosPressable>
-          </View>
+    <Sheet
+      onClose={close}
+      title={taskObject ? `EDIT TASK · ${taskCode(taskObject.id)}` : "NEW TASK"}
+    >
+      <Field
+        label="Task"
+        autoFocus={!taskObject}
+        value={title}
+        onChangeText={setTitle}
+        placeholder="> task"
+        error={tried && !name ? "TASK NAME CAN'T BE EMPTY" : undefined}
+      />
 
-          <ScrollView
-            contentContainerStyle={s.body}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-            <FocusInput
-              autoFocus={!taskObject}
-              error={tried && !name}
-              style={s.title}
-              value={title}
-              onChangeText={setTitle}
-              placeholder="> task"
-              placeholderTextColor={Colors.textMuted}
-              accessibilityLabel="Task name"
-            />
+      <Field
+        label="Note"
+        value={note}
+        onChangeText={setNote}
+        placeholder="note (optional)"
+        maxCount={MAX_NOTE}
+        multiline
+      />
 
-            <View style={s.group}>
-              <Text style={text.caption}>NOTE</Text>
-              <FocusInput
-                style={s.note}
-                value={note}
-                onChangeText={setNote}
-                placeholder="note (optional)"
-                placeholderTextColor={Colors.textMuted}
-                maxLength={MAX_NOTE}
-                multiline
-                accessibilityLabel="Task note"
+      <TagEditor field={tagField} known={known} />
+
+      <View style={s.group}>
+        <FieldLabel>Reminder</FieldLabel>
+        {remind === null ? (
+          <Button label="+ Add reminder" variant="secondary" onPress={addReminder} />
+        ) : (
+          <>
+            {Platform.OS === "ios" ? (
+              <DateTimePicker value={remind} mode="datetime" onChange={onPickerChange} />
+            ) : (
+              <Button
+                label={remind.toLocaleString()}
+                variant="secondary"
+                onPress={() => setPickerMode("date")}
               />
-            </View>
+            )}
+            <Button label="Clear reminder" variant="text" size="sm" onPress={clearReminder} style={s.clear} />
+          </>
+        )}
+        {tried && pickedPast ? <Status tone="err">{hint}</Status> : null}
+      </View>
 
-            <TagEditor field={tagField} known={known} />
+      <View style={s.group}>
+        <FieldLabel>Repeat</FieldLabel>
+        <ChipRow>
+          {([null, ...REPEATS] as (Repeat | null)[]).map((r) => (
+            <Chip
+              key={r ?? "none"}
+              label={r ? repeatChipLabel(r, remind) : "None"}
+              selected={r === repeat}
+              disabled={remind === null}
+              onPress={() => setRepeat(r)}
+            />
+          ))}
+        </ChipRow>
+        <Hint>
+          {remind === null
+            ? "SET A TIME FIRST, THE REPEAT FOLLOWS IT"
+            : repeat
+              ? repeatSummary(repeat, remind)
+              : "ONLY ONCE"}
+        </Hint>
+        {Platform.OS === "android" && pickerMode && (
+          <DateTimePicker value={remind ?? suggested} mode={pickerMode} onChange={onPickerChange} />
+        )}
+      </View>
 
-            <View style={s.group}>
-              <Text style={text.caption}>REMINDER</Text>
-              {remind === null ? (
-                <CtosPressable
-                  style={s.field}
-                  onPress={addReminder}
-                  accessibilityRole="button"
-                  accessibilityLabel="Add reminder"
-                >
-                  <Text style={s.fieldTxt}>+ Add reminder</Text>
-                </CtosPressable>
-              ) : (
-                <View style={s.group}>
-                  {Platform.OS === "ios" ? (
-                    <DateTimePicker
-                      value={remind}
-                      mode="datetime"
-                      onChange={onPickerChange}
-                    />
-                  ) : (
-                    <CtosPressable
-                      style={s.field}
-                      onPress={() => setPickerMode("date")}
-                    >
-                      <Text style={s.fieldTxt}>{remind.toLocaleString()}</Text>
-                    </CtosPressable>
-                  )}
-                  <CtosPressable
-                    haptic="select"
-                    pressedStyle={{ opacity: 0.5 }}
-                    onPress={clearReminder}
-                    hitSlop={8}
-                    accessibilityRole="button"
-                    accessibilityLabel="Clear reminder"
-                  >
-                    <Text style={s.clearTxt}>Clear reminder</Text>
-                  </CtosPressable>
-                </View>
-              )}
-              <Text style={text.caption}>REPEAT</Text>
-              <View style={s.chips}>
-                {([null, ...REPEATS] as (Repeat | null)[]).map((r) => {
-                  const on = r === repeat;
-                  return (
-                    <CtosPressable
-                      key={r ?? "none"}
-                      haptic="select"
-                      disabled={remind === null}
-                      style={[
-                        globalStyles.chip,
-                        on && globalStyles.chipActive,
-                        remind === null && s.chipOff,
-                      ]}
-                      onPress={() => setRepeat(r)}
-                      accessibilityRole="button"
-                      accessibilityState={{ selected: on, disabled: remind === null }}
-                    >
-                      <Text style={[globalStyles.textSmall, on && { color: Colors.primary }]}>
-                        {r ? repeatChipLabel(r, remind) : "NONE"}
-                      </Text>
-                    </CtosPressable>
-                  );
-                })}
-              </View>
-              <Text style={text.caption}>
-                {remind === null
-                  ? "SET A TIME FIRST, THE REPEAT FOLLOWS IT"
-                  : repeat
-                    ? repeatSummary(repeat, remind)
-                    : "ONLY ONCE"}
-              </Text>
-              {Platform.OS === "android" && pickerMode && (
-                <DateTimePicker
-                  value={remind ?? suggested}
-                  mode={pickerMode}
-                  onChange={onPickerChange}
-                />
-              )}
-            </View>
-
-            {tried && hint ? <Text style={s.errorTxt}>{hint}</Text> : null}
-
-            <View style={s.btns}>
-              <CtosPressable
-                style={[s.btn, s.cancel]}
-                pressedStyle={{ opacity: 0.7 }}
-                onPress={close}
-              >
-                <Text style={s.cancelTxt}>CANCEL</Text>
-              </CtosPressable>
-              <CtosPressable
-                haptic="none"
-                style={[s.btn, primaryBtnBase, { flex: 1 }]}
-                pressedStyle={{ opacity: 0.7 }}
-                onPress={save}
-                accessibilityRole="button"
-                accessibilityLabel={taskObject ? "Save task" : "Add task"}
-              >
-                <Text style={globalStyles.primaryBtnTxt}>
-                  {taskObject ? "SAVE" : "ADD TASK"}
-                </Text>
-              </CtosPressable>
-            </View>
-          </ScrollView>
-        </View>
-      </KeyboardAvoidingView>
-    </Modal>
+      <ButtonRow>
+        <Button label="Cancel" variant="secondary" onPress={close} style={s.flex} />
+        <Button
+          label={taskObject ? "Save" : "Add task"}
+          haptic="none"
+          onPress={save}
+          style={s.flex}
+        />
+      </ButtonRow>
+    </Sheet>
   );
 }
 
 const s = StyleSheet.create({
-  root: { flex: 1, justifyContent: "flex-end" },
-  backdrop: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: "rgba(0,4,6,0.75)",
-  },
-  sheet: {
-    maxHeight: "90%",
-    backgroundColor: Colors.surface,
-    borderTopWidth: 2,
-    borderTopColor: Colors.primary,
-    paddingHorizontal: 20,
-    paddingTop: 10,
-  },
-  handle: {
-    alignSelf: "center",
-    width: 36,
-    height: 4,
-    backgroundColor: Colors.border,
-    marginBottom: 14,
-  },
-  head: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 14,
-  },
-  headTxt: { ...text.caption, color: Colors.primary },
-  body: { gap: 16, paddingBottom: 28 },
   group: { gap: 8 },
-  title: { ...fieldBase, paddingVertical: 12 },
-  note: { ...fieldBase, minHeight: 64, textAlignVertical: "top" },
-  field: { ...fieldBase },
-  fieldTxt: {
-    fontFamily: Typography.primary,
-    fontSize: fontSize.md,
-    color: Colors.textPrimary,
-  },
-  chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  chipOff: { opacity: 0.35 },
-  clearTxt: {
-    fontFamily: Typography.primary,
-    fontSize: fontSize.sm,
-    color: Colors.danger,
-    textAlign: "right",
-  },
-  errorTxt: {
-    fontFamily: Typography.primary,
-    fontSize: fontSize.xs,
-    letterSpacing: 1,
-    color: Colors.danger,
-  },
-  btns: { flexDirection: "row", gap: 8, marginTop: 4 },
-  btn: { paddingVertical: 14, alignItems: "center", justifyContent: "center" },
-  cancel: { flex: 1, borderWidth: 1, borderColor: Colors.border },
-  cancelTxt: { ...text.caption, color: Colors.textSecondary },
+  flex: { flex: 1 },
+  clear: { alignSelf: "flex-end" },
 });

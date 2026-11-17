@@ -7,6 +7,7 @@ import gitStatsStyles from "./gitStatsStyles";
 import { Ionicons } from "@expo/vector-icons";
 
 import CtosText from "@/components/CtosText";
+import LoadState from "@/components/ctos/LoadState";
 import Corners from "@/components/ctos/Corners";
 import { useGitStats } from "./hooks/useGitStats";
 import { openLink } from "../favLinks/utils/openLink";
@@ -19,18 +20,12 @@ const GitStats = () => {
     return (
       <View style={[globalStyles.card, globalStyles.center]}>
         <Corners />
-        {loading ? (
-          <ActivityIndicator size="large" color={Colors.primary} />
-        ) : (
-          <>
-            <Text style={globalStyles.centerTxt}>
-              {error ?? "Unable to find GitHub Profile"}
-            </Text>
-            <Pressable style={globalStyles.retryBtn} onPress={refetch}>
-              <Text style={globalStyles.retryTxt}>Try again</Text>
-            </Pressable>
-          </>
-        )}
+        <LoadState
+          loading={loading}
+          error={error}
+          notice="Unable to find GitHub Profile"
+          onRetry={refetch}
+        />
       </View>
     );
   }

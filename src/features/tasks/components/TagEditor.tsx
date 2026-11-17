@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/Colors";
-import CtosPressable from "@/components/ctos/CtosPressable";
+import Chip from "@/components/ctos/Chip";
+import ChipRow from "@/components/ctos/ChipRow";
+import FieldLabel from "@/components/ctos/FieldLabel";
 import FocusInput from "@/components/ctos/FocusInput";
-import globalStyles, { fieldBase, text } from "@/style/globalStyles";
+import Hint from "@/components/ctos/Hint";
+import { Colors } from "@/constants/Colors";
+import { fieldStyles } from "@/style/globalStyles";
 import { MAX_TAGS, addTag } from "../taskTags";
 
 // State for one tag field. `final` is what to save: the chips plus a half-typed tag,
@@ -44,24 +47,13 @@ export default function TagEditor({ field, known }: Props) {
 
   return (
     <View style={s.wrap}>
-      <Text style={text.caption}>TAGS</Text>
-      <View style={s.row}>
+      <FieldLabel>Tags</FieldLabel>
+      <ChipRow>
         {tags.map((t) => (
-          <CtosPressable
-            haptic="select"
-            key={t}
-            style={[globalStyles.chip, globalStyles.chipActive]}
-            onPress={() => setTags(tags.filter((x) => x !== t))}
-            accessibilityRole="button"
-            accessibilityLabel={`Remove tag ${t}`}
-          >
-            <Text style={[globalStyles.textSmall, { color: Colors.primary }]}>
-              #{t} ×
-            </Text>
-          </CtosPressable>
+          <Chip key={t} label={`#${t}`} selected onRemove={() => setTags(tags.filter((x) => x !== t))} />
         ))}
         {full ? (
-          <Text style={text.caption}>MAX {MAX_TAGS}</Text>
+          <Hint>{`MAX ${MAX_TAGS}`}</Hint>
         ) : (
           <FocusInput
             style={s.input}
@@ -77,25 +69,16 @@ export default function TagEditor({ field, known }: Props) {
             accessibilityLabel="Add tag"
           />
         )}
-      </View>
+      </ChipRow>
 
       {suggestions.length > 0 && !full ? (
         <>
-          <Text style={text.caption}>YOUR TAGS</Text>
-          <View style={s.row}>
+          <FieldLabel>Your tags</FieldLabel>
+          <ChipRow>
             {suggestions.map((t) => (
-              <CtosPressable
-                haptic="select"
-                key={t}
-                style={globalStyles.chip}
-                onPress={() => setTags(addTag(tags, t))}
-                accessibilityRole="button"
-                accessibilityLabel={`Add tag ${t}`}
-              >
-                <Text style={globalStyles.textSmall}>#{t}</Text>
-              </CtosPressable>
+              <Chip key={t} label={`#${t}`} onPress={() => setTags(addTag(tags, t))} />
             ))}
-          </View>
+          </ChipRow>
         </>
       ) : null}
     </View>
@@ -104,6 +87,5 @@ export default function TagEditor({ field, known }: Props) {
 
 const s = StyleSheet.create({
   wrap: { gap: 8 },
-  row: { flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 8 },
-  input: { ...fieldBase, flex: 1, minWidth: 110, paddingVertical: 6 },
+  input: { ...fieldStyles.input, flex: 1, minWidth: 110, minHeight: 32, paddingVertical: 4 },
 });

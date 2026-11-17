@@ -2,13 +2,10 @@ import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
 import {
-  cardBase,
-  glowBase,
   fieldBase,
   fontSize,
   hud,
   insetBase,
-  primaryBtnBase,
   text,
 } from "@/style/globalStyles";
 
@@ -42,23 +39,6 @@ const toolsStyles = StyleSheet.create({
   // header + filter
   headRow: { flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" },
   count: { ...text.muted, fontSize: fontSize.xs, marginBottom: 6 },
-  search: {
-    ...fieldBase,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    paddingVertical: 0,
-    height: 44,
-    borderLeftWidth: 2,
-    borderLeftColor: Colors.primary,
-  },
-  searchInput: {
-    flex: 1,
-    fontFamily: Typography.primary,
-    color: Colors.textPrimary,
-    fontSize: fontSize.md,
-    paddingVertical: 0,
-  },
   empty: { ...text.muted, textAlign: "center", paddingVertical: 24 },
 
   // standup
@@ -95,34 +75,10 @@ const toolsStyles = StyleSheet.create({
     lineHeight: 17,
   },
   snippetTag: { ...text.caption, color: Colors.primary, marginBottom: 4 },
-  tagChips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   vaultScroll: { paddingHorizontal: 16, paddingBottom: 32, gap: 12 },
   snippetActions: { flexDirection: "row", gap: 14 },
   snippetAct: { ...text.caption, color: Colors.primary },
   snippetDel: { ...text.caption, color: Colors.danger },
-  editSnippetForm: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,4,6,0.8)",
-  },
-  editSnippetContent: {
-    ...cardBase,
-    ...glowBase,
-    overflow: "visible",
-    width: "85%",
-    gap: 16,
-    padding: 16,
-  },
-  addForm: { gap: 8, marginTop: 10 },
-  addInput: { ...fieldBase, fontSize: fontSize.sm },
-  addCode: {
-    ...fieldBase,
-    fontSize: fontSize.sm,
-    minHeight: 64,
-    textAlignVertical: "top",
-  },
-  addBtn: { ...primaryBtnBase, paddingVertical: 8 },
   toggle: { ...text.caption, color: Colors.primary },
 });
 

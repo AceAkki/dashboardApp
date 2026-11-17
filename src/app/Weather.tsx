@@ -1,6 +1,4 @@
 import {
-  ActivityIndicator,
-  Pressable,
   RefreshControl,
   ScrollView,
   Text,
@@ -16,6 +14,8 @@ import useFetchWeatherData from "@/features/weather/hooks/useFetchWeatherData";
 import weatherStyles from "@/features/weather/weatherStyles";
 import type { WeatherData } from "@/features/weather/weatherType";
 import CtosScreen from "@/components/ctos/CtosScreen";
+import LoadState from "@/components/ctos/LoadState";
+import SectionLabel from "@/components/ctos/SectionLabel";
 import CtosText from "@/components/CtosText";
 import globalStyles from "@/style/globalStyles";
 import { APP_TAG } from "@/global/appInfo";
@@ -30,18 +30,12 @@ const Weather = () => {
     return (
       <CtosScreen style={globalStyles.screen} edges={["top", "bottom"]}>
         <View style={[weatherStyles.screen, weatherStyles.center]}>
-          {loading ? (
-            <ActivityIndicator size="large" color={Colors.primary} />
-          ) : (
-            <>
-              <Text style={weatherStyles.centerTxt}>
-                {error ?? "Set your location to see the weather."}
-              </Text>
-              <Pressable style={weatherStyles.retryBtn} onPress={refetch}>
-                <Text style={weatherStyles.retryTxt}>Try again</Text>
-              </Pressable>
-            </>
-          )}
+          <LoadState
+            loading={loading}
+            error={error}
+            notice="Set your location to see the weather."
+            onRetry={refetch}
+          />
         </View>
       </CtosScreen>
     );
@@ -95,8 +89,8 @@ const Weather = () => {
             ))}
         </View>
 
-        <View>
-          <Text style={weatherStyles.sectionSubTitle}>Hourly Updates</Text>
+        <View style={weatherStyles.section}>
+          <SectionLabel>Hourly Updates</SectionLabel>
           <Hourly
             hourly={weatherData.hourly}
             tempUnit={weatherData.hourly_units.temperature_2m}
@@ -104,8 +98,8 @@ const Weather = () => {
           />
         </View>
 
-        <View>
-          <Text style={weatherStyles.sectionSubTitle}>Daily Updates</Text>
+        <View style={weatherStyles.section}>
+          <SectionLabel>Daily Updates</SectionLabel>
           <Daily
             daily={weatherData.daily}
             tempUnit={weatherData.daily_units.temperature_2m_max}

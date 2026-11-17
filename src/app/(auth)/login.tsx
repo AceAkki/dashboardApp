@@ -1,7 +1,5 @@
-import { type Ref, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
-  ActivityIndicator,
-  Pressable,
   ScrollView,
   Text,
   TextInput,
@@ -9,15 +7,15 @@ import {
   Image,
   StyleSheet,
   type ImageSourcePropType,
-  type TextInputProps,
 } from "react-native";
 import Constants from "expo-constants";
-import { Ionicons } from "@expo/vector-icons";
 
 import CtosScreen from "@/components/ctos/CtosScreen";
 import CtosText from "@/components/CtosText";
+import Button from "@/components/ctos/Button";
+import Field from "@/components/ctos/Field";
+import Hint from "@/components/ctos/Hint";
 import Panel from "@/components/ctos/Panel";
-import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
 import { useUserStore } from "@/features/auth/useAuthStore";
 import loginStyles from "@/features/auth/loginStyles";
@@ -29,38 +27,6 @@ import { appName } from "@/global/appInfo";
 const LOGO: ImageSourcePropType | null = require("../../../assets/images/icon.png");
 
 type Errors = { name?: string; git?: string; lat?: string; lon?: string };
-
-type FieldProps = Omit<TextInputProps, "style"> & {
-  label: string;
-  error?: string;
-  valid?: boolean;
-  ref?: Ref<TextInput>;
-};
-
-// label above, input, green tick when valid, red text under it when wrong
-const Field = ({ label, error, valid, ref, ...rest }: FieldProps) => (
-  <View style={loginStyles.fieldWrap}>
-    <Text style={globalStyles.sectionLabel}>{label}</Text>
-    <View>
-      <TextInput
-        ref={ref}
-        style={[
-          loginStyles.input,
-          !!error && loginStyles.inputError,
-          valid && loginStyles.inputPad,
-        ]}
-        placeholderTextColor={Colors.textMuted}
-        {...rest}
-      />
-      {valid ? (
-        <View style={loginStyles.checkWrap} pointerEvents="none">
-          <Ionicons name="checkmark" size={18} color={Colors.primary} />
-        </View>
-      ) : null}
-    </View>
-    {error ? <Text style={loginStyles.errTxt}>{error}</Text> : null}
-  </View>
-);
 
 export default function Login() {
   const updateUser = useUserStore((state) => state.updateUser);
@@ -202,38 +168,16 @@ export default function Login() {
               </View>
             </View>
 
-            <Pressable
-              style={loginStyles.locateBtn}
+            <Button
+              variant="secondary"
+              icon="location-outline"
+              label={locating ? "Locating…" : "Use my location"}
+              loading={locating}
               onPress={grabLocation}
-              disabled={locating}
-              accessibilityRole="button"
-              accessibilityLabel="Use my location"
-            >
-              {locating ? (
-                <ActivityIndicator size="small" color={Colors.primary} />
-              ) : (
-                <Ionicons
-                  name="location-outline"
-                  size={18}
-                  color={Colors.primary}
-                />
-              )}
-              <Text style={loginStyles.locateTxt}>
-                {locating ? "LOCATING…" : "USE MY LOCATION"}
-              </Text>
-            </Pressable>
-            <Text style={loginStyles.hint}>
-              Used only for weather. Stays on this phone.
-            </Text>
+            />
+            <Hint>Used only for weather. Stays on this phone.</Hint>
 
-            <Pressable style={loginStyles.submitBtn} onPress={onSubmit}>
-              <Text style={loginStyles.submitTxt}>INITIALIZE</Text>
-              <Ionicons
-                name="chevron-forward"
-                size={18}
-                color={Colors.textOnPrimary}
-              />
-            </Pressable>
+            <Button label="Initialize" onPress={onSubmit} />
           </View>
         </Panel>
 

@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 
 import useAsyncAction from "@/global/useAsyncAction";
 import { checkPort, lookupIp } from "../logic/network";
-import { ActionButton, Field, Hint, ResultRow, Status, Sub, Stack } from "../toolKit";
+import Hint from "@/components/ctos/Hint";
+import ResultRow from "@/components/ctos/ResultRow";
+import Status from "@/components/ctos/Status";
+import { ActionButton, Field, Sub, Stack } from "../toolKit";
 
 function IpSection() {
   const [target, setTarget] = useState("");
@@ -23,7 +26,7 @@ function IpSection() {
         placeholder="8.8.8.8"
       />
       <ActionButton label="LOOKUP" busy={busy} onPress={() => run(target)} />
-      {error ? <Status tone="error">{error}</Status> : null}
+      {error ? <Status tone="err">{error}</Status> : null}
       {data ? (
         <>
           <ResultRow reveal label="IP" value={data.ip} />
@@ -46,7 +49,7 @@ function PortSection() {
       ? "ok"
       : data?.state === "no-answer"
         ? "warn"
-        : "error";
+        : "err";
 
   return (
     <>
@@ -70,7 +73,7 @@ function PortSection() {
         disabled={!host.trim() || !port.trim()}
         onPress={() => run(host, port)}
       />
-      {error ? <Status tone="error">{error}</Status> : null}
+      {error ? <Status tone="err">{error}</Status> : null}
       {data ? (
         <Status tone={tone}>
           {data.state === "open"

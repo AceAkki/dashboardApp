@@ -3,16 +3,11 @@ import { useState } from "react";
 import Panel from "@/components/ctos/Panel";
 import useAsyncAction from "@/global/useAsyncAction";
 import { decryptText, encryptText } from "../logic/cipher";
-import {
-  ActionButton,
-  Chip,
-  ChipRow,
-  Field,
-  Hint,
-  OutputBlock,
-  Stack,
-  Status,
-} from "../toolKit";
+import ChipRow from "@/components/ctos/ChipRow";
+import Hint from "@/components/ctos/Hint";
+import OutputBlock from "@/components/ctos/OutputBlock";
+import Status from "@/components/ctos/Status";
+import { ActionButton, Chip, Field, Stack } from "../toolKit";
 
 type Mode = "encrypt" | "decrypt";
 
@@ -48,7 +43,7 @@ export default function EncryptionPanel() {
             disabled={!input || !passphrase}
             onPress={() => run(mode, input, passphrase)}
           />
-          {error ? <Status tone="error">{error}</Status> : null}
+          {error ? <Status tone="err">{error}</Status> : null}
         </Stack>
       </Panel>
 

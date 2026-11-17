@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
 
 import { decodeBase64, encodeBase64 } from "../logic/base64";
-import { Chip, ChipRow, Field, OutputBlock, Status, Stack } from "../toolKit";
+import ChipRow from "@/components/ctos/ChipRow";
+import OutputBlock from "@/components/ctos/OutputBlock";
+import Status from "@/components/ctos/Status";
+import { Chip, Field, Stack } from "../toolKit";
 
 export default function Base64Panel() {
   const [mode, setMode] = useState<"encode" | "decode">("encode");
@@ -51,7 +54,7 @@ export default function Base64Panel() {
         placeholder={mode === "encode" ? "text to encode" : "SGVsbG8="}
         multiline
       />
-      {result?.error ? <Status tone="error">{result.error}</Status> : null}
+      {result?.error ? <Status tone="err">{result.error}</Status> : null}
       {result?.out !== undefined ? (
         <OutputBlock label="RESULT" value={result.out} />
       ) : null}

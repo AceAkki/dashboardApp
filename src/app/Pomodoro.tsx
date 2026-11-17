@@ -1,8 +1,9 @@
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import CtosScreen from "@/components/ctos/CtosScreen";
-import { Ionicons } from "@expo/vector-icons";
+import Chip from "@/components/ctos/Chip";
+import ChipRow from "@/components/ctos/ChipRow";
+import IconButton from "@/components/ctos/IconButton";
 
-import { Colors } from "@/constants/Colors";
 import TimerRing from "@/features/pomodoro/components/TimerRing";
 import usePomodoro from "@/features/pomodoro/hooks/usePomodoro";
 import { modeColor } from "@/features/pomodoro/modeColor";
@@ -36,25 +37,11 @@ export default function PomodoroScreen() {
   return (
     <CtosScreen style={pomodoroStyles.screen}  edges={["top", "bottom"]}>
       <View style={pomodoroStyles.modeTabs}>
-        {MODES.map((m) => (
-          <Pressable
-            key={m}
-            onPress={() => setMode(m)}
-            style={[
-              pomodoroStyles.modeTab,
-              mode === m && pomodoroStyles.modeTabActive,
-            ]}
-          >
-            <Text
-              style={[
-                pomodoroStyles.modeTabTxt,
-                mode === m && pomodoroStyles.modeTabTxtActive,
-              ]}
-            >
-              {MODE_LABEL[m]}
-            </Text>
-          </Pressable>
-        ))}
+        <ChipRow center>
+          {MODES.map((m) => (
+            <Chip key={m} label={MODE_LABEL[m]} selected={mode === m} onPress={() => setMode(m)} />
+          ))}
+        </ChipRow>
       </View>
 
       <View style={pomodoroStyles.ringWrap}>
@@ -85,26 +72,15 @@ export default function PomodoroScreen() {
       </CtosText>
 
       <View style={pomodoroStyles.bigControls}>
-        <Pressable onPress={reset}>
-          <Ionicons name="refresh" size={26} color={Colors.textSecondary} />
-        </Pressable>
-        <Pressable
-          style={pomodoroStyles.bigPlayBtn}
+        <IconButton variant="plain" icon="refresh" label="Reset" onPress={reset} />
+        <IconButton
+          variant="primary"
+          size={76}
+          icon={running ? "pause" : "play"}
+          label={running ? "Pause" : "Start"}
           onPress={running ? pause : start}
-        >
-          <Ionicons
-            name={running ? "pause" : "play"}
-            size={34}
-            color={Colors.textOnPrimary}
-          />
-        </Pressable>
-        <Pressable onPress={skip}>
-          <Ionicons
-            name="play-skip-forward"
-            size={26}
-            color={Colors.textSecondary}
-          />
-        </Pressable>
+        />
+        <IconButton variant="plain" icon="play-skip-forward" label="Skip" onPress={skip} />
       </View>
     </CtosScreen>
   );

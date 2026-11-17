@@ -2,7 +2,9 @@ import { useState } from "react";
 
 import useAsyncAction from "@/global/useAsyncAction";
 import { pingSite } from "../logic/network";
-import { ActionButton, Field, ResultRow, Status, Stack } from "../toolKit";
+import ResultRow from "@/components/ctos/ResultRow";
+import Status from "@/components/ctos/Status";
+import { ActionButton, Field, Stack } from "../toolKit";
 
 export default function PingPanel() {
   const [url, setUrl] = useState("");
@@ -22,10 +24,10 @@ export default function PingPanel() {
         disabled={!url.trim()}
         onPress={() => run(url)}
       />
-      {error ? <Status tone="error">{error}</Status> : null}
+      {error ? <Status tone="err">{error}</Status> : null}
       {data ? (
         <>
-          <Status tone={data.ok ? "ok" : data.status < 500 ? "warn" : "error"}>
+          <Status tone={data.ok ? "ok" : data.status < 500 ? "warn" : "err"}>
             {data.opaque
               ? "REACHABLE"
               : data.ok

@@ -1,6 +1,6 @@
-import { ActivityIndicator, Text, View } from "react-native";
+import { View } from "react-native";
 
-import { Colors } from "@/constants/Colors";
+import LoadState from "@/components/ctos/LoadState";
 import useFetchWeatherData from "../hooks/useFetchWeatherData";
 import WeatherCard from "./WeatherCard";
 import weatherStyles from "../weatherStyles";
@@ -19,13 +19,11 @@ const WeatherCardContainer = () => {
           { alignItems: "center", paddingVertical: 32 },
         ]}
       >
-        {loading ? (
-          <ActivityIndicator color={Colors.primary} />
-        ) : (
-          <Text style={weatherStyles.centerTxt}>
-            {error ?? "Set your location to see the weather."}
-          </Text>
-        )}
+        <LoadState
+          loading={loading}
+          error={error}
+          notice="Set your location to see the weather."
+        />
         <Corners />
       </View>
     );

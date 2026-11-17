@@ -2,13 +2,12 @@ import { useShallow } from "zustand/shallow";
 import {
   Modal,
   Pressable,
-  Text,
   View,
   useWindowDimensions,
 } from "react-native";
 import { useState } from "react";
 
-import CtosPressable from "@/components/ctos/CtosPressable";
+import MenuItem from "@/components/ctos/MenuItem";
 import { feedback } from "@/global/useFeedback";
 
 import { taskTypesArr } from "../taskTypeUtils";
@@ -64,58 +63,16 @@ export default function OptionsPopup({
               taskObject={taskObject}
               currentType={currentType}
             />
-            <CtosPressable
-              style={optionsStyles.optionBtn}
-              pressedStyle={optionsStyles.optionBtnPressed}
-              onPress={handleToggleEdit}
-            >
-              {({ pressed }) => (
-                <Text
-                  style={[
-                    optionsStyles.optionTxt,
-                    pressed && optionsStyles.optionTxtPressed,
-                  ]}
-                >
-                  Remind Me
-                </Text>
-              )}
-            </CtosPressable>
-            <CtosPressable
-              style={optionsStyles.optionBtn}
-              pressedStyle={optionsStyles.optionBtnPressed}
-              onPress={handleToggleEdit}
-            >
-              {({ pressed }) => (
-                <Text
-                  style={[
-                    optionsStyles.optionTxt,
-                    pressed && optionsStyles.optionTxtPressed,
-                  ]}
-                >
-                  Edit Task
-                </Text>
-              )}
-            </CtosPressable>
-            <CtosPressable
+            <MenuItem label="Remind Me" onPress={handleToggleEdit} />
+            <MenuItem label="Edit Task" onPress={handleToggleEdit} />
+            <MenuItem
+              label="Delete Task"
               haptic="none"
-              style={optionsStyles.optionBtn}
-              pressedStyle={optionsStyles.optionBtnPressed}
               onPress={() => {
                 deleteTask(taskObject.id);
                 feedback.warn("TASK DELETED", UNDO_ACTION);
               }}
-            >
-              {({ pressed }) => (
-                <Text
-                  style={[
-                    optionsStyles.optionTxt,
-                    pressed && optionsStyles.optionTxtPressed,
-                  ]}
-                >
-                  Delete Task
-                </Text>
-              )}
-            </CtosPressable>
+            />
           </View>
         </View>
       </Pressable>

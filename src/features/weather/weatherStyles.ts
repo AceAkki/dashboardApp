@@ -5,7 +5,6 @@ import {
   cardBase,
   cardHeadBase,
   fontSize,
-  primaryBtnBase,
   screenBase,
   text,
 } from "@/style/globalStyles";
@@ -18,11 +17,7 @@ const weatherStyles = StyleSheet.create({
   scroll: { padding: 16, gap: 16 },
   sectionTitle: { ...text.heading },
   sectionPara: { ...text.small, fontSize: fontSize.md, marginTop: 4 },
-  sectionSubTitle: {
-    ...text.label,
-    fontSize: fontSize.sm,
-    marginBottom: 10,
-  },
+  section: { gap: 10 },
   expiry: { ...text.muted, textAlign: "center" },
 
   // loading / error
@@ -33,9 +28,6 @@ const weatherStyles = StyleSheet.create({
     padding: 24,
     gap: 12,
   },
-  centerTxt: { ...text.small, fontSize: fontSize.lg, textAlign: "center" },
-  retryBtn: { ...primaryBtnBase, paddingHorizontal: 18 },
-  retryTxt: { ...text.btn, fontSize: 14 },
 
   // WeatherCard
   weatherCard: { ...cardBase, padding: 16, flex: 1 },

@@ -5,14 +5,9 @@ import Panel from "@/components/ctos/Panel";
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
 import { diffLines, diffStats, type DiffLine } from "../logic/diff";
-import {
-  ActionButton,
-  Chip,
-  ChipRow,
-  Field,
-  Stack,
-  Status,
-} from "../toolKit";
+import ChipRow from "@/components/ctos/ChipRow";
+import Status from "@/components/ctos/Status";
+import { ActionButton, Chip, Field, Stack } from "../toolKit";
 import { fontSize } from "@/style/globalStyles";
 
 const LINE_LOOK = {
@@ -48,7 +43,7 @@ export default function DiffCheckerPanel() {
           <Field label="ORIGINAL" value={oldText} onChangeText={setOldText} placeholder="old version" multiline />
           <Field label="CHANGED" value={newText} onChangeText={setNewText} placeholder="new version" multiline />
           <ActionButton label="COMPARE" onPress={compare} />
-          {error ? <Status tone="error">{error}</Status> : null}
+          {error ? <Status tone="err">{error}</Status> : null}
         </Stack>
       </Panel>
 

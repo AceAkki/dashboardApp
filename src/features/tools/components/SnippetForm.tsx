@@ -1,28 +1,19 @@
 import { useState } from "react";
 import { useShallow } from "zustand/shallow";
-import { Modal, Text, View } from "react-native";
 
-import CtosPressable from "@/components/ctos/CtosPressable";
-import FocusInput from "@/components/ctos/FocusInput";
+import Button from "@/components/ctos/Button";
+import ButtonRow from "@/components/ctos/ButtonRow";
+import Chip from "@/components/ctos/Chip";
+import ChipRow from "@/components/ctos/ChipRow";
+import Field from "@/components/ctos/Field";
+import Sheet from "@/components/ctos/Sheet";
 import { feedback } from "@/global/useFeedback";
 
 import { useToolsStore } from "../hooks/useToolsStore";
 import { cleanTag, tagCounts } from "../snippetTags";
 
-import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "@/constants/Colors";
-import globalStyles from "@/style/globalStyles";
-import styles from "../toolsStyles";
-
 const SnippetForm = () => {
-  const {
-    snippets,
-    addSnippet,
-    updateSnippet,
-    snippetID,
-    setSnippetID,
-    toggleIsPopupOpen,
-  } =
+  const { snippets, addSnippet, updateSnippet, snippetID, setSnippetID, toggleIsPopupOpen } =
     useToolsStore(
       useShallow((s) => ({
         snippets: s.snippets,
@@ -34,19 +25,21 @@ const SnippetForm = () => {
       })),
     );
 
-  const selectedSnippet = snippetID
-    ? snippets.find((s) => s.id === snippetID)
-    : null;
-  const editTitle = selectedSnippet ? selectedSnippet.title : "";
-  const editCode = selectedSnippet ? selectedSnippet.code : "";
+  const selectedSnippet = snippetID ? snippets.find((s) => s.id === snippetID) : null;
 
-  const [title, setTitle] = useState(editTitle);
-  const [code, setCode] = useState(editCode);
+  const [title, setTitle] = useState(selectedSnippet?.title ?? "");
+  const [code, setCode] = useState(selectedSnippet?.code ?? "");
   const [tag, setTag] = useState(selectedSnippet?.tag ?? "");
   const known = tagCounts(snippets).slice(0, 8);
   const currentTag = cleanTag(tag);
 
   const [tried, setTried] = useState(false);
+
+  // so the next "+ NEW" is a new snippet, not an edit of this one
+  const close = () => {
+    setSnippetID(null);
+    toggleIsPopupOpen();
+  };
 
   const save = () => {
     if (!title.trim() || !code.trim()) {
@@ -60,97 +53,55 @@ const SnippetForm = () => {
       addSnippet(title.trim(), code.trim(), tag);
     }
     feedback.success(selectedSnippet ? "SNIPPET UPDATED" : "SNIPPET SAVED");
-    // so the next "+ NEW" is a new snippet, not an edit of this one
-    setSnippetID(null);
-    toggleIsPopupOpen();
+    close();
   };
 
   return (
-    <Modal transparent visible animationType="fade">
-      <View style={styles.editSnippetForm}>
-        <View style={styles.editSnippetContent}>
-          <View style={styles.snippetHead}>
-            <Text style={globalStyles.sectionSubTitle}>
-              {selectedSnippet ? "Edit" : "New"} Snippet
-            </Text>
-
-            <CtosPressable
-              style={[styles.addBtn,]}
-              onPress={() => {
-                setSnippetID(null);
-                toggleIsPopupOpen();
-              }}
-            >
-              <Ionicons
-                name="close-outline"
-                size={20}
-                color={Colors.textOnPrimary}
-              />
-            </CtosPressable>
-          </View>
-          <View style={styles.addForm}>
-            <FocusInput
-              style={styles.addInput}
-              value={title}
-              onChangeText={setTitle}
-              error={tried && !title.trim()}
-              placeholder="title"
-              placeholderTextColor={Colors.textMuted}
+    <Sheet onClose={close} title={`${selectedSnippet ? "EDIT" : "NEW"} SNIPPET`}>
+      <Field
+        label="Title"
+        value={title}
+        onChangeText={setTitle}
+        placeholder="title"
+        error={tried && !title.trim() ? "TITLE NEEDED" : undefined}
+      />
+      <Field
+        label="Text"
+        value={code}
+        onChangeText={setCode}
+        placeholder="command, code or note"
+        autoCapitalize="none"
+        autoCorrect={false}
+        multiline
+        error={tried && !code.trim() ? "TEXT NEEDED" : undefined}
+      />
+      <Field
+        label="Tag"
+        value={tag}
+        onChangeText={setTag}
+        placeholder="git, docker, notes"
+        help="OPTIONAL"
+        autoCapitalize="none"
+        autoCorrect={false}
+        maxLength={30}
+      />
+      {known.length > 0 ? (
+        <ChipRow>
+          {known.map((t) => (
+            <Chip
+              key={t.tag}
+              label={`#${t.tag}`}
+              selected={currentTag === t.tag}
+              onPress={() => setTag(currentTag === t.tag ? "" : t.tag)}
             />
-            <FocusInput
-              style={styles.addCode}
-              value={code}
-              onChangeText={setCode}
-              error={tried && !code.trim()}
-              placeholder="command, code or note"
-              placeholderTextColor={Colors.textMuted}
-              autoCapitalize="none"
-              autoCorrect={false}
-              multiline
-            />
-            <FocusInput
-              style={styles.addInput}
-              value={tag}
-              onChangeText={setTag}
-              placeholder="tag (optional): git, docker, notes"
-              placeholderTextColor={Colors.textMuted}
-              autoCapitalize="none"
-              autoCorrect={false}
-              maxLength={30}
-            />
-            {known.length > 0 ? (
-              <View style={styles.tagChips}>
-                {known.map((t) => (
-                  <CtosPressable
-                    haptic="select"
-                    key={t.tag}
-                    style={[
-                      globalStyles.chip,
-                      currentTag === t.tag && globalStyles.chipActive,
-                    ]}
-                    onPress={() => setTag(currentTag === t.tag ? "" : t.tag)}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: currentTag === t.tag }}
-                  >
-                    <Text
-                      style={[
-                        globalStyles.textSmall,
-                        currentTag === t.tag && { color: Colors.primary },
-                      ]}
-                    >
-                      #{t.tag}
-                    </Text>
-                  </CtosPressable>
-                ))}
-              </View>
-            ) : null}
-            <CtosPressable haptic="none" style={styles.addBtn} pressedStyle={{ opacity: 0.7 }} onPress={save}>
-              <Text style={globalStyles.primaryBtnTxt}>Save</Text>
-            </CtosPressable>
-          </View>
-        </View>
-      </View>
-    </Modal>
+          ))}
+        </ChipRow>
+      ) : null}
+      <ButtonRow>
+        <Button label="Cancel" variant="secondary" onPress={close} style={{ flex: 1 }} />
+        <Button label="Save" haptic="none" onPress={save} style={{ flex: 1 }} />
+      </ButtonRow>
+    </Sheet>
   );
 };
 

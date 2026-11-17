@@ -1,25 +1,20 @@
 import { ComponentProps, useState, type ReactNode } from "react";
-import {
-  ScrollView,
-  Text,
-  View,
-  useWindowDimensions,
-  type TextInputProps,
-} from "react-native";
+import { ScrollView, Text, View, useWindowDimensions, type TextInputProps } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 
+import Button from "@/components/ctos/Button";
+import ButtonRow from "@/components/ctos/ButtonRow";
+import Chip from "@/components/ctos/Chip";
 import CtosScreen from "@/components/ctos/CtosScreen";
+import CtosPressable from "@/components/ctos/CtosPressable";
+import Field from "@/components/ctos/Field";
 import CtosText from "@/components/CtosText";
 import { Colors } from "@/constants/Colors";
-import { writeClipboardText } from "@/global/globalFunctions";
-import { feedback } from "@/global/useFeedback";
-import useAsciiSpinner from "@/global/useAsciiSpinner";
-import CtosPressable from "@/components/ctos/CtosPressable";
-import FocusInput from "@/components/ctos/FocusInput";
 import { APP_TAG } from "@/global/appInfo";
-import globalStyles, { text } from "@/style/globalStyles";
+import { hitSlop, text } from "@/style/globalStyles";
+import globalStyles from "@/style/globalStyles";
 import kit from "./toolKitStyles";
 
 type IconName = ComponentProps<typeof Ionicons>["name"];
@@ -129,7 +124,7 @@ export function ToolScreen({
   );
 }
 
-// ---------- input ----------
+// ---------- thin wrappers: the old tool API on top of the shared components ----------
 
 type FieldProps = {
   label: string;
@@ -142,16 +137,14 @@ type FieldProps = {
   keyboardType?: TextInputProps["keyboardType"];
 };
 
-// Labelled text input with a PASTE button (CLEAR once there is text): typing on a phone is slow.
-export function Field({
-  label,
-  value,
-  onChangeText,
-  placeholder,
-  multiline,
-  secure,
-  keyboardType,
-}: FieldProps) {
+const FieldAction = ({ label, onPress }: { label: string; onPress: () => void }) => (
+  <CtosPressable haptic="select" pressedStyle={{ opacity: 0.5 }} onPress={onPress} hitSlop={hitSlop}>
+    <Text style={kit.action}>{label}</Text>
+  </CtosPressable>
+);
+
+// Shared Field with a PASTE button (CLEAR once there is text): typing on a phone is slow.
+export function ToolField({ label, value, onChangeText, placeholder, multiline, secure, keyboardType }: FieldProps) {
   const [hidden, setHidden] = useState(!!secure);
 
   const paste = async () => {
@@ -163,77 +156,34 @@ export function Field({
   };
 
   return (
-    <View style={kit.fieldWrap}>
-      <View style={kit.fieldHead}>
-        <Text style={text.caption}>{label}</Text>
+    <Field
+      label={label}
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={placeholder}
+      multiline={multiline}
+      secureTextEntry={hidden}
+      keyboardType={keyboardType}
+      autoCapitalize="none"
+      autoCorrect={false}
+      spellCheck={false}
+      headerRight={
         <View style={kit.fieldActions}>
-          {secure ? (
-            <CtosPressable haptic="select" pressedStyle={{ opacity: 0.5 }} onPress={() => setHidden((h) => !h)} hitSlop={8}>
-              <Text style={kit.action}>{hidden ? "SHOW" : "HIDE"}</Text>
-            </CtosPressable>
-          ) : null}
-          <CtosPressable
-            haptic="select"
-            pressedStyle={{ opacity: 0.5 }}
-            onPress={value ? () => onChangeText("") : paste}
-            hitSlop={8}
-          >
-            <Text style={kit.action}>{value ? "CLEAR" : "PASTE"}</Text>
-          </CtosPressable>
+          {secure ? <FieldAction label={hidden ? "SHOW" : "HIDE"} onPress={() => setHidden((h) => !h)} /> : null}
+          <FieldAction label={value ? "CLEAR" : "PASTE"} onPress={value ? () => onChangeText("") : paste} />
         </View>
-      </View>
-      <FocusInput
-        style={[kit.input, multiline && kit.inputMulti]}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor={Colors.textMuted}
-        multiline={multiline}
-        secureTextEntry={hidden}
-        keyboardType={keyboardType}
-        autoCapitalize="none"
-        autoCorrect={false}
-        spellCheck={false}
-      />
-    </View>
+      }
+    />
   );
 }
 
-// ---------- choices ----------
-
-export const ChipRow = ({ children }: { children: ReactNode }) => (
-  <View style={kit.chips}>{children}</View>
+// same props the panels always used (`active`), on the shared Chip
+export const ToolChip = ({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) => (
+  <Chip label={label} selected={active} onPress={onPress} />
 );
 
-export function Chip({
-  label,
-  active,
-  onPress,
-}: {
-  label: string;
-  active: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <CtosPressable
-      haptic="select"
-      onPress={onPress}
-      style={[kit.chip, active && kit.chipOn]}
-      accessibilityRole="button"
-      accessibilityState={{ selected: active }}
-    >
-      <Text style={[kit.chipTxt, active && kit.chipTxtOn]}>{label}</Text>
-    </CtosPressable>
-  );
-}
-
-// ---------- buttons ----------
-
-export const ButtonRow = ({ children }: { children: ReactNode }) => (
-  <View style={kit.btnRow}>{children}</View>
-);
-
-export function ActionButton({
+// busy -> loading, ghost -> secondary; each button takes an equal share of its ButtonRow
+export const ActionButton = ({
   label,
   onPress,
   busy = false,
@@ -245,121 +195,20 @@ export function ActionButton({
   busy?: boolean;
   disabled?: boolean;
   ghost?: boolean;
-}) {
-  const off = busy || disabled;
-  const spin = useAsciiSpinner(busy);
-  return (
-    <CtosPressable
-      onPress={onPress}
-      disabled={off}
-      accessibilityRole="button"
-      style={[
-        ghost ? kit.btnGhost : [globalStyles.primaryBtn, kit.btn],
-        off && kit.btnOff,
-      ]}
-      pressedStyle={ghost ? undefined : { opacity: 0.7 }}
-    >
-      <Text style={ghost ? kit.btnGhostTxt : globalStyles.primaryBtnTxt}>
-        {busy ? `${spin} WORKING` : label}
-      </Text>
-    </CtosPressable>
-  );
-}
-
-export function CopyButton({ text: value }: { text: string }) {
-  const [done, setDone] = useState(false);
-  const press = async () => {
-    await writeClipboardText(value);
-    feedback.success();
-    setDone(true);
-    setTimeout(() => setDone(false), 1500);
-  };
-  return (
-    <CtosPressable haptic="none" pressedStyle={{ opacity: 0.5 }} onPress={press} hitSlop={8}>
-      <Text style={kit.action}>{done ? "COPIED" : "COPY"}</Text>
-    </CtosPressable>
-  );
-}
-
-// ---------- results ----------
-
-// one line: LABEL  value  COPY
-// reveal: the value types itself in (scramble). Only for results that appear once, after a button
-// press; leave it off where the value changes while typing.
-export function ResultRow({
-  label,
-  value,
-  reveal = false,
-}: {
-  label: string;
-  value: string;
-  reveal?: boolean;
-}) {
-  return (
-    <View style={kit.row}>
-      <Text style={kit.rowLabel}>{label}</Text>
-      {reveal && value.length <= 64 ? (
-        <CtosText style={kit.rowValue} selectable duration={450}>
-          {value}
-        </CtosText>
-      ) : (
-        <Text style={kit.rowValue} selectable>
-          {value}
-        </Text>
-      )}
-      <CopyButton text={value} />
-    </View>
-  );
-}
-
-// a box for longer output (several lines), copy button in the header
-export function OutputBlock({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <View style={kit.block}>
-      <View style={kit.blockHead}>
-        <Text style={text.caption}>{label}</Text>
-        <CopyButton text={value} />
-      </View>
-      <Text style={kit.blockText} selectable>
-        {value}
-      </Text>
-    </View>
-  );
-}
-
-const TONES = {
-  ok: { glyph: "✓", color: Colors.success },
-  warn: { glyph: "▲", color: Colors.warning },
-  error: { glyph: "✕", color: Colors.danger },
-  info: { glyph: "●", color: Colors.info },
-} as const;
-
-// glyph + words, never colour alone
-export function Status({
-  tone,
-  children,
-}: {
-  tone: keyof typeof TONES;
-  children: ReactNode;
-}) {
-  const { glyph, color } = TONES[tone];
-  return (
-    <Text style={[kit.status, { color }]}>
-      {glyph} {children}
-    </Text>
-  );
-}
-
-export const Sub = ({ children }: { children: string }) => (
-  <Text style={kit.sub}>{`// ${children}`}</Text>
+}) => (
+  <Button
+    label={label}
+    onPress={onPress}
+    loading={busy}
+    disabled={disabled}
+    variant={ghost ? "secondary" : "primary"}
+    style={kit.btn}
+  />
 );
 
-export const Hint = ({ children }: { children: ReactNode }) => (
-  <Text style={kit.hint}>{children}</Text>
-);
+export const Sub = ({ children }: { children: string }) => <Text style={kit.sub}>{`// ${children}`}</Text>;
+
+export { ButtonRow };
+
+// panels import these under the short names
+export { ToolField as Field, ToolChip as Chip };

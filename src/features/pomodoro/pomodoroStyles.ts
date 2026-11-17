@@ -3,11 +3,7 @@ import { Colors } from "@/constants/Colors";
 import {
   cardBase,
   cardHeadBase,
-  chipActiveBase,
-  chipBase,
   fontSize,
-  glowBase,
-  insetBase,
   radius,
   screenBase,
   text,
@@ -28,15 +24,6 @@ const pomodoroStyles = StyleSheet.create({
     alignItems: "center",
     gap: 16,
   },
-  playBtn: {
-    ...insetBase,
-    width: 40,
-    height: 40,
-    borderRadius: radius.xs,
-    borderColor: Colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
   // full screen
   screen: { ...screenBase, backgroundColor: "transparent", padding: 16 },
@@ -46,10 +33,6 @@ const pomodoroStyles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 8,
   },
-  modeTab: { ...chipBase },
-  modeTabActive: { ...chipActiveBase },
-  modeTabTxt: { ...text.small, fontSize: fontSize.md },
-  modeTabTxtActive: { color: Colors.primary },
 
   ringWrap: { flex: 1, alignItems: "center", justifyContent: "center" },
   bigTime: { ...text.display },
@@ -61,15 +44,6 @@ const pomodoroStyles = StyleSheet.create({
     alignItems: "center",
     gap: 28,
     marginBottom: 24,
-  },
-  bigPlayBtn: {
-    width: 76,
-    height: 76,
-    borderRadius: radius.xs,
-    backgroundColor: Colors.primary,
-    ...glowBase,
-    alignItems: "center",
-    justifyContent: "center",
   },
 
   sessionRow: {

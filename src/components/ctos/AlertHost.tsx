@@ -20,6 +20,7 @@ import {
   type AlertDialog,
 } from "@/global/ctosAlert";
 import { feedback } from "@/global/useFeedback";
+import Button from "./Button";
 import CtosPressable from "./CtosPressable";
 import FocusInput from "./FocusInput";
 
@@ -53,17 +54,16 @@ function Bracket({ color, pos }: { color: string; pos: "tl" | "tr" | "bl" | "br"
   );
 }
 
+// dialog look names -> shared Button variants
+const VARIANT = {
+  solid: "primary",
+  "danger-solid": "danger",
+  "danger-line": "dangerLine",
+  ghost: "secondary",
+} as const;
+
 function ActionButton({ text, look, onPress }: { text: string; look: Look; onPress: () => void }) {
-  return (
-    <CtosPressable
-      accessibilityRole="button"
-      style={[styles.button, LOOKS[look].box]}
-      pressedStyle={LOOKS[look].pressed}
-      onPress={onPress}
-    >
-      <Text style={[styles.buttonText, { color: LOOKS[look].text }]}>{text.toUpperCase()}</Text>
-    </CtosPressable>
-  );
+  return <Button label={text} variant={VARIANT[look]} onPress={onPress} />;
 }
 
 // The typed answer. Its own component so the text and the error reset for every new prompt.
@@ -179,29 +179,6 @@ export default function AlertHost() {
   );
 }
 
-const LOOKS = {
-  solid: {
-    box: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-    pressed: { backgroundColor: Colors.primaryHover, borderColor: Colors.primaryHover },
-    text: Colors.textOnPrimary,
-  },
-  "danger-solid": {
-    box: { backgroundColor: Colors.danger, borderColor: Colors.danger },
-    pressed: { opacity: 0.8 },
-    text: Colors.textOnPrimary,
-  },
-  "danger-line": {
-    box: { backgroundColor: Colors.dangerSoft, borderColor: Colors.danger },
-    pressed: { backgroundColor: Colors.danger + "40", borderColor: Colors.danger },
-    text: Colors.danger,
-  },
-  ghost: {
-    box: { backgroundColor: Colors.secondarySoft, borderColor: Colors.border },
-    pressed: { backgroundColor: Colors.primarySoft, borderColor: Colors.primary },
-    text: Colors.textSecondary,
-  },
-};
-
 const styles = StyleSheet.create({
   root: { flex: 1, justifyContent: "center", paddingHorizontal: 32 },
   backdrop: { ...StyleSheet.absoluteFill, backgroundColor: "rgba(0,0,0,0.7)" },
@@ -245,7 +222,5 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
   },
   buttons: { marginTop: 18, gap: 10 },
-  button: { height: 46, alignItems: "center", justifyContent: "center", borderWidth: 1 },
-  buttonText: { fontFamily: Typography.primary_bold, fontSize: fontSize.md, letterSpacing: 1 },
   bracket: { position: "absolute", width: 16, height: 16 },
 });

@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
 
 import { describeTime, parseTimeInput } from "../logic/timestamp";
-import { ActionButton, Field, Hint, ResultRow, Status, Stack } from "../toolKit";
+import Hint from "@/components/ctos/Hint";
+import ResultRow from "@/components/ctos/ResultRow";
+import Status from "@/components/ctos/Status";
+import { ActionButton, Field, Stack } from "../toolKit";
 
 export default function TimestampPanel() {
   const [input, setInput] = useState("");
@@ -22,7 +25,7 @@ export default function TimestampPanel() {
         onPress={() => setInput(String(Math.floor(Date.now() / 1000)))}
       />
       {input.trim() && !date ? (
-        <Status tone="error">CAN'T READ THAT AS A TIME</Status>
+        <Status tone="err">CAN'T READ THAT AS A TIME</Status>
       ) : null}
       {date
         ? describeTime(date).map((r) => (

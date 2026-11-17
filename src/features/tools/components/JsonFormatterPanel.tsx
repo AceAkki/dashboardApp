@@ -2,17 +2,12 @@ import { useMemo, useState } from "react";
 
 import Panel from "@/components/ctos/Panel";
 import { formatJson, INDENTS, jsonError, minifyJson, type JsonIndent } from "../logic/json";
-import {
-  ActionButton,
-  ButtonRow,
-  Chip,
-  ChipRow,
-  Field,
-  Hint,
-  OutputBlock,
-  Stack,
-  Status,
-} from "../toolKit";
+import ButtonRow from "@/components/ctos/ButtonRow";
+import ChipRow from "@/components/ctos/ChipRow";
+import Hint from "@/components/ctos/Hint";
+import OutputBlock from "@/components/ctos/OutputBlock";
+import Status from "@/components/ctos/Status";
+import { ActionButton, Chip, Field, Stack } from "../toolKit";
 
 export default function JsonFormatterPanel() {
   const [input, setInput] = useState("");
@@ -37,7 +32,7 @@ export default function JsonFormatterPanel() {
           <Field label="JSON" value={input} onChangeText={edit} placeholder='{"name": "ctOS"}' multiline />
           {!hasInput ? <Hint>PASTE JSON ABOVE. IT IS CHECKED AS YOU TYPE.</Hint> : null}
           {valid ? <Status tone="ok">VALID JSON</Status> : null}
-          {error ? <Status tone="error">{error}</Status> : null}
+          {error ? <Status tone="err">{error}</Status> : null}
 
           <ChipRow>
             {INDENTS.map((i) => (
