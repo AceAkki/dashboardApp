@@ -85,6 +85,7 @@ const UserProfile = () => {
     updateUser,
     BootOption,
     updateBootOption,
+    updateLastBackup
   } = useUserStore(
     useShallow((st) => ({
       username: st.username,
@@ -94,6 +95,7 @@ const UserProfile = () => {
       updateUser: st.updateUser,
       BootOption: st.BootOption,
       updateBootOption: st.updateBootOption,
+      updateLastBackup:st.updateLastBackup
     })),
   );
   const { gitStatData, fetchTime, expiresAt, gitInvalidate } = useGitStore(
@@ -448,7 +450,10 @@ const UserProfile = () => {
             >
               <ButtonRow>
                 <Button icon="download-outline" style={s.flex} label="Export File"
-                  onPress={exportToFile} />
+                  onPress={() => {
+                    exportToFile();
+                    updateLastBackup(new Date().toString());
+                  }} />
                 <Button variant="secondary" label="Copy" doneLabel="Copied" onPress={exportToClipboard} />
               </ButtonRow>
               <ButtonRow>

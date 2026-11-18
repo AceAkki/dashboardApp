@@ -21,6 +21,7 @@ import { isoWeek } from "../devfeed/utils";
 import Tag from "@/components/ctos/Tag";
 import CtosText from "@/components/CtosText";
 import CtosItem from "@/components/CtosItem";
+import { ctosAlert } from "@/global/ctosAlert";
 
 import TerminalPanel from "@/features/tools/components/TerminalPanel";
 import FavLinks from "@/features/favLinks/FavLinks";
@@ -37,8 +38,8 @@ import bentoStyles from "./bentoStyles";
 const BentoStructure = () => {
   const router = useRouter();
   const online = useOnlineStatus();
-  const { username, location } = useUserStore(
-    useShallow((s) => ({ username: s.username, location: s.location })),
+  const { username, location, lastBackup } = useUserStore(
+    useShallow((s) => ({ username: s.username, location: s.location, lastBackup:s.lastBackup })),
   );
   const { setApps } = useToolsStore(
     useShallow((s) => ({ setApps: s.setApps })),
@@ -157,6 +158,18 @@ const BentoStructure = () => {
           <StandupPanel />
         </CtosItem>
       </ScrollView>
+
+      {/* {
+        lastBackup > 
+         ctosAlert(
+            "Reminders on time",
+            'Android can delay reminders by a few minutes. On the next screen, allow "Alarms & reminders" for this app.',
+            [
+              { text: "Not now", style: "cancel" },
+              { text: "Open settings", onPress: openExactAlarmSettings },
+            ],
+          );
+      } */}
     </View>
   );
 };

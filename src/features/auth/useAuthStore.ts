@@ -13,6 +13,7 @@ export type userType = {
   BootOption: string;
   themeType: "light" | "dark";
   location: { latitude: number; longitude: number };
+  lastBackup:string;
 };
 
 const initialState: userType = {
@@ -22,6 +23,7 @@ const initialState: userType = {
   BootOption:defaultBootKey,
   themeType: "light",
   location: { latitude: 0, longitude: 0 },
+  lastBackup: "",
 };
 
 interface UserStore extends userType {
@@ -35,6 +37,7 @@ interface UserStore extends userType {
   updateThemeType: () => void;
   updateBackground: (url: string) => void;
   logOutUser: () => void;
+  updateLastBackup: (dateString:string) => void;
 }
 
 export const useUserStore = create<UserStore>()(
@@ -54,6 +57,7 @@ export const useUserStore = create<UserStore>()(
         })),
       updateBackground: (url) => set(() => ({ backgroundURL: url })),
       logOutUser: () => set(initialState),
+      updateLastBackup: (dateString)=> set(()=> ({lastBackup:dateString}))
     }),
     {
       name: userKey,
