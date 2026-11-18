@@ -449,7 +449,7 @@ const UserProfile = () => {
               <ButtonRow>
                 <Button icon="download-outline" style={s.flex} label="Export File"
                   onPress={exportToFile} />
-                <Button variant="secondary" label="Copy" onPress={exportToClipboard} />
+                <Button variant="secondary" label="Copy" doneLabel="Copied" onPress={exportToClipboard} />
               </ButtonRow>
               <ButtonRow>
                 <Button icon="push-outline" style={s.flex} label="Import File"

@@ -5,6 +5,8 @@ import { useRouter } from "expo-router";
 import { TASK_EXAMPLE, runCommand } from "../terminalCommands";
 
 import { Colors } from "@/constants/Colors";
+import Hint from "@/components/ctos/Hint";
+import Status from "@/components/ctos/Status";
 import { feedback } from "@/global/useFeedback";
 import styles from "../toolsStyles";
 
@@ -24,17 +26,7 @@ export default function TerminalPanel() {
     setValue("");
   };
 
-  let defaultMsg = "TASK · NOTE · TIMER · GO · START  —  TYPE help";
-  let resultMsg =  result && `${result.ok ? "OK" : "ERR"} · ${result.message}`;
-
-  let terminalMsg = () => {
-    if (result) {
-      let msg = resultMsg
-      setTimeout(()=> msg = defaultMsg, 1000);
-      return msg;
-    } else return defaultMsg;
-  };
-
+  const defaultMsg = "TASK · NOTE · TIMER · GO · START  —  TYPE help";
 
   return (
     <View>
@@ -53,14 +45,13 @@ export default function TerminalPanel() {
           accessibilityLabel="Command input"
         />
       </View>
-      <Text
-        style={[
-          styles.output,
-          result && { color: result.ok ? Colors.success : Colors.danger },
-        ]}
-      >
-        {result ? resultMsg : defaultMsg}
-      </Text>
+      <View style={styles.outputRow}>
+        {result ? (
+          <Status tone={result.ok ? "ok" : "err"}>{result.message}</Status>
+        ) : (
+          <Hint>{defaultMsg}</Hint>
+        )}
+      </View>
     </View>
   );
 }

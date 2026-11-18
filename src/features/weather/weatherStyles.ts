@@ -3,7 +3,6 @@ import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
 import {
   cardBase,
-  cardHeadBase,
   fontSize,
   screenBase,
   text,
@@ -11,8 +10,6 @@ import {
 
 const weatherStyles = StyleSheet.create({
   // screen
-  cardHead: { ...cardHeadBase },
-  cardTitle: { ...text.cardTitle },
   screen: { ...screenBase, backgroundColor: "transparent" },
   scroll: { padding: 16, gap: 16 },
   sectionTitle: { ...text.heading },

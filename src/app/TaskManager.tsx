@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Text, View, useWindowDimensions } from "react-native";
+import { useIsFocused } from "expo-router";
 import { useShallow } from "zustand/shallow";
 import { TabView, SceneRendererProps } from "react-native-tab-view";
 
@@ -79,8 +80,11 @@ export default function TaskManager() {
   };
 
   // one popup / edit form for the whole screen, driven by the store
-  const isOpen = taskID && !isEditMode;
-  const editingTask = isEditMode ? tasks.find((t) => t.id === taskID) : null;
+  // the nav bar pushes screens, so an older copy of this page can still be mounted behind:
+  // only the page in front may show the sheet and the popup
+  const focused = useIsFocused();
+  const isOpen = focused && taskID && !isEditMode;
+  const editingTask = focused && isEditMode ? tasks.find((t) => t.id === taskID) : null;
   const taskTxt = tasks.find((task) => task?.id === taskID) as TaskActionData;
 
   return (

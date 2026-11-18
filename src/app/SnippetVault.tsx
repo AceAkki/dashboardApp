@@ -4,11 +4,11 @@ import { Text, View, ScrollView } from "react-native";
 import CtosScreen from "@/components/ctos/CtosScreen";
 import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
-import CtosPressable from "@/components/ctos/CtosPressable";
 import EmptyState from "@/components/ctos/EmptyState";
 import Chip from "@/components/ctos/Chip";
 import ChipRow from "@/components/ctos/ChipRow";
 import SearchField from "@/components/ctos/SearchField";
+import TextAction from "@/components/ctos/TextAction";
 
 import { useToolsStore } from "@/features/tools/hooks/useToolsStore";
 import { Snippet } from "@/features/tools/components/Snippet";
@@ -44,11 +44,7 @@ export default function SnippetVault() {
 
         <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
           <CtosText style={globalStyles.textHeading}> Snippet Vault</CtosText>
-          <CtosPressable onPress={toggleIsPopupOpen} hitSlop={10}>
-            <Text style={styles.toggle}>
-              {isPopupOpen ? "CANCEL" : "+ NEW"}
-            </Text>
-          </CtosPressable>
+          <TextAction label={isPopupOpen ? "CANCEL" : "+ NEW"} onPress={toggleIsPopupOpen} />
         </View>
       </View>
 

@@ -1,4 +1,4 @@
-import { type ComponentProps } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 import { StyleSheet, Text, type StyleProp, type ViewStyle } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -8,6 +8,7 @@ import {
   buttonSize,
   buttonText,
   iconSize,
+  motion,
   opacity,
   type ButtonSize,
   type ButtonVariant,
@@ -26,6 +27,8 @@ type Props = {
   loading?: boolean;
   /** feel of the press; "none" when the action gives its own feedback */
   haptic?: "tap" | "select" | "none";
+  /** after a press the label shows "✓ <doneLabel>" for a moment, e.g. "SAVED"; for buttons that stay on screen */
+  doneLabel?: string;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -39,15 +42,25 @@ export default function Button({
   disabled = false,
   loading = false,
   haptic = "tap",
+  doneLabel,
   style,
 }: Props) {
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    if (!done) return;
+    const t = setTimeout(() => setDone(false), motion.savedHold);
+    return () => clearTimeout(t);
+  }, [done]);
   const look = buttonLook[variant];
   const off = disabled || loading;
   const spin = useAsciiSpinner(loading);
 
   return (
     <CtosPressable
-      onPress={onPress}
+      onPress={() => {
+        onPress();
+        if (doneLabel) setDone(true);
+      }}
       haptic={haptic}
       disabled={off}
       accessibilityRole="button"
@@ -58,7 +71,7 @@ export default function Button({
     >
       {icon ? <Ionicons name={icon} size={iconSize.sm + 1} color={look.textColor} /> : null}
       <Text style={[buttonText, { color: look.textColor }]}>
-        {loading ? `${spin} WORKING` : label}
+        {loading ? `${spin} WORKING` : done && doneLabel ? `✓ ${doneLabel}` : label}
       </Text>
     </CtosPressable>
   );

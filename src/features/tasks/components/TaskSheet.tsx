@@ -1,9 +1,6 @@
 import { useState } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useShallow } from "zustand/shallow";
-import DateTimePicker, {
-  type DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
 
 import Button from "@/components/ctos/Button";
 import ButtonRow from "@/components/ctos/ButtonRow";
@@ -12,8 +9,8 @@ import ChipRow from "@/components/ctos/ChipRow";
 import Field from "@/components/ctos/Field";
 import FieldLabel from "@/components/ctos/FieldLabel";
 import Hint from "@/components/ctos/Hint";
+import ReminderPicker from "@/components/ctos/ReminderPicker";
 import Sheet from "@/components/ctos/Sheet";
-import Status from "@/components/ctos/Status";
 import { feedback } from "@/global/useFeedback";
 import { useTaskStore } from "../hooks/useTasksStore";
 import { getTaskTypes, taskCode } from "../taskTypeUtils";
@@ -49,7 +46,11 @@ export default function TaskSheet({ taskObject, onClose }: Props) {
       toggleEditMode: state.toggleEditMode,
     })),
   );
-  const close = () => (onClose ? onClose() : toggleEditMode());
+  // closing twice (backdrop + back button) must not toggle edit mode back on
+  const close = () => {
+    if (onClose) onClose();
+    else if (useTaskStore.getState().isEditMode) toggleEditMode();
+  };
 
   const [title, setTitle] = useState(taskObject?.taskName ?? "");
   const [note, setNote] = useState(taskObject?.note ?? "");
@@ -67,34 +68,10 @@ export default function TaskSheet({ taskObject, onClose }: Props) {
   );
   // null = does not repeat. It takes its time of day from `remind`, so it only exists with one.
   const [repeat, setRepeat] = useState<Repeat | null>(taskObject?.repeat ?? null);
-  // where the Android picker starts when there is no reminder yet
-  const [suggested] = useState(inAnHour);
-  // Android shows date and time in separate native dialogs
-  const [pickerMode, setPickerMode] = useState<"date" | "time" | null>(null);
-
-  const onPickerChange = (event: DateTimePickerEvent, selected?: Date) => {
-    if (Platform.OS === "android") {
-      const wasDate = pickerMode === "date";
-      if (event.type === "dismissed" || !selected) {
-        setPickerMode(null);
-        return;
-      }
-      setRemind(selected);
-      setPickerMode(wasDate ? "time" : null);
-      return;
-    }
-    if (selected) setRemind(selected);
-  };
-
-  const addReminder = () => {
-    // Android: nothing is set until a date is actually picked
-    if (Platform.OS === "android") setPickerMode("date");
-    else setRemind(suggested);
-  };
-  const clearReminder = () => {
-    setRemind(null);
-    setRepeat(null);
-    setPickerMode(null);
+  const changeReminder = (next: Date | null) => {
+    setRemind(next);
+    // a repeat follows the reminder's time, so it goes when the reminder goes
+    if (!next) setRepeat(null);
   };
 
   const name = title.trim();
@@ -164,26 +141,7 @@ export default function TaskSheet({ taskObject, onClose }: Props) {
 
       <TagEditor field={tagField} known={known} />
 
-      <View style={s.group}>
-        <FieldLabel>Reminder</FieldLabel>
-        {remind === null ? (
-          <Button label="+ Add reminder" variant="secondary" onPress={addReminder} />
-        ) : (
-          <>
-            {Platform.OS === "ios" ? (
-              <DateTimePicker value={remind} mode="datetime" onChange={onPickerChange} />
-            ) : (
-              <Button
-                label={remind.toLocaleString()}
-                variant="secondary"
-                onPress={() => setPickerMode("date")}
-              />
-            )}
-            <Button label="Clear reminder" variant="text" size="sm" onPress={clearReminder} style={s.clear} />
-          </>
-        )}
-        {tried && pickedPast ? <Status tone="err">{hint}</Status> : null}
-      </View>
+      <ReminderPicker value={remind} onChange={changeReminder} error={tried && pickedPast ? hint : null} />
 
       <View style={s.group}>
         <FieldLabel>Repeat</FieldLabel>
@@ -205,9 +163,6 @@ export default function TaskSheet({ taskObject, onClose }: Props) {
               ? repeatSummary(repeat, remind)
               : "ONLY ONCE"}
         </Hint>
-        {Platform.OS === "android" && pickerMode && (
-          <DateTimePicker value={remind ?? suggested} mode={pickerMode} onChange={onPickerChange} />
-        )}
       </View>
 
       <ButtonRow>
@@ -226,5 +181,4 @@ export default function TaskSheet({ taskObject, onClose }: Props) {
 const s = StyleSheet.create({
   group: { gap: 8 },
   flex: { flex: 1 },
-  clear: { alignSelf: "flex-end" },
 });

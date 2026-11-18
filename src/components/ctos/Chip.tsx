@@ -1,7 +1,8 @@
-import { type ReactNode } from "react";
-import { Text, View } from "react-native";
+import { useEffect, useState, type ReactNode } from "react";
+import { Animated, Text, View } from "react-native";
 
-import { chipStyles, fontSize, hitSlop, iconSize } from "@/style/globalStyles";
+import { chipStyles, fontSize, hitSlop, iconSize, motion } from "@/style/globalStyles";
+import { ease } from "@/global/motion";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import CtosPressable from "./CtosPressable";
@@ -31,6 +32,13 @@ export default function Chip({
   disabled = false,
   left,
 }: Props) {
+  // 0 = idle, 1 = selected; colours fade between the two instead of snapping
+  const [fade] = useState(() => new Animated.Value(selected ? 1 : 0));
+  useEffect(() => {
+    ease(fade, selected ? 1 : 0, motion.fade, false);
+  }, [selected, fade]);
+  const mix = (a: string, b: string) => fade.interpolate({ inputRange: [0, 1], outputRange: [a, b] });
+
   const box = [
     chipStyles.box,
     size === "sm" && chipStyles.boxSm,
@@ -40,17 +48,19 @@ export default function Chip({
   const content = (
     <>
       {left}
-      <Text
+      <Animated.Text
         style={[
           chipStyles.label,
           size === "sm" && { fontSize: fontSize.xs },
-          selected && chipStyles.labelSelected,
+          onPress
+            ? { color: mix(Colors.textSecondary, Colors.primary) }
+            : selected && chipStyles.labelSelected,
         ]}
         numberOfLines={1}
       >
         {label}
         {count != null ? <Text style={chipStyles.count}>{` ${count}`}</Text> : null}
-      </Text>
+      </Animated.Text>
       {onRemove ? (
         <CtosPressable
           haptic="tap"
@@ -79,7 +89,10 @@ export default function Chip({
       disabled={disabled}
       accessibilityRole="button"
       accessibilityState={{ selected, disabled }}
-      style={box}
+      style={[
+        box,
+        { backgroundColor: mix(Colors.secondarySoft, Colors.primarySoft), borderColor: mix(Colors.border, Colors.primary) },
+      ]}
       pressedStyle={chipStyles.pressed}
     >
       {content}

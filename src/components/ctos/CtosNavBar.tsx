@@ -1,10 +1,13 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Animated, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { usePathname, useRouter } from "expo-router";
 
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
-import { hud } from "@/style/globalStyles";
+import { hud, motion } from "@/style/globalStyles";
+import { ease } from "@/global/motion";
+import CtosPressable from "./CtosPressable";
 
 type Item = {
   label: string;
@@ -20,6 +23,28 @@ const ITEMS: Item[] = [
   { label: "TOOLS", path: "/Tools", icon: "terminal-outline" },
 ];
 
+// Each screen mounts its own bar, so the active tab "draws in" on mount: the line grows from the centre
+// and the icon settles from slightly small.
+function ActiveMark({ children }: { children: React.ReactNode }) {
+  const [t] = useState(() => new Animated.Value(0));
+  useEffect(() => {
+    ease(t, 1, motion.slide);
+  }, [t]);
+  return (
+    <>
+      <Animated.View style={[styles.activeLine, { transform: [{ scaleX: t }] }]} />
+      <Animated.View
+        style={{
+          opacity: t.interpolate({ inputRange: [0, 1], outputRange: [0.5, 1] }),
+          transform: [{ scale: t.interpolate({ inputRange: [0, 1], outputRange: [0.8, 1] }) }],
+        }}
+      >
+        {children}
+      </Animated.View>
+    </>
+  );
+}
+
 export default function CtosNavBar() {
   const router = useRouter();
   const pathname = usePathname().toLowerCase();
@@ -30,8 +55,10 @@ export default function CtosNavBar() {
         const active = pathname === item.path.toLowerCase();
         const color = active ? Colors.primary : Colors.textSecondary;
         return (
-          <Pressable
+          <CtosPressable
             key={item.label}
+            haptic="select"
+            pressedStyle={{ opacity: 0.6 }}
             style={styles.item}
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
@@ -40,10 +67,15 @@ export default function CtosNavBar() {
               if (!active) router.push(item.path);
             }}
           >
-            {active ? <View style={styles.activeLine} /> : null}
-            <Ionicons name={item.icon} size={20} color={color} />
+            {active ? (
+              <ActiveMark>
+                <Ionicons name={item.icon} size={20} color={color} />
+              </ActiveMark>
+            ) : (
+              <Ionicons name={item.icon} size={20} color={color} />
+            )}
             <Text style={[styles.label, { color }]}>{item.label}</Text>
-          </Pressable>
+          </CtosPressable>
         );
       })}
     </View>

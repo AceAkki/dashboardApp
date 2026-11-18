@@ -1,16 +1,13 @@
-import { Pressable, Text, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Text, View } from "react-native";
 import { useRouter } from "expo-router";
 
-import { Colors } from "@/constants/Colors";
 import TimerRing from "./TimerRing";
 import usePomodoro from "../hooks/usePomodoro";
 import { MODE_LABEL } from "../hooks/pomodoroStore";
 import pomodoroStyles from "../pomodoroStyles";
 import { modeColor } from "../modeColor";
-import CtosText from "@/components/CtosText";
 import IconButton from "@/components/ctos/IconButton";
-import Corners from "@/components/ctos/Corners";
+import Panel from "@/components/ctos/Panel";
 
 // Compact dashboard version;
 export default function PomodoroCard() {
@@ -19,21 +16,18 @@ export default function PomodoroCard() {
     usePomodoro();
 
   return (
-    <View style={[pomodoroStyles.card, { flex: 1 }]}>
-      <Pressable
-        style={pomodoroStyles.cardHead}
-        onPress={() => router.push("/Pomodoro")}
-      >
-        <CtosText style={pomodoroStyles.cardTitle}>
-          {"// Pomodoro Timer"}
-        </CtosText>
-        <Ionicons
-          name="expand-outline"
-          size={14}
-          color={Colors.textSecondary}
+    <Panel
+      style={pomodoroStyles.card}
+      title="Pomodoro Timer"
+      right={
+        <IconButton
+          variant="plain"
+          icon="expand-outline"
+          label="Open pomodoro"
+          onPress={() => router.push("/Pomodoro")}
         />
-      </Pressable>
-
+      }
+    >
       <View style={pomodoroStyles.cardRingWrap}>
         <TimerRing
           size={112}
@@ -56,7 +50,6 @@ export default function PomodoroCard() {
         />
         <IconButton variant="plain" icon="play-skip-forward" label="Skip" onPress={skip} />
       </View>
-      <Corners />
-    </View>
+    </Panel>
   );
 }

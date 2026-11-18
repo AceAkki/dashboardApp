@@ -1,34 +1,61 @@
-import { Pressable, StyleSheet, type PressableProps, type StyleProp, type ViewStyle } from "react-native";
+import { useState } from "react";
+import {
+  Animated,
+  Pressable,
+  StyleSheet,
+  type PressableProps,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { feedback } from "@/global/useFeedback";
+import { ease } from "@/global/motion";
+import { motion } from "@/style/globalStyles";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type Props = Omit<PressableProps, "style"> & {
-  style?: StyleProp<ViewStyle>;
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /** what the press feels like: a light tap (default), a selection tick (chips, tabs) or nothing */
   haptic?: "tap" | "select" | "none";
   /** how it looks while held down; default is the cyan flash */
   pressedStyle?: StyleProp<ViewStyle>;
 };
 
-// Drop-in <Pressable>: cyan flash while pressed + a haptic on press.
+// Drop-in <Pressable>: cyan flash + a tiny scale-down while pressed, and a haptic on press.
 // Swap it in anywhere a Pressable is a button; style / onPress / hitSlop work as before.
 export default function CtosPressable({
   style,
   pressedStyle,
   haptic = "tap",
   onPress,
+  onPressIn,
+  onPressOut,
   ...rest
 }: Props) {
+  const [pressed, setPressed] = useState(false);
+  const [scale] = useState(() => new Animated.Value(1));
+
   return (
-    <Pressable
+    <AnimatedPressable
       {...rest}
+      onPressIn={(e) => {
+        setPressed(true);
+        ease(scale, motion.pressScale, motion.pressIn);
+        onPressIn?.(e);
+      }}
+      onPressOut={(e) => {
+        setPressed(false);
+        ease(scale, 1, motion.pressOut);
+        onPressOut?.(e);
+      }}
       onPress={(e) => {
         if (haptic === "tap") feedback.tap();
         else if (haptic === "select") feedback.select();
         onPress?.(e);
       }}
-      style={({ pressed }) => [style, pressed && (pressedStyle ?? styles.pressed)]}
+      style={[style, pressed && (pressedStyle ?? styles.pressed), { transform: [{ scale }] }]}
     />
   );
 }

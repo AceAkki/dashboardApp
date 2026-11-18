@@ -1,6 +1,8 @@
-import { ActivityIndicator, Pressable, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 
 import Panel from "@/components/ctos/Panel";
+import Spinner from "@/components/ctos/Spinner";
+import Status from "@/components/ctos/Status";
 import { Colors } from "@/constants/Colors";
 import { openLink } from "@/features/favLinks/utils/openLink";
 import { useReleases } from "../hooks";
@@ -13,7 +15,7 @@ export default function ReleasesPanel() {
   return (
     <Panel
       title="RELEASES · PUBLIC REPOS"
-      right={loading && !data ? <ActivityIndicator size="small" color={Colors.primary} /> : null}
+      right={loading && !data ? <Spinner /> : null}
     >
       {(data ?? []).map((r, i) => (
         <Pressable
@@ -28,7 +30,7 @@ export default function ReleasesPanel() {
           </Text>
         </Pressable>
       ))}
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Status tone="warn">{error}</Status> : null}
     </Panel>
   );
 }

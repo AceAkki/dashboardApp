@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Animated, StyleSheet, TextInput, type TextInputProps } from "react-native";
 
 import { Colors } from "@/constants/Colors";
+import { ease } from "@/global/motion";
+import { motion } from "@/style/globalStyles";
 
 const AnimatedInput = Animated.createAnimatedComponent(TextInput);
 
@@ -14,6 +16,11 @@ type Props = TextInputProps & {
 export default function FocusInput({ style, error, onFocus, onBlur, ...rest }: Props) {
   const [focused, setFocused] = useState(false);
   const [x] = useState(() => new Animated.Value(0));
+  // 0 = idle, 1 = focused: border and tint fade in instead of switching on
+  const [glow] = useState(() => new Animated.Value(0));
+  useEffect(() => {
+    ease(glow, focused ? 1 : 0, motion.fade, false);
+  }, [focused, glow]);
 
   useEffect(() => {
     if (!error) return;
@@ -34,12 +41,19 @@ export default function FocusInput({ style, error, onFocus, onBlur, ...rest }: P
         setFocused(false);
         onBlur?.(e);
       }}
-      style={[style, focused && styles.focus, error && styles.error, { transform: [{ translateX: x }] }]}
+      style={[
+        style,
+        {
+          borderColor: glow.interpolate({ inputRange: [0, 1], outputRange: [Colors.border, Colors.primary] }),
+          backgroundColor: glow.interpolate({ inputRange: [0, 1], outputRange: [Colors.secondarySoft, "#0A282F"] }),
+        },
+        error && styles.error,
+        { transform: [{ translateX: x }] },
+      ]}
     />
   );
 }
 
 const styles = StyleSheet.create({
-  focus: { borderColor: Colors.primary, backgroundColor: "#00E5FF0F" },
   error: { borderColor: Colors.danger },
 });

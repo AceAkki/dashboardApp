@@ -10,6 +10,7 @@ import Chip from "@/components/ctos/Chip";
 import CtosScreen from "@/components/ctos/CtosScreen";
 import CtosPressable from "@/components/ctos/CtosPressable";
 import Field from "@/components/ctos/Field";
+import TextAction from "@/components/ctos/TextAction";
 import CtosText from "@/components/CtosText";
 import { Colors } from "@/constants/Colors";
 import { APP_TAG } from "@/global/appInfo";
@@ -137,12 +138,6 @@ type FieldProps = {
   keyboardType?: TextInputProps["keyboardType"];
 };
 
-const FieldAction = ({ label, onPress }: { label: string; onPress: () => void }) => (
-  <CtosPressable haptic="select" pressedStyle={{ opacity: 0.5 }} onPress={onPress} hitSlop={hitSlop}>
-    <Text style={kit.action}>{label}</Text>
-  </CtosPressable>
-);
-
 // Shared Field with a PASTE button (CLEAR once there is text): typing on a phone is slow.
 export function ToolField({ label, value, onChangeText, placeholder, multiline, secure, keyboardType }: FieldProps) {
   const [hidden, setHidden] = useState(!!secure);
@@ -169,8 +164,8 @@ export function ToolField({ label, value, onChangeText, placeholder, multiline, 
       spellCheck={false}
       headerRight={
         <View style={kit.fieldActions}>
-          {secure ? <FieldAction label={hidden ? "SHOW" : "HIDE"} onPress={() => setHidden((h) => !h)} /> : null}
-          <FieldAction label={value ? "CLEAR" : "PASTE"} onPress={value ? () => onChangeText("") : paste} />
+          {secure ? <TextAction label={hidden ? "SHOW" : "HIDE"} onPress={() => setHidden((h) => !h)} /> : null}
+          <TextAction label={value ? "CLEAR" : "PASTE"} onPress={value ? () => onChangeText("") : paste} />
         </View>
       }
     />

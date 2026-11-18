@@ -342,6 +342,18 @@ export const screenPad = 16;
 export const iconSize = { sm: 14, md: 18, lg: 24 } as const;
 export const hitSlop = 8;
 export const duration = { fast: 160, shake: 45 } as const;
+// motion: every shared animation reads these, so the whole app moves the same way
+export const motion = {
+  pressIn: 70,
+  pressOut: 130,
+  pressScale: 0.97,
+  fade: 140,
+  slide: 180,
+  pop: 160,
+  strike: 220,
+  tick: 350,
+  savedHold: 1200,
+} as const;
 export const letterSpacing = { tight: 1, normal: 1.5, wide: 2, widest: 3 } as const;
 
 // status colour + glyph; colour is never the only signal
@@ -456,13 +468,7 @@ export const chipStyles = StyleSheet.create({
 export const fieldStyles = StyleSheet.create({
   wrap: { gap: 6 },
   head: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", minHeight: 16 },
-  label: {
-    fontFamily: Typography.primary_bold,
-    fontSize: fontSize.xs,
-    letterSpacing: letterSpacing.wide,
-    color: Colors.textMuted,
-    textTransform: "uppercase",
-  },
+  label: { ...text.caption },
   input: { ...fieldBase, minHeight: 40 },
   inputMulti: { minHeight: 88, textAlignVertical: "top" },
   inputValid: { paddingRight: 30 },

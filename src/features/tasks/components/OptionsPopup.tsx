@@ -23,8 +23,9 @@ export default function OptionsPopup({
   onClose,
 }: optionPopupProps) {
   const { MoveBtns, getCurrentType } = useOptions();
-  const { width: screenWidth } = useWindowDimensions();
-  const [popupWidth, setPopupWidth] = useState(0);
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const [size, setSize] = useState({ width: 0, height: 0 });
+  const popupWidth = size.width;
   const { moveTask, deleteTask, toggleEditMode } = useTaskStore(
     useShallow((state) => ({
       moveTask: state.moveTask,
@@ -43,18 +44,22 @@ export default function OptionsPopup({
     Math.min(position.x - popupWidth, screenWidth - popupWidth - 8),
   );
 
+  // The popup's top edge is the tap point, pulled up when it would run off the bottom.
+  const top = Math.max(8, Math.min(position.y, screenHeight - size.height - 8));
+
   const handleToggleEdit = () => {
     // keep taskID so the edit form knows which task; Task hides this popup
-    // automatically once isEditMode is true
-    toggleEditMode();
+    // automatically once isEditMode is true.
+    // Only ever turns edit mode ON here: a second tap must not switch it back off.
+    if (!useTaskStore.getState().isEditMode) toggleEditMode();
   };
 
   return (
-    <Modal transparent visible animationType="fade" onRequestClose={onClose}>
+    <Modal transparent visible statusBarTranslucent animationType="fade" onRequestClose={onClose}>
       <Pressable style={optionsStyles.backdrop} onPress={onClose}>
         <View
-          style={[optionsStyles.optionsWrap, { top: position.y, left }]}
-          onLayout={(e) => setPopupWidth(e.nativeEvent.layout.width)}
+          style={[optionsStyles.optionsWrap, { top, left }]}
+          onLayout={(e) => setSize(e.nativeEvent.layout)}
         >
           <View style={optionsStyles.optionsList}>
             <MoveBtns

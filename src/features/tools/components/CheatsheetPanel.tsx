@@ -10,7 +10,8 @@ import { feedback } from "@/global/useFeedback";
 import { fontSize, insetBase, text } from "@/style/globalStyles";
 
 import { searchCheatsheet, type CheatItem, type CheatSection } from "../logic/cheatsheet";
-import { Field, Stack, Sub } from "../toolKit";
+import SearchField from "@/components/ctos/SearchField";
+import { Stack, Sub } from "../toolKit";
 
 // one snippet; tapping it copies it
 function SnippetRow({ item }: { item: CheatItem }) {
@@ -51,7 +52,7 @@ export default function CheatsheetPanel({ sections, placeholder }: Props) {
 
   return (
     <Stack>
-      <Field label="SEARCH" value={query} onChangeText={setQuery} placeholder={placeholder ?? "map · filter · async"} />
+      <SearchField value={query} onChangeText={setQuery} placeholder={placeholder ?? "map · filter · async"} />
       {shown.map((s) => (
         <Stack key={s.title}>
           <Sub>{s.title.toUpperCase()}</Sub>

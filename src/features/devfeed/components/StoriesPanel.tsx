@@ -1,8 +1,9 @@
-import { ActivityIndicator, Pressable, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 import { useRouter } from "expo-router";
 
 import Panel from "@/components/ctos/Panel";
-import { Colors } from "@/constants/Colors";
+import Spinner from "@/components/ctos/Spinner";
+import Status from "@/components/ctos/Status";
 import { openLink } from "@/features/favLinks/utils/openLink";
 import { useStories } from "../hooks";
 import { timeAgo } from "../utils";
@@ -20,7 +21,7 @@ export default function StoriesPanel() {
 
       right={
         loading && !data ? (
-          <ActivityIndicator size="small" color={Colors.primary} />
+          <Spinner />
         ) : (
           <Text style={styles.lineValue}>FEED ›</Text>
         )
@@ -39,7 +40,7 @@ export default function StoriesPanel() {
           <Text style={styles.lineValue}>{timeAgo(s.time)}</Text>
         </Pressable>
       ))}
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Status tone="warn">{error}</Status> : null}
     </Panel>
   );
 }

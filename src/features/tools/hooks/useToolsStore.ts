@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { notesKey } from "@/global/storageKeys";
 import type { ToolsState} from "../toolTypes"
 import { cleanTag } from "../snippetTags";
+import { animateNext } from "@/global/motion";
 
 const makeId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
@@ -32,18 +33,22 @@ export const useToolsStore = create<ToolsState>()(
           tag: "git",
         },
       ],
-      addSnippet: (title, code, tag) =>
+      addSnippet: (title, code, tag) => {
+        animateNext();
         set((s) => ({
           snippets: [...s.snippets, { id: makeId(), title, code, tag: cleanTag(tag) }],
-        })),
+        }));
+      },
       updateSnippet: (id, title, code, tag) =>
         set((s) => ({
           snippets: s.snippets.map((x) =>
             x.id === id ? { ...x, title, code, tag: cleanTag(tag) } : x,
           ),
         })),
-      deleteSnippet: (id) =>
-        set((s) => ({ snippets: s.snippets.filter((x) => x.id !== id) })),
+      deleteSnippet: (id) => {
+        animateNext();
+        set((s) => ({ snippets: s.snippets.filter((x) => x.id !== id) }));
+      },
       snippetID: null,
       setSnippetID: (id) => set({ snippetID: id }),
       isPopupOpen: false,

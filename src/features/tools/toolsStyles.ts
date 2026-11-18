@@ -34,30 +34,12 @@ const toolsStyles = StyleSheet.create({
     fontSize: fontSize.md,
     paddingVertical: 0,
   },
-  output: { ...text.caption, marginTop: 8 },
+  outputRow: { marginTop: 8 },
 
   // header + filter
   headRow: { flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" },
   count: { ...text.muted, fontSize: fontSize.xs, marginBottom: 6 },
-  empty: { ...text.muted, textAlign: "center", paddingVertical: 24 },
 
-  // standup
-  standupRow: {
-    flexDirection: "row",
-    gap: 10,
-    paddingVertical: 8,
-    borderTopWidth: 1,
-    borderTopColor: hud.faint,
-  },
-  standupFirst: { borderTopWidth: 0 },
-  standupLabel: { ...text.caption, width: 74, paddingTop: 4 },
-  standupInput: {
-    flex: 1,
-    fontFamily: Typography.secondary,
-    color: Colors.textPrimary,
-    fontSize: fontSize.md,
-    paddingVertical: 2,
-  },
 
   // snippets
   snippet: { ...insetBase, padding: 10, marginTop: 8 },
@@ -77,9 +59,6 @@ const toolsStyles = StyleSheet.create({
   snippetTag: { ...text.caption, color: Colors.primary, marginBottom: 4 },
   vaultScroll: { paddingHorizontal: 16, paddingBottom: 32, gap: 12 },
   snippetActions: { flexDirection: "row", gap: 14 },
-  snippetAct: { ...text.caption, color: Colors.primary },
-  snippetDel: { ...text.caption, color: Colors.danger },
-  toggle: { ...text.caption, color: Colors.primary },
 });
 
 export default toolsStyles;

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useIsFocused } from "expo-router";
 import { useShallow } from "zustand/shallow";
 
 import Button from "@/components/ctos/Button";
@@ -35,10 +36,15 @@ const SnippetForm = () => {
 
   const [tried, setTried] = useState(false);
 
+  // The nav bar pushes screens, so the dashboard and the Snippets page can both be mounted.
+  // They share one open/closed flag: only the screen in front may show the sheet.
+  const focused = useIsFocused();
+
   // so the next "+ NEW" is a new snippet, not an edit of this one
   const close = () => {
     setSnippetID(null);
-    toggleIsPopupOpen();
+    // only if it is still open: closing twice must not open it again
+    if (useToolsStore.getState().isPopupOpen) toggleIsPopupOpen();
   };
 
   const save = () => {
@@ -55,6 +61,8 @@ const SnippetForm = () => {
     feedback.success(selectedSnippet ? "SNIPPET UPDATED" : "SNIPPET SAVED");
     close();
   };
+
+  if (!focused) return null;
 
   return (
     <Sheet onClose={close} title={`${selectedSnippet ? "EDIT" : "NEW"} SNIPPET`}>

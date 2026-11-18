@@ -1,15 +1,14 @@
-import { Pressable, Text, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { usePathname } from "expo-router";
-import { Colors } from "@/constants/Colors";
 import WeatherAnimation from "./WeatherAnimation";
 import { getAQILevel, toSentenceCase, USAQI } from "../utils/getAQI";
 import { formatFullDate } from "../utils/dateFormatter";
 import type { WeatherCardProps } from "../weatherType";
 import weatherStyles from "../weatherStyles";
 import { fontSize } from "@/style/globalStyles";
-import Corners from "@/components/ctos/Corners";
+import Panel from "@/components/ctos/Panel";
+import IconButton from "@/components/ctos/IconButton";
 
 const WeatherCard = ({
   current,
@@ -21,21 +20,20 @@ const WeatherCard = ({
   const pathname = usePathname();
   const isDashboard = pathname === "/";
   return (
-    <View style={weatherStyles.weatherCard}>
-      {isDashboard && (
-        <Pressable
-          style={weatherStyles.cardHead}
-          onPress={() => router.push("/Weather")}
-        >
-          <Text style={weatherStyles.cardTitle}>{"// Weather"}</Text>
-          <Ionicons
-            name="expand-outline"
-            size={20}
-            color={Colors.textSecondary}
+    <Panel
+      style={weatherStyles.weatherCard}
+      title={isDashboard ? "Weather" : undefined}
+      right={
+        isDashboard ? (
+          <IconButton
+            variant="plain"
+            icon="expand-outline"
+            label="Open weather"
+            onPress={() => router.push("/Weather")}
           />
-        </Pressable>
-      )}
-
+        ) : undefined
+      }
+    >
       <Text style={weatherStyles.weatherDate}>
         {formatFullDate(current.time)}
       </Text>
@@ -71,8 +69,7 @@ const WeatherCard = ({
           </Text>
         </Text>
       </View>
-      <Corners />
-    </View>
+    </Panel>
   );
 };
 

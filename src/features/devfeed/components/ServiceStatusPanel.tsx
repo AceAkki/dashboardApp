@@ -1,6 +1,9 @@
-import { ActivityIndicator, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import Panel from "@/components/ctos/Panel";
+import Spinner from "@/components/ctos/Spinner";
+import Status from "@/components/ctos/Status";
+import Hint from "@/components/ctos/Hint";
 import StatusDot from "@/components/ctos/StatusDot";
 import Tag from "@/components/ctos/Tag";
 import { Colors } from "@/constants/Colors";
@@ -24,7 +27,7 @@ export default function ServiceStatusPanel() {
             color={allOk ? Colors.success : Colors.warning}
           />
         ) : loading ? (
-          <ActivityIndicator size="small" color={Colors.primary} />
+          <Spinner />
         ) : null
       }
     >
@@ -37,9 +40,9 @@ export default function ServiceStatusPanel() {
           </Text>
         </View>
       ))}
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Status tone="warn">{error}</Status> : null}
       {!data && !loading && !error ? (
-        <Text style={styles.hint}>NO DATA</Text>
+        <Hint>NO DATA</Hint>
       ) : null}
     </Panel>
   );

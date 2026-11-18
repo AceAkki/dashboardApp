@@ -58,7 +58,6 @@ const kit = StyleSheet.create({
 
   // text field
   fieldActions: { flexDirection: "row", gap: 14 },
-  action: { ...text.caption, color: Colors.primary },
 
   // chips
 

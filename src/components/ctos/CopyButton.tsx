@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text } from "react-native";
 
-import { Colors } from "@/constants/Colors";
 import { writeClipboardText } from "@/global/globalFunctions";
 import { feedback } from "@/global/useFeedback";
-import { hitSlop, text } from "@/style/globalStyles";
-import CtosPressable from "./CtosPressable";
+import TextAction from "./TextAction";
 
-// COPY text button; says COPIED for 1.5 s
+// COPY word-button; says COPIED for 1.5 s
 export default function CopyButton({ text: value }: { text: string }) {
   const [done, setDone] = useState(false);
 
@@ -23,13 +20,5 @@ export default function CopyButton({ text: value }: { text: string }) {
     setDone(true);
   };
 
-  return (
-    <CtosPressable haptic="none" pressedStyle={{ opacity: 0.5 }} onPress={press} hitSlop={hitSlop}>
-      <Text style={styles.action}>{done ? "COPIED" : "COPY"}</Text>
-    </CtosPressable>
-  );
+  return <TextAction label={done ? "COPIED" : "COPY"} haptic="none" onPress={press} />;
 }
-
-const styles = StyleSheet.create({
-  action: { ...text.caption, color: Colors.primary },
-});

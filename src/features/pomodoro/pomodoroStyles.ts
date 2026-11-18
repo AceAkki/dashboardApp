@@ -2,7 +2,6 @@ import { StyleSheet } from "react-native";
 import { Colors } from "@/constants/Colors";
 import {
   cardBase,
-  cardHeadBase,
   fontSize,
   radius,
   screenBase,
@@ -12,8 +11,6 @@ import {
 const pomodoroStyles = StyleSheet.create({
   // dashboard card
   card: { ...cardBase, flex: 1 },
-  cardHead: { ...cardHeadBase },
-  cardTitle: { ...text.cardTitle },
   cardRingWrap: { alignItems: "center", marginVertical: 12 },
   cardTime: { ...text.title },
   cardMode: { ...text.caption },

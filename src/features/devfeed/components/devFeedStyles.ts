@@ -22,8 +22,6 @@ const devFeedStyles = StyleSheet.create({
     fontSize: fontSize.md,
     color: Colors.primary,
   },
-  hint: { ...text.caption, color: Colors.textMuted, marginTop: 6 },
-  error: { ...text.caption, color: Colors.warning, marginTop: 6 },
 
   // full story card (Feed screen)
   story: {

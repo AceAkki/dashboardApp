@@ -1,14 +1,15 @@
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 // styles
 import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
 import gitStatsStyles from "./gitStatsStyles";
-import { Ionicons } from "@expo/vector-icons";
 
 import CtosText from "@/components/CtosText";
 import LoadState from "@/components/ctos/LoadState";
 import Corners from "@/components/ctos/Corners";
+import Panel from "@/components/ctos/Panel";
+import IconButton from "@/components/ctos/IconButton";
 import { useGitStats } from "./hooks/useGitStats";
 import { openLink } from "../favLinks/utils/openLink";
 import { dateFormat } from "@/global/globalFunctions";
@@ -35,21 +36,18 @@ const GitStats = () => {
     new Date(data.lastPushDate).getDate() < new Date().getDate();
 
   return (
-    <View style={gitStatsStyles.cardBase}>
-      <Pressable
-        style={globalStyles.cardHead}
-        onPress={() => openLink(data.html_url, data.html_url)}
-      >
-        <View>
-          <CtosText style={globalStyles.cardTitle}>{"// Git Stats"}</CtosText>
-        </View>
-        <Ionicons
-          name="expand-outline"
-          size={20}
-          color={Colors.textSecondary}
+    <Panel
+      style={gitStatsStyles.cardBase}
+      title="Git Stats"
+      right={
+        <IconButton
+          variant="plain"
+          icon="expand-outline"
+          label="Open GitHub profile"
+          onPress={() => openLink(data.html_url, data.html_url)}
         />
-      </Pressable>
-
+      }
+    >
       <View>
         <CtosText style={globalStyles.sectionTitle}>{data.login}</CtosText>
 
@@ -94,8 +92,7 @@ const GitStats = () => {
           Expiry Time : {dateFormat({ dateString: storageTime, hasTime: true })}
         </Text>
       ) : null}
-      <Corners />
-    </View>
+    </Panel>
   );
 };
 

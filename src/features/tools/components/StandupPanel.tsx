@@ -1,10 +1,10 @@
-import {Text, TextInput, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
+import Field from "@/components/ctos/Field";
 import Panel from "@/components/ctos/Panel";
-import { Colors } from "@/constants/Colors";
+import { spacing } from "@/style/globalStyles";
 import { useToolsStore } from "../hooks/useToolsStore";
-import type {StandupField} from "../toolTypes.ts";
-import styles from "../toolsStyles";
+import type { StandupField } from "../toolTypes.ts";
 
 const FIELDS: { key: StandupField; label: string; placeholder: string }[] = [
   { key: "yesterday", label: "YESTERDAY", placeholder: "What shipped" },
@@ -18,22 +18,22 @@ export default function StandupPanel() {
 
   return (
     <Panel title="STANDUP NOTES">
-      {FIELDS.map((f, i) => (
-        <View
-          key={f.key}
-          style={[styles.standupRow, i === 0 && styles.standupFirst]}
-        >
-          <Text style={styles.standupLabel}>{f.label}</Text>
-          <TextInput
-            style={styles.standupInput}
+      <View style={styles.fields}>
+        {FIELDS.map((f) => (
+          <Field
+            key={f.key}
+            label={f.label}
             value={standup[f.key]}
             onChangeText={(t) => setStandup(f.key, t)}
             placeholder={f.placeholder}
-            placeholderTextColor={Colors.textMuted}
             multiline
           />
-        </View>
-      ))}
+        ))}
+      </View>
     </Panel>
   );
 }
+
+const styles = StyleSheet.create({
+  fields: { gap: spacing.md },
+});

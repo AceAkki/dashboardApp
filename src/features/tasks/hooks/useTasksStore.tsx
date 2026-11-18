@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { TaskActionData, MoveTaskProps, TasksTypes } from "../taskTypes";
 import type { Repeat } from "../taskRepeat";
 import { tasksKey } from "@/global/storageKeys";
+import { animateNext } from "@/global/motion";
 
 // the last delete or move, kept so it can be taken back. Not saved: gone when the app closes.
 export type TaskChange =
@@ -48,6 +49,7 @@ export const useTaskStore = create<TaskStore>()(
         if (!change) return false;
         if (change.kind === "delete") {
           if (get().tasks.some((t) => t.id === change.task.id)) return false;
+          animateNext();
           set((state) => {
             const tasks = [...state.tasks];
             tasks.splice(Math.min(change.index, tasks.length), 0, change.task);
@@ -56,13 +58,15 @@ export const useTaskStore = create<TaskStore>()(
           return true;
         }
         if (!get().tasks.some((t) => t.id === change.id)) return false;
+        animateNext();
         set((state) => ({
           tasks: state.tasks.map((t) => (t.id === change.id ? { ...t, type: change.before } : t)),
           lastChange: null,
         }));
         return true;
       },
-      deleteTask: (id) =>
+      deleteTask: (id) => {
+        animateNext();
         set((state) => {
           const index = state.tasks.findIndex((task) => task.id === id);
           if (index < 0) return { taskID: null };
@@ -71,8 +75,10 @@ export const useTaskStore = create<TaskStore>()(
             taskID: null,
             lastChange: { kind: "delete", task: state.tasks[index], index },
           };
-        }),
-      moveTask: ({ id, targetType, currentType }) =>
+        });
+      },
+      moveTask: ({ id, targetType, currentType }) => {
+        animateNext();
         set((state) => ({
           lastChange: (() => {
             const task = state.tasks.find((t) => t.id === id);
@@ -91,11 +97,14 @@ export const useTaskStore = create<TaskStore>()(
               : task,
           ),
           taskID: null,
-        })),
-      updateTasks: (task) =>
+        }));
+      },
+      updateTasks: (task) => {
+        animateNext();
         set((state) => ({
           tasks: [...state.tasks, task],
-        })),
+        }));
+      },
       clearAllTasks: () => {
         set({ tasks: [], lastChange: null });
         AsyncStorage.removeItem(tasksKey);

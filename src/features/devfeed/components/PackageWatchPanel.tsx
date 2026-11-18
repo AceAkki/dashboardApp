@@ -1,6 +1,9 @@
-import { ActivityIndicator, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import Panel from "@/components/ctos/Panel";
+import Spinner from "@/components/ctos/Spinner";
+import Status from "@/components/ctos/Status";
+import Hint from "@/components/ctos/Hint";
 import Tag from "@/components/ctos/Tag";
 import { Colors } from "@/constants/Colors";
 import { usePackageWatch } from "../hooks";
@@ -18,7 +21,7 @@ export default function PackageWatchPanel() {
       style={{ flex: 1 }}
       right={
         loading && rows.length === 0 ? (
-          <ActivityIndicator size="small" color={Colors.primary} />
+          <Spinner />
         ) : anyNew ? (
           <Tag label="Latest" color={Colors.success} />
         ) : null
@@ -33,8 +36,8 @@ export default function PackageWatchPanel() {
           </Text>
         </View>
       ))}
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      {anyNew ? <Text style={styles.hint}>TAP TO MARK AS SEEN</Text> : null}
+      {error ? <Status tone="warn">{error}</Status> : null}
+      {anyNew ? <Hint>TAP TO MARK AS SEEN</Hint> : null}
     </Panel>
   );
 }
