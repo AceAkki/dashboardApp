@@ -78,7 +78,7 @@ const BentoStructure = () => {
     })();
 
       new Date(lastBackup).getTime() + sevenDays < Date.now() && ctosAlert(
-         `Last backup was on ${dateFormat({dateString:lastBackup, hasTime:false})}`,
+         `Last backup was on ${dateFormat({dateString:lastBackup, hasTime:true})}`,
          'Needs to be backup right now',
          [
            { text: "Not now", style: "cancel" },
