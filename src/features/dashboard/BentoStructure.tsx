@@ -24,6 +24,8 @@ import CtosText from "@/components/CtosText";
 import CtosItem from "@/components/CtosItem";
 import { ctosAlert } from "@/global/ctosAlert";
 
+import { exportToFile } from "@/global/backup";
+
 import TerminalPanel from "@/features/tools/components/TerminalPanel";
 import FavLinks from "@/features/favLinks/FavLinks";
 import SnippetsPanel from "@/features/tools/components/SnippetsPanel";
@@ -36,8 +38,8 @@ import useNotifications from "@/hooks/useNotifications";
 import { askExactAlarmOnce } from "@/global/exactAlarm";
 import bentoStyles from "./bentoStyles";
 
-const sevenDays = 7 * 24 * 60 * 60 * 1000;
-
+const sevenDays = 12 * 60 * 60 * 1000;
+// 7 * 24 * 60 * 60 * 1000;
 const BentoStructure = () => {
   const router = useRouter();
   const online = useOnlineStatus();
@@ -75,17 +77,15 @@ const BentoStructure = () => {
       setApps({ appsArr: checked });
     })();
 
-    console.log( new Date(lastBackup).getTime()  )
-    
-        //  ctosAlert(
-        //     "Reminders on time",
-        //     'Android can delay reminders by a few minutes. On the next screen, allow "Alarms & reminders" for this app.',
-        //     [
-        //       { text: "Not now", style: "cancel" },
-        //       { text: "Open settings", onPress: openExactAlarmSettings },
-        //     ],
-        //   );
-  }, []);
+      new Date(lastBackup).getTime() + sevenDays < Date.now() && ctosAlert(
+         `Last backup was on ${dateFormat({dateString:lastBackup, hasTime:false})}`,
+         'Needs to be backup right now',
+         [
+           { text: "Not now", style: "cancel" },
+           { text: "Open settings", onPress: exportToFile },
+         ],
+       );
+    }, []);
 
   return (
     <View style={bentoStyles.root}>
