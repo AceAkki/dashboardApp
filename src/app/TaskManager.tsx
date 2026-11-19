@@ -131,6 +131,7 @@ export default function TaskManager() {
 
       <CutCornerButton
         icon="add"
+        text="New task"
         floating
         accessibilityLabel="Add task"
         onPress={() => setAdding(true)}

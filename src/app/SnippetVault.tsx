@@ -101,8 +101,7 @@ export default function SnippetVault() {
 
       <CutCornerButton
         icon="add"
-        text="Add"
-        size={50}
+        text="New snippet"
         floating
         accessibilityLabel="Add Snippet"
         onPress={() => toggleIsPopupOpen()}

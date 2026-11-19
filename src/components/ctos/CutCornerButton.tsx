@@ -1,6 +1,6 @@
 import { useState, type ComponentProps } from "react";
 import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from "react-native";
-import Svg, { Polygon } from "react-native-svg";
+import Svg, { Polygon, Polyline } from "react-native-svg";
 import { Ionicons } from "@expo/vector-icons";
 
 import { Colors } from "@/constants/Colors";
@@ -24,7 +24,7 @@ type Props = {
   loading?: boolean;
   /** height (and width, when there is no text) */
   size?: number;
-  /** how much of the top-left corner is cut off */
+  /** how much of the top-left and bottom-right corners is cut off */
   cut?: number;
   haptic?: "tap" | "select" | "none";
   /** pins it to the bottom-right of its parent. The parent must be the area ABOVE the nav bar (a flex:1 View) */
@@ -57,10 +57,13 @@ const LOOK: Record<Variant, { fill: string; edge: string; pressed: string; ink: 
   },
 };
 
+const TICK_GAP = 5; // space between the button and its corner ticks
+const TICK_LEN = 8;
+const ICON_WITH_TEXT = 14;
 const NONE: ViewStyle = {};
 const DIM: ViewStyle = { opacity: 0.8 };
 
-// Square button with the top-left corner cut off, used for the floating "add" buttons.
+// Button with two corners cut off (top-left and bottom-right) and HUD ticks around it, used for the floating "add" buttons.
 // React Native cannot clip a View to a shape, so the fill is an SVG polygon with the content on top.
 //   <CutCornerButton icon="add" accessibilityLabel="Add task" onPress={...} floating />
 export default function CutCornerButton({
@@ -88,7 +91,26 @@ export default function CutCornerButton({
   const w = text ? Math.max(measured, size) : size;
   const c = Math.min(cut, size / 2 - 1); // a cut bigger than half the button would break the shape
   const half = 0.5; // keeps the 1 px outline inside the box
-  const points = `${c},${half} ${w - half},${half} ${w - half},${size - half} ${half},${size - half} ${half},${c}`;
+  // top-left and bottom-right corners cut
+  const points = [
+    `${c},${half}`,
+    `${w - half},${half}`,
+    `${w - half},${size - c}`,
+    `${w - c},${size - half}`,
+    `${half},${size - half}`,
+    `${half},${c}`,
+  ].join(" ");
+  // HUD ticks: small brackets just outside the four corners, drawn in a slightly bigger SVG
+  const T = TICK_GAP;
+  const L = TICK_LEN;
+  const bw = w + 2 * T;
+  const bh = size + 2 * T;
+  const ticks = [
+    `0,${L} 0,0 ${L},0`,
+    `${bw - L},0 ${bw},0 ${bw},${L}`,
+    `${bw},${bh - L} ${bw},${bh} ${bw - L},${bh}`,
+    `${L},${bh} 0,${bh} 0,${bh - L}`,
+  ];
 
   return (
     <CtosPressable
@@ -125,11 +147,21 @@ export default function CutCornerButton({
               strokeWidth={1}
             />
           </Svg>
+          <Svg
+            width={bw}
+            height={bh}
+            pointerEvents="none"
+            style={{ position: "absolute", left: -T, top: -T }}
+          >
+            {ticks.map((t) => (
+              <Polyline key={t} points={t} fill="none" stroke={look.edge} strokeWidth={1.5} />
+            ))}
+          </Svg>
           <View style={styles.content}>
             {loading ? (
               <Text style={[styles.label, { color: look.ink }]}>{spin}</Text>
             ) : (
-              <Ionicons name={icon} size={Math.round(size * 0.5)} color={look.ink} />
+              <Ionicons name={icon} size={text ? ICON_WITH_TEXT : Math.round(size * 0.5)} color={look.ink} />
             )}
             {text ? <Text style={[styles.label, { color: look.ink }]}>{text}</Text> : null}
           </View>
