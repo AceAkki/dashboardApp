@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import useAsyncAction from "@/global/useAsyncAction";
+import useAsyncAction from "@/hooks/useAsyncAction";
 import { checkSsl } from "../logic/network";
 import ResultRow from "@/components/ctos/ResultRow";
 import Status from "@/components/ctos/Status";

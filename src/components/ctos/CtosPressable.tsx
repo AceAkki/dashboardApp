@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 import { Colors } from "@/constants/Colors";
-import { feedback } from "@/global/useFeedback";
+import { feedback } from "@/hooks/useFeedback";
 import { ease } from "@/global/motion";
 import { motion } from "@/style/globalStyles";
 
@@ -42,12 +42,14 @@ export default function CtosPressable({
       {...rest}
       onPressIn={(e) => {
         setPressed(true);
-        ease(scale, motion.pressScale, motion.pressIn);
+        // JS-driven on purpose: a Chip passes colour animations (JS-only) to this same view, and one view can
+        // not mix native- and JS-driven animations
+        ease(scale, motion.pressScale, motion.pressIn, false);
         onPressIn?.(e);
       }}
       onPressOut={(e) => {
         setPressed(false);
-        ease(scale, 1, motion.pressOut);
+        ease(scale, 1, motion.pressOut, false);
         onPressOut?.(e);
       }}
       onPress={(e) => {

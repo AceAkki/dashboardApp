@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import useCachedFetch from "@/global/useCachedFetch";
+import useCachedFetch from "@/hooks/useCachedFetch";
 import { TTL } from "./devConfig";
 import {
   fetchDevTo,

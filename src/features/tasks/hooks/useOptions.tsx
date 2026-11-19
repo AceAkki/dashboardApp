@@ -1,5 +1,6 @@
+import { leaveThen } from "@/global/motion";
 import MenuItem from "@/components/ctos/MenuItem";
-import { feedback, type StatusAction } from "@/global/useFeedback";
+import { feedback, type StatusAction } from "@/hooks/useFeedback";
 import { useTaskStore } from "./useTasksStore";
 
 import type { MoveBtnsProps, TasksTypes } from "../taskTypes";
@@ -33,7 +34,7 @@ function MoveBtns({
           label={targetType}
           haptic="none"
           onPress={() => {
-            moveTask({ id: taskObject.id, currentType, targetType });
+            leaveThen(taskObject.id, () => moveTask({ id: taskObject.id, currentType, targetType }), "move");
             feedback.success(`MOVED TO ${targetType.toUpperCase()}`, UNDO_ACTION);
           }}
         />

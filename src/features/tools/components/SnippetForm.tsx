@@ -4,14 +4,13 @@ import { useShallow } from "zustand/shallow";
 
 import Button from "@/components/ctos/Button";
 import ButtonRow from "@/components/ctos/ButtonRow";
-import Chip from "@/components/ctos/Chip";
-import ChipRow from "@/components/ctos/ChipRow";
 import Field from "@/components/ctos/Field";
 import Sheet from "@/components/ctos/Sheet";
-import { feedback } from "@/global/useFeedback";
+import TagEditor, { useTagField } from "@/components/ctos/TagEditor";
+import { feedback } from "@/hooks/useFeedback";
 
 import { useToolsStore } from "../hooks/useToolsStore";
-import { cleanTag, tagCounts } from "../snippetTags";
+import { tagCounts } from "../snippetTags";
 
 const SnippetForm = () => {
   const { snippets, addSnippet, updateSnippet, snippetID, setSnippetID, toggleIsPopupOpen } =
@@ -30,9 +29,8 @@ const SnippetForm = () => {
 
   const [title, setTitle] = useState(selectedSnippet?.title ?? "");
   const [code, setCode] = useState(selectedSnippet?.code ?? "");
-  const [tag, setTag] = useState(selectedSnippet?.tag ?? "");
-  const known = tagCounts(snippets).slice(0, 8);
-  const currentTag = cleanTag(tag);
+  const tagField = useTagField(selectedSnippet?.tags ?? []);
+  const known = tagCounts(snippets).map((t) => t.tag);
 
   const [tried, setTried] = useState(false);
 
@@ -54,9 +52,9 @@ const SnippetForm = () => {
       return;
     }
     if (selectedSnippet) {
-      updateSnippet(selectedSnippet.id, title.trim(), code.trim(), tag);
+      updateSnippet(selectedSnippet.id, title.trim(), code.trim(), tagField.final);
     } else {
-      addSnippet(title.trim(), code.trim(), tag);
+      addSnippet(title.trim(), code.trim(), tagField.final);
     }
     feedback.success(selectedSnippet ? "SNIPPET UPDATED" : "SNIPPET SAVED");
     close();
@@ -83,28 +81,7 @@ const SnippetForm = () => {
         multiline
         error={tried && !code.trim() ? "TEXT NEEDED" : undefined}
       />
-      <Field
-        label="Tag"
-        value={tag}
-        onChangeText={setTag}
-        placeholder="git, docker, notes"
-        help="OPTIONAL"
-        autoCapitalize="none"
-        autoCorrect={false}
-        maxLength={30}
-      />
-      {known.length > 0 ? (
-        <ChipRow>
-          {known.map((t) => (
-            <Chip
-              key={t.tag}
-              label={`#${t.tag}`}
-              selected={currentTag === t.tag}
-              onPress={() => setTag(currentTag === t.tag ? "" : t.tag)}
-            />
-          ))}
-        </ChipRow>
-      ) : null}
+      <TagEditor field={tagField} known={known} />
       <ButtonRow>
         <Button label="Cancel" variant="secondary" onPress={close} style={{ flex: 1 }} />
         <Button label="Save" haptic="none" onPress={save} style={{ flex: 1 }} />

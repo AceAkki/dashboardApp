@@ -350,6 +350,7 @@ export const motion = {
   fade: 140,
   slide: 180,
   pop: 160,
+  leave: 300,
   strike: 220,
   tick: 350,
   savedHold: 1200,

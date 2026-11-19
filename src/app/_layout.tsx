@@ -12,8 +12,10 @@ import { Colors } from "@/constants/Colors";
 
 import { useUserStore } from "@/features/auth/useAuthStore";
 import useTaskReminders from "@/features/tasks/hooks/useTaskReminders";
-
 import {bootMap, type BootMapKey} from "@/global/bootMap"
+
+// for widgets
+import useWidgetSync from "@/features/widgets/useWidgetSync";
 
 export default function RootLayout() {
   const {username, isLoggedIn, BootOption } = useUserStore(

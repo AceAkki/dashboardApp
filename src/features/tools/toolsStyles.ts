@@ -7,6 +7,8 @@ import {
   hud,
   insetBase,
   text,
+  screenPad,
+  spacing,
 } from "@/style/globalStyles";
 
 const toolsStyles = StyleSheet.create({
@@ -37,9 +39,12 @@ const toolsStyles = StyleSheet.create({
   outputRow: { marginTop: 8 },
 
   // header + filter
-  headRow: { flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between" },
+  headRow: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+  },
   count: { ...text.muted, fontSize: fontSize.xs, marginBottom: 6 },
-
 
   // snippets
   snippet: { ...insetBase, padding: 10, marginTop: 8 },
@@ -57,8 +62,9 @@ const toolsStyles = StyleSheet.create({
     lineHeight: 17,
   },
   snippetTag: { ...text.caption, color: Colors.primary, marginBottom: 4 },
-  vaultScroll: { paddingHorizontal: 16, paddingBottom: 32, gap: 12 },
   snippetActions: { flexDirection: "row", gap: 14 },
+  vaultScroll: { paddingHorizontal: 16, paddingBottom: 16, gap: 12 },
+  scene: { flex: 1, paddingHorizontal: 16, paddingBottom: 16 },
 });
 
 export default toolsStyles;

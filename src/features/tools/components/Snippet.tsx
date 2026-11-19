@@ -1,9 +1,13 @@
 import { useShallow } from "zustand/shallow";
 import { Text, View } from "react-native";
 
+import Reveal from "@/components/ctos/Reveal";
+import { leaveThen } from "@/global/motion";
+import Chip from "@/components/ctos/Chip";
+import ChipRow from "@/components/ctos/ChipRow";
 import CopyButton from "@/components/ctos/CopyButton";
 import TextAction from "@/components/ctos/TextAction";
-import { feedback } from "@/global/useFeedback";
+import { feedback } from "@/hooks/useFeedback";
 
 import { useToolsStore } from "../hooks/useToolsStore";
 
@@ -21,7 +25,8 @@ export const Snippet = ({ sData }:{sData:snippetType}) => {
       })),
     );
   return (
-    <View key={sData.id} style={styles.snippet}>
+    <Reveal id={sData.id}>
+    <View style={styles.snippet}>
       <View style={styles.snippetHead}>
         <Text style={styles.snippetTitle}># {sData.title}</Text>
         <View style={styles.snippetActions}>
@@ -39,17 +44,24 @@ export const Snippet = ({ sData }:{sData:snippetType}) => {
             tone="danger"
             haptic="none"
             onPress={() => {
-              deleteSnippet(sData.id);
+              leaveThen(sData.id, () => deleteSnippet(sData.id), "delete");
               feedback.warn("SNIPPET DELETED");
             }}
           />
         </View>
       </View>
-      {sData.tag ? <Text style={styles.snippetTag}>#{sData.tag}</Text> : null}
+      {sData.tags?.length ? (
+        <ChipRow>
+          {sData.tags.map((t) => (
+            <Chip key={t} label={`#${t}`} size="sm" />
+          ))}
+        </ChipRow>
+      ) : null}
       <Text style={styles.snippetCode} selectable>
         {sData.code}
       </Text>
     </View>
+    </Reveal>
   );
 };
 

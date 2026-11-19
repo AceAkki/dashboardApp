@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import useAsciiSpinner from "@/global/useAsciiSpinner";
+import useAsciiSpinner from "@/hooks/useAsciiSpinner";
 import { spacing, text, tone } from "@/style/globalStyles";
 import Button from "./Button";
 

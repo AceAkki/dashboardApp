@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
+import Reveal from "@/components/ctos/Reveal";
 import IconButton from "@/components/ctos/IconButton";
 import Chip from "@/components/ctos/Chip";
 import { text } from "@/style/globalStyles";
@@ -30,6 +31,7 @@ const Task = ({ taskTxt, showType = true }: Props) => {
   const due = done ? null : formatDue(taskTxt.remindTime, Date.now(), taskTxt.repeat);
 
   return (
+    <Reveal id={taskTxt.id} stays={!!showType}>
     <View style={[taskStyles.taskWrap, { borderLeftColor: color }]}>
       <View style={taskStyles.taskBody}>
         <View style={taskStyles.metaRow}>
@@ -85,6 +87,7 @@ const Task = ({ taskTxt, showType = true }: Props) => {
         }}
       />
     </View>
+    </Reveal>
   );
 };
 

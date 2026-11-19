@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import useNotifications, { TASK_CATEGORY } from "@/global/useNotifications";
+import useNotifications, { TASK_CATEGORY } from "@/hooks/useNotifications";
 import { useTaskStore } from "./useTasksStore";
 import { isFinished, taskKindOf } from "../taskTypeUtils";
 import { SNOOZE_SUFFIX, reminderPlan, type PlannedReminder } from "../taskRepeat";

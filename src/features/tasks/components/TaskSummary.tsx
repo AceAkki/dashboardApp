@@ -4,10 +4,34 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import Panel from "@/components/ctos/Panel";
 import { useTaskStore } from "../hooks/useTasksStore";
 import { countTasks, taskMain, taskTypesArr } from "../taskTypeUtils";
+import { useCountTo } from "@/global/motion";
 
 import { Colors } from "@/constants/Colors";
-import globalStyles from "@/style/globalStyles";
+import globalStyles, { motion } from "@/style/globalStyles";
 import bentoStyles from "@/features/dashboard/bentoStyles";
+
+import type { TaskNum, TaskKind } from "../taskTypes";
+
+const CountCell = ({ counts, value }: { counts: TaskNum; value: TaskKind }) => {
+  const counted = useCountTo({
+    target: typeof counts[value] === "number" ? counts[value] : 0,
+    ms: motion.tick,
+    fromZero: true,
+  });
+
+  return (
+    <View style={bentoStyles.countCell}>
+      <Text
+        style={[globalStyles.textReadout, { color: taskMain[value].taskColor }]}
+      >
+        {String(counted).padStart(2, "0")}
+      </Text>
+      <Text style={bentoStyles.countLabel}>
+        {taskMain[value].taskGlyph} {value}
+      </Text>
+    </View>
+  );
+};
 
 // counts per task type, big readouts with a proportional bar underneath
 export default function TaskSummary() {
@@ -24,19 +48,7 @@ export default function TaskSummary() {
     >
       <View style={bentoStyles.counts}>
         {taskTypesArr.map((k) => (
-          <View key={k} style={bentoStyles.countCell}>
-            <Text
-              style={[
-                globalStyles.textReadout,
-                { color: taskMain[k].taskColor },
-              ]}
-            >
-              {String(counts[k]).padStart(2, "0")}
-            </Text>
-            <Text style={bentoStyles.countLabel}>
-              {taskMain[k].taskGlyph} {k}
-            </Text>
-          </View>
+          <CountCell key={k} counts={counts} value={k} />
         ))}
       </View>
       <View style={bentoStyles.segBar}>

@@ -24,7 +24,7 @@ export default function FocusInput({ style, error, onFocus, onBlur, ...rest }: P
 
   useEffect(() => {
     if (!error) return;
-    const move = (to: number) => Animated.timing(x, { toValue: to, duration: 45, useNativeDriver: true });
+    const move = (to: number) => Animated.timing(x, { toValue: to, duration: 45, useNativeDriver: false }); // JS-driven: the border fade above is too, and one view can not mix both
     Animated.sequence([move(-6), move(6), move(-4), move(4), move(0)]).start();
   }, [error, x]);
 

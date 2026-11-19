@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
 import { Text, View, useWindowDimensions } from "react-native";
 import { useIsFocused } from "expo-router";
 import { useShallow } from "zustand/shallow";
@@ -47,6 +48,11 @@ export default function TaskManager() {
       })),
     );
   const [adding, setAdding] = useState(false);
+  // the home screen widget's "+ ADD" opens this screen as taskmanager?add=1: show the new-task sheet at once
+  const { add } = useLocalSearchParams<{ add?: string }>();
+  useEffect(() => {
+    if (add === "1") setAdding(true);
+  }, [add]);
   const [index, setIndex] = useState(0);
   const [query, setQuery] = useState("");
   const [picked, setPicked] = useState<string | null>(null);

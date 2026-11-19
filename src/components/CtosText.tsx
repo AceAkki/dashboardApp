@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Text, type GestureResponderEvent, type TextProps } from "react-native";
-import { useCtosText } from "@/global/useCtosText";
+import { useCtosText } from "@/hooks/useCtosText";
 import { CtosRevealContext } from "@/components/ctosReveal";
 
 // <Text> that reveals itself with the CTOS scramble effect.

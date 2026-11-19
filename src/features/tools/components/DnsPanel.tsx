@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import useAsyncAction from "@/global/useAsyncAction";
+import useAsyncAction from "@/hooks/useAsyncAction";
 import { DNS_TYPE_LIST, lookupDns, type DnsType } from "../logic/network";
 import ChipRow from "@/components/ctos/ChipRow";
 import ResultRow from "@/components/ctos/ResultRow";

@@ -4,6 +4,8 @@ import { ScrollView, Text, View } from "react-native";
 import CtosScreen from "@/components/ctos/CtosScreen";
 import EmptyState from "@/components/ctos/EmptyState";
 import SearchField from "@/components/ctos/SearchField";
+import Tag from "@/components/ctos/Tag";
+
 import CtosText from "@/components/CtosText";
 import Panel from "@/components/ctos/Panel";
 import globalStyles from "@/style/globalStyles";
@@ -47,7 +49,7 @@ export default function Tools() {
             <CtosText style={[globalStyles.textHeading, { marginTop: 6 }]}>
               Utilities
             </CtosText>
-            <Text style={toolsStyles.count}>{ALL_TOOLS.length} TOOLS</Text>
+            <Tag label={`${ALL_TOOLS.length} TOOLS`} />
           </View>
         </View>
 
@@ -55,7 +57,11 @@ export default function Tools() {
           <TerminalPanel />
         </Panel>
 
-        <SearchField value={query} onChangeText={setQuery} placeholder="filter tools…" />
+        <SearchField
+          value={query}
+          onChangeText={setQuery}
+          placeholder="filter tools…"
+        />
 
         {TOOL_GROUPS.map((group) => {
           const items = shown.filter((t) => t.group === group);

@@ -34,6 +34,7 @@ import Hint from "@/components/ctos/Hint";
 import InfoRow from "@/components/ctos/InfoRow";
 import StatTile from "@/components/ctos/StatTile";
 import Status from "@/components/ctos/Status";
+import Corners from "@/components/ctos/Corners";
 
 // stores
 import { useUserStore } from "@/features/auth/useAuthStore";
@@ -56,17 +57,19 @@ import { usePomodoroStore } from "@/features/pomodoro/hooks/pomodoroStore";
 import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
 import { ctosAlert, ctosPrompt } from "@/global/ctosAlert";
 import { exportToClipboard, exportToFile, importBackup } from "@/global/backup";
-import useNotifications from "@/global/useNotifications";
 import { dateFormat } from "@/global/globalFunctions";
 import { openExactAlarmSettings } from "@/global/exactAlarm";
 import { APP_TAG } from "@/global/appInfo";
-import { feedback } from "@/global/useFeedback";
-import { useSettingsStore } from "@/global/useSettingsStore";
+import { feedback } from "@/hooks/useFeedback";
 import { bootMap } from "@/global/bootMap";
+
+// hooks
+import useNotifications from "@/hooks/useNotifications";
+import { useSettingsStore } from "@/hooks/useSettingsStore";
+
 
 // style
 import loginStyles from "@/features/auth/loginStyles";
-import Corners from "@/components/ctos/Corners";
 
 // only Android 14+ has the "Alarms & reminders" switch
 const hasAlarmSetting =

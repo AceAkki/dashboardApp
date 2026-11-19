@@ -6,7 +6,7 @@ import { Typography } from "@/constants/Typography";
 import CtosPressable from "@/components/ctos/CtosPressable";
 import EmptyState from "@/components/ctos/EmptyState";
 import { writeClipboardText } from "@/global/globalFunctions";
-import { feedback } from "@/global/useFeedback";
+import { feedback } from "@/hooks/useFeedback";
 import { fontSize, insetBase, text } from "@/style/globalStyles";
 
 import { searchCheatsheet, type CheatItem, type CheatSection } from "../logic/cheatsheet";

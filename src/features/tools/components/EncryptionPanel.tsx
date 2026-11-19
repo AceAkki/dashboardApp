@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import Panel from "@/components/ctos/Panel";
-import useAsyncAction from "@/global/useAsyncAction";
+import useAsyncAction from "@/hooks/useAsyncAction";
 import { decryptText, encryptText } from "../logic/cipher";
 import ChipRow from "@/components/ctos/ChipRow";
 import Hint from "@/components/ctos/Hint";

@@ -7,7 +7,7 @@ import { TASK_EXAMPLE, runCommand } from "../terminalCommands";
 import { Colors } from "@/constants/Colors";
 import Hint from "@/components/ctos/Hint";
 import Status from "@/components/ctos/Status";
-import { feedback } from "@/global/useFeedback";
+import { feedback } from "@/hooks/useFeedback";
 import styles from "../toolsStyles";
 
 export default function TerminalPanel() {

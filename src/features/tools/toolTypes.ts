@@ -4,7 +4,8 @@ export interface snippetType {
   id: string;
   title: string;
   code: string;
-  tag?: string;
+  /** up to MAX_TAGS short lowercase tags (no #). Older saved snippets had a single `tag`; see upgradeSnippet. */
+  tags?: string[];
 }
 
 export type appsType =  {
@@ -27,8 +28,8 @@ export interface ToolsState {
   appendToday: (line: string) => void;
 
   snippets: snippetType[];
-  addSnippet: (title: string, code: string, tag?: string) => void;
-  updateSnippet: (id: string, title: string, code: string, tag?: string) => void;
+  addSnippet: (title: string, code: string, tags?: string[]) => void;
+  updateSnippet: (id: string, title: string, code: string, tags?: string[]) => void;
   deleteSnippet: (id: string) => void;
   snippetID: string | null;
   setSnippetID: (id: string|null) => void;

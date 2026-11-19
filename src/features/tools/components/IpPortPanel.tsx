@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import useAsyncAction from "@/global/useAsyncAction";
+import useAsyncAction from "@/hooks/useAsyncAction";
 import { checkPort, lookupIp } from "../logic/network";
 import Hint from "@/components/ctos/Hint";
 import ResultRow from "@/components/ctos/ResultRow";

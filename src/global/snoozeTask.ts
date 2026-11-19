@@ -5,11 +5,11 @@ import * as TaskManager from "expo-task-manager";
 import { useTaskStore } from "@/features/tasks/hooks/useTasksStore";
 import { SNOOZE_SUFFIX } from "@/features/tasks/taskRepeat";
 import { isFinished, taskKindOf } from "@/features/tasks/taskTypeUtils";
-import { CHANNEL_ID, SOUND, TASK_CATEGORY } from "./useNotifications";
+import { CHANNEL_ID, SOUND, TASK_CATEGORY } from "../hooks/useNotifications";
 
 // The three buttons under a task reminder: +10 MIN, +1 HOUR, TOMORROW.
 // Tapping one moves the reminder without opening the app.
-//
+
 // This file has to load when the app starts (app/_layout.tsx imports it), because Android
 // starts the app in the background to run the task below when the button is tapped while the
 // app is closed. expo-notifications runs the task for us; it must be defined here, at the top

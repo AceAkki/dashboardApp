@@ -2,7 +2,7 @@ import { useEffect, useState, type ComponentProps } from "react";
 import { StyleSheet, Text, type StyleProp, type ViewStyle } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-import useAsciiSpinner from "@/global/useAsciiSpinner";
+import useAsciiSpinner from "@/hooks/useAsciiSpinner";
 import {
   buttonLook,
   buttonSize,

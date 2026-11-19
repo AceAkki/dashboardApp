@@ -18,8 +18,8 @@ import { cleanNote, cleanTags } from "@/features/tasks/taskTags";
 import { cleanRepeat } from "@/features/tasks/taskRepeat";
 import type { TaskActionData } from "@/features/tasks/taskTypes";
 import type { StandupField, snippetType } from "@/features/tools/toolTypes";
-import { feedback } from "@/global/useFeedback";
-import { cleanTag } from "@/features/tools/snippetTags";
+import { feedback } from "@/hooks/useFeedback";
+import { cleanTags as cleanTagList } from "@/global/tagRules";
 
 // Backup of the data that lives only on this phone: tasks, snippets, standup notes, the profile (name, GitHub ID, coordinates) and the Pomodoro session count.
 // NOT included: weather and GitHub caches (they refetch by themselves) and the running timer.
@@ -163,8 +163,9 @@ export function parseBackup(raw: string): ParseResult {
       continue;
     }
     snippetIds.add(id);
-    const tag = isObj(s) ? cleanTag(s.tag) : undefined;
-    snippets.push(tag ? { id, title, code, tag } : { id, title, code });
+    // older backups have a single `tag`, newer ones a list `tags`
+    const tagList = isObj(s) ? cleanTagList(Array.isArray(s.tags) ? s.tags : s.tag ? [s.tag] : []) : [];
+    snippets.push(tagList.length ? { id, title, code, tags: tagList } : { id, title, code });
   }
 
   const standup: Standup = { yesterday: "", today: "", blocked: "" };

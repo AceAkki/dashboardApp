@@ -7,3 +7,4 @@ export const newsKey = "news-storage";
 export const weatherKey = "weather-storage";
 export const settingsKey = "settings-storage";
 export const exactAlarmKey = "exact-alarm-asked";
+export const widgetStateKey = "widget-tasks-state";

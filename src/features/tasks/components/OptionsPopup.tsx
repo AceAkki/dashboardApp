@@ -1,16 +1,12 @@
+import { leaveThen } from "@/global/motion";
 import { useShallow } from "zustand/shallow";
-import {
-  Modal,
-  Pressable,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { Modal, Pressable, View, useWindowDimensions } from "react-native";
 import { useState } from "react";
 
 import MenuItem from "@/components/ctos/MenuItem";
-import { feedback } from "@/global/useFeedback";
+import { feedback } from "@/hooks/useFeedback";
 
-import { taskTypesArr } from "../taskTypeUtils";
+import { taskTypesArr, isFinished, taskKindOf } from "../taskTypeUtils";
 import useOptions, { UNDO_ACTION } from "../hooks/useOptions";
 import { useTaskStore } from "../hooks/useTasksStore";
 
@@ -55,7 +51,13 @@ export default function OptionsPopup({
   };
 
   return (
-    <Modal transparent visible statusBarTranslucent animationType="fade" onRequestClose={onClose}>
+    <Modal
+      transparent
+      visible
+      statusBarTranslucent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
       <Pressable style={optionsStyles.backdrop} onPress={onClose}>
         <View
           style={[optionsStyles.optionsWrap, { top, left }]}
@@ -68,13 +70,21 @@ export default function OptionsPopup({
               taskObject={taskObject}
               currentType={currentType}
             />
-            <MenuItem label="Remind Me" onPress={handleToggleEdit} />
+            <MenuItem
+              label="Remind Me"
+              isDisabled={isFinished(taskKindOf(taskObject.type))}
+              onPress={handleToggleEdit}
+            />
             <MenuItem label="Edit Task" onPress={handleToggleEdit} />
             <MenuItem
               label="Delete Task"
               haptic="none"
               onPress={() => {
-                deleteTask(taskObject.id);
+                leaveThen(
+                  taskObject.id,
+                  () => deleteTask(taskObject.id),
+                  "delete",
+                );
                 feedback.warn("TASK DELETED", UNDO_ACTION);
               }}
             />

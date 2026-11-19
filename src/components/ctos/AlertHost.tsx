@@ -19,7 +19,7 @@ import {
   type AlertButton,
   type AlertDialog,
 } from "@/global/ctosAlert";
-import { feedback } from "@/global/useFeedback";
+import { feedback } from "@/hooks/useFeedback";
 import Button from "./Button";
 import CtosPressable from "./CtosPressable";
 import FocusInput from "./FocusInput";

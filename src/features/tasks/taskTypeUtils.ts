@@ -4,6 +4,7 @@ import type {
   TaskKind,
   TaskKindArr,
   TaskTab,
+  TaskNum,
 } from "@/features/tasks/taskTypes";
 import { Colors } from "@/constants/Colors";
 import { repeatDue, type Repeat } from "./taskRepeat";
@@ -60,9 +61,7 @@ export const taskKindOf = (type: TasksTypes): TaskKind =>
   taskTypesArr.find((k) => type[k]) ?? DEFAULT_KIND;
 
 // fresh counts per type, worked out from the list every time
-export const countTasks = (
-  tasks: TaskActionData[],
-): Record<TaskKind, number> => {
+export const countTasks = (tasks: TaskActionData[]): TaskNum => {
   const counts = Object.fromEntries(taskTypesArr.map((k) => [k, 0])) as Record<
     TaskKind,
     number
@@ -74,7 +73,7 @@ export const countTasks = (
 };
 
 // tasks that are not finished
-export const openCount = (counts: Record<TaskKind, number>) =>
+export const openCount = (counts: TaskNum) =>
   taskTypesArr.filter((k) => !isFinished(k)).reduce((n, k) => n + counts[k], 0);
 
 // "T-3F9A": short readable code from the task id
@@ -95,10 +94,13 @@ export const formatDue = (iso: string, now = Date.now(), repeat?: Repeat) => {
     const m = mins % 60;
 
     const span =
-      days >= 1 ? `${days}D ${hours}H`
-      : hours >= 1 ? `${hours}H ${m}M`
-      : mins >= 1 ? `${m}M`
-      : "JUST NOW";
+      days >= 1
+        ? `${days}D ${hours}H`
+        : hours >= 1
+          ? `${hours}H ${m}M`
+          : mins >= 1
+            ? `${m}M`
+            : "JUST NOW";
 
     return { label: `OVERDUE ${span}`, overdue: true };
   }

@@ -8,7 +8,8 @@ import EmptyState from "@/components/ctos/EmptyState";
 import Chip from "@/components/ctos/Chip";
 import ChipRow from "@/components/ctos/ChipRow";
 import SearchField from "@/components/ctos/SearchField";
-import TextAction from "@/components/ctos/TextAction";
+import Tag from "@/components/ctos/Tag";
+import CutCornerButton from "@/components/ctos/CutCornerButton";
 
 import { useToolsStore } from "@/features/tools/hooks/useToolsStore";
 import { Snippet } from "@/features/tools/components/Snippet";
@@ -34,6 +35,8 @@ export default function SnippetVault() {
   const tags = tagCounts(snippets);
   // the picked tag can disappear (its last snippet was deleted or retagged): then show everything
   const tag = tags.some((t) => t.tag === picked) ? picked : null;
+  // forget a picked tag that no longer exists, so it can't switch itself back on when a snippet gets it again
+  if (picked && !tag) setPicked(null);
   const shown = filterSnippets(snippets, tag, query);
   const filtering = !!tag || !!query.trim();
 
@@ -44,23 +47,28 @@ export default function SnippetVault() {
 
         <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
           <CtosText style={globalStyles.textHeading}> Snippet Vault</CtosText>
-          <TextAction label={isPopupOpen ? "CANCEL" : "+ NEW"} onPress={toggleIsPopupOpen} />
+          <Tag label={`${String(snippets.length).padStart(2, "0")} Snips`} />
         </View>
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.vaultScroll}
-        keyboardShouldPersistTaps="handled"
-      >
+      <View style={styles.vaultScroll}>
         <SearchField
           value={query}
           onChangeText={setQuery}
           placeholder="search title, text or tag…"
         />
+      </View>
 
+      <ScrollView
+        contentContainerStyle={[styles.vaultScroll, styles.scene]}
+        keyboardShouldPersistTaps="handled"
+      >
         {tags.length > 0 ? (
           <ChipRow>
-            {[{ tag: null as string | null, count: snippets.length }, ...tags].map((t) => (
+            {[
+              { tag: null as string | null, count: snippets.length },
+              ...tags,
+            ].map((t) => (
               <Chip
                 key={t.tag ?? "all"}
                 label={t.tag ? `#${t.tag}` : "ALL"}
@@ -78,7 +86,7 @@ export default function SnippetVault() {
           </Text>
         ) : null}
 
-        <Panel>
+        <Panel style={styles.scene}>
           {shown.map((s) => (
             <Snippet sData={s} key={s.id} />
           ))}
@@ -90,6 +98,15 @@ export default function SnippetVault() {
           {isPopupOpen ? <SnippetForm /> : null}
         </Panel>
       </ScrollView>
+
+      <CutCornerButton
+        icon="add"
+        text="Add"
+        size={50}
+        floating
+        accessibilityLabel="Add Snippet"
+        onPress={() => toggleIsPopupOpen()}
+      />
     </CtosScreen>
   );
 }

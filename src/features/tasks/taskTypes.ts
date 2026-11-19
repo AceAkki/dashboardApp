@@ -18,6 +18,7 @@ export type TaskKind = keyof typeof taskMain;
 export type TaskKindArr = TaskKind[];
 export type TaskTab = typeof ALL_TAB | TaskKind;
 export type TasksTypes = Record<TaskKind, boolean>;
+export type TaskNum = Record<TaskKind, number>;
 
 export type RouteType = {
   key: TaskTab;

@@ -11,7 +11,7 @@ import FieldLabel from "@/components/ctos/FieldLabel";
 import Hint from "@/components/ctos/Hint";
 import ReminderPicker from "@/components/ctos/ReminderPicker";
 import Sheet from "@/components/ctos/Sheet";
-import { feedback } from "@/global/useFeedback";
+import { feedback } from "@/hooks/useFeedback";
 import { useTaskStore } from "../hooks/useTasksStore";
 import { getTaskTypes, taskCode } from "../taskTypeUtils";
 import { MAX_NOTE, cleanNote, tagCounts } from "../taskTags";

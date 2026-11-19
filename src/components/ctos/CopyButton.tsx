@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { writeClipboardText } from "@/global/globalFunctions";
-import { feedback } from "@/global/useFeedback";
+import { feedback } from "@/hooks/useFeedback";
 import TextAction from "./TextAction";
 
 // COPY word-button; says COPIED for 1.5 s

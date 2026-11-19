@@ -1,4 +1,4 @@
-import { getJSON } from "@/global/useCachedFetch";
+import { getJSON } from "@/hooks/useCachedFetch";
 import { PACKAGES, REPOS, SERVICES } from "./devConfig";
 import type {
   PackageVersion,

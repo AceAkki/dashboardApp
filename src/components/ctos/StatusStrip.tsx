@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { AccessibilityInfo, Animated, StyleSheet, Text } from "react-native";
+import { AccessibilityInfo, Animated, Easing, StyleSheet, Text, View } from "react-native";
 
-import CtosPressable from "./CtosPressable";
+import TextAction from "./TextAction";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
 import { fontSize } from "@/style/globalStyles";
-import { useStatusStore, type StatusTone } from "@/global/useFeedback";
+import { isReducedMotion, useTyped } from "@/global/motion";
+import { useStatusStore, type StatusTone } from "@/hooks/useFeedback";
 
 const TONES: Record<StatusTone, { glyph: string; word: string; color: string }> = {
   ok: { glyph: "✓", word: "OK", color: Colors.success },
@@ -25,6 +26,7 @@ export default function StatusStrip() {
   const current = useStatusStore((s) => s.current);
   const insets = useSafeAreaInsets();
   const [y] = useState(() => new Animated.Value(HIDDEN));
+  const [drain] = useState(() => new Animated.Value(1)); // the bar under the line, emptying over the show time
   const id = current?.id;
   const message = current?.message;
   const hasAction = !!current?.action;
@@ -33,18 +35,27 @@ export default function StatusStrip() {
     if (id === undefined) return;
     AccessibilityInfo.announceForAccessibility(message ?? "");
     Animated.timing(y, { toValue: 0, duration: 160, useNativeDriver: true }).start();
+    const showMs = hasAction ? SHOW_WITH_ACTION_MS : SHOW_MS;
+    drain.setValue(1);
+    if (!isReducedMotion()) {
+      Animated.timing(drain, { toValue: 0, duration: showMs, easing: Easing.linear, useNativeDriver: true }).start();
+    }
     const timer = setTimeout(() => {
       Animated.timing(y, { toValue: HIDDEN, duration: 160, useNativeDriver: true }).start(
         ({ finished }) => {
           if (finished) useStatusStore.getState().clear(id);
         },
       );
-    }, hasAction ? SHOW_WITH_ACTION_MS : SHOW_MS);
+    }, showMs);
     return () => clearTimeout(timer);
-  }, [id, message, hasAction, y]);
+  }, [id, message, hasAction, y, drain]);
+
+  const tone = current ? TONES[current.tone] : TONES.ok;
+  const line = current ? `${tone.glyph} ${tone.word} · ${current.message.toUpperCase()}` : "";
+  const typed = useTyped(line);
 
   if (!current) return null;
-  const { glyph, word, color } = TONES[current.tone];
+  const { color } = tone;
   const { action } = current;
 
   return (
@@ -56,23 +67,27 @@ export default function StatusStrip() {
       ]}
     >
       <Text style={[styles.text, styles.grow, { color }]} numberOfLines={1}>
-        {glyph} {word} · {current.message.toUpperCase()}
+        {typed}
       </Text>
       {action ? (
-        <CtosPressable
-          haptic="none"
-          hitSlop={10}
-          accessibilityRole="button"
-          pressedStyle={{ opacity: 0.5 }}
-          style={styles.action}
-          onPress={() => {
-            useStatusStore.getState().clear(current.id);
-            action.run();
-          }}
-        >
-          <Text style={[styles.text, { color: Colors.primary }]}>{action.label.toUpperCase()}</Text>
-        </CtosPressable>
+        <View style={styles.action}>
+          <TextAction
+            label={action.label.toUpperCase()}
+            haptic="none"
+            onPress={() => {
+              useStatusStore.getState().clear(current.id);
+              action.run();
+            }}
+          />
+        </View>
       ) : null}
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          styles.drain,
+          { backgroundColor: color, transform: [{ scaleX: drain }], transformOrigin: "left" },
+        ]}
+      />
     </Animated.View>
   );
 }
@@ -93,6 +108,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   grow: { flex: 1 },
+  drain: { position: "absolute", left: 0, right: 0, bottom: 0, height: 2 },
   action: { marginLeft: 12, paddingLeft: 12, borderLeftWidth: 1, borderLeftColor: Colors.border },
   text: {
     fontFamily: Typography.primary_bold,

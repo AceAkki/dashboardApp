@@ -31,7 +31,7 @@ import StandupPanel from "@/features/tools/components/StandupPanel";
 import { useToolsStore } from "../tools/hooks/useToolsStore";
 import { APPS } from "@/global/AppsConfig";
 import { isInstalled } from "@/global/launcher";
-import useNotifications from "@/global/useNotifications";
+import useNotifications from "@/hooks/useNotifications";
 import { askExactAlarmOnce } from "@/global/exactAlarm";
 import bentoStyles from "./bentoStyles";
 
