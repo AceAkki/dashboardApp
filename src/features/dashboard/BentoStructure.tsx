@@ -7,6 +7,7 @@ import { Colors } from "@/constants/Colors";
 import globalStyles from "@/style/globalStyles";
 import { useUserStore } from "../auth/useAuthStore";
 import {
+  dateFormat,
   timeOfTheDayGreeting,
   useOnlineStatus,
 } from "../../global/globalFunctions";
@@ -34,6 +35,8 @@ import { isInstalled } from "@/global/launcher";
 import useNotifications from "@/hooks/useNotifications";
 import { askExactAlarmOnce } from "@/global/exactAlarm";
 import bentoStyles from "./bentoStyles";
+
+const sevenDays = 7 * 24 * 60 * 60 * 1000;
 
 const BentoStructure = () => {
   const router = useRouter();
@@ -71,6 +74,17 @@ const BentoStructure = () => {
       checked.sort((a, b) => Number(b.installed) - Number(a.installed));
       setApps({ appsArr: checked });
     })();
+
+    console.log( new Date(lastBackup).getTime()  )
+    
+        //  ctosAlert(
+        //     "Reminders on time",
+        //     'Android can delay reminders by a few minutes. On the next screen, allow "Alarms & reminders" for this app.',
+        //     [
+        //       { text: "Not now", style: "cancel" },
+        //       { text: "Open settings", onPress: openExactAlarmSettings },
+        //     ],
+        //   );
   }, []);
 
   return (
@@ -158,18 +172,6 @@ const BentoStructure = () => {
           <StandupPanel />
         </CtosItem>
       </ScrollView>
-
-      {/* {
-        lastBackup > 
-         ctosAlert(
-            "Reminders on time",
-            'Android can delay reminders by a few minutes. On the next screen, allow "Alarms & reminders" for this app.',
-            [
-              { text: "Not now", style: "cancel" },
-              { text: "Open settings", onPress: openExactAlarmSettings },
-            ],
-          );
-      } */}
     </View>
   );
 };
