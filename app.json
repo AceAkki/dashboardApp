@@ -12,7 +12,9 @@
       "icon": "./assets/expo.icon",
       "bundleIdentifier": "com.aceakki.terminaldeck",
       "supportsTablet": false,
-      "infoPlist": { "NSAppTransportSecurity": { "NSAllowsArbitraryLoads": true } }
+      "infoPlist": {
+        "NSAppTransportSecurity": { "NSAllowsArbitraryLoads": true }
+      }
     },
     "android": {
       "package": "com.aceakki.terminaldeck",
@@ -37,6 +39,84 @@
           "backgroundColor": "#090A0F",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 120
+        }
+      ],
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "TasksList",
+              "label": "Tasks",
+              "description": "Recent tasks with current / priority tabs",
+              "minWidth": "250dp",
+              "minHeight": "250dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 4,
+              "updatePeriodMillis": 1800000,
+              "resizeMode": "horizontal|vertical"
+            },
+            {
+              "name": "TaskCountActive",
+              "label": "Active tasks",
+              "description": "Number of active tasks",
+              "minWidth": "110dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 2,
+              "targetCellHeight": 2,
+              "updatePeriodMillis": 1800000
+            },
+            {
+              "name": "TaskCountP0",
+              "label": "P0 tasks",
+              "description": "Number of P0 tasks",
+              "minWidth": "110dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 2,
+              "targetCellHeight": 2,
+              "updatePeriodMillis": 1800000
+            },
+            {
+              "name": "AddTask",
+              "label": "Add task",
+              "description": "Tap to add a task",
+              "minWidth": "250dp",
+              "minHeight": "40dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 1,
+              "updatePeriodMillis": 0
+            },
+            {
+              "name": "PomodoroBar",
+              "label": "Pomodoro bar",
+              "description": "Compact Pomodoro timer",
+              "minWidth": "250dp",
+              "minHeight": "40dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 1,
+              "updatePeriodMillis": 1800000
+            },
+            {
+              "name": "PomodoroCard",
+              "label": "Pomodoro card",
+              "description": "Pomodoro timer with controls",
+              "minWidth": "250dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 2,
+              "updatePeriodMillis": 1800000
+            },
+            {
+              "name": "PomodoroTile",
+              "label": "Pomodoro tile",
+              "description": "Square Pomodoro timer",
+              "minWidth": "110dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 2,
+              "targetCellHeight": 2,
+              "updatePeriodMillis": 1800000
+            }
+          ]
         }
       ],
       [
@@ -66,7 +146,10 @@
         {
           "icon": "./assets/images/notification-icon.png",
           "color": "#00E5FF",
-          "sounds": ["./assets/sounds/ctos_alert.wav", "./assets/sounds/ctos_chime.wav"]
+          "sounds": [
+            "./assets/sounds/ctos_alert.wav",
+            "./assets/sounds/ctos_chime.wav"
+          ]
         }
       ],
       [
@@ -80,9 +163,7 @@
           }
         }
       ],
-      [
-      "./plugins/withPackageQueries"
-    ],
+      ["./plugins/withPackageQueries"],
       "@react-native-community/datetimepicker"
     ],
     "experiments": {
