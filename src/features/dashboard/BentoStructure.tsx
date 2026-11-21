@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, Platform, ScrollView, Text, View } from "react-native";
 import { useShallow } from "zustand/shallow";
 import { useRouter } from "expo-router";
@@ -38,18 +38,18 @@ import useNotifications from "@/hooks/useNotifications";
 import { askExactAlarmOnce } from "@/global/exactAlarm";
 import bentoStyles from "./bentoStyles";
 
-const sevenDays = 12 * 60 * 60 * 1000;
-// 7 * 24 * 60 * 60 * 1000;
 const BentoStructure = () => {
   const router = useRouter();
   const online = useOnlineStatus();
-  const { username, location, lastBackup } = useUserStore(
-    useShallow((s) => ({ username: s.username, location: s.location, lastBackup:s.lastBackup })),
+  const { username, location, lastBackup, backupEvery, rewindEvery } = useUserStore(
+    useShallow((s) => ({ username: s.username, location: s.location, lastBackup:s.lastBackup, backupEvery:s.backupEvery, rewindEvery:s.rewindEvery })),
   );
   const { setApps } = useToolsStore(
     useShallow((s) => ({ setApps: s.setApps })),
   );
   const { requestPermission } = useNotifications();
+
+  const [lastReminded, setLastReminded] = useState<number>(0);
 
   // ask for notification permission once, as the main screen opens
   // if it was allowed, explain the Android "Alarms & reminders" setting (once, ever)
@@ -77,14 +77,23 @@ const BentoStructure = () => {
       setApps({ appsArr: checked });
     })();
 
-      new Date(lastBackup).getTime() + sevenDays < Date.now() && ctosAlert(
-         `Last backup was on ${dateFormat({dateString:lastBackup, hasTime:true})}`,
-         'Needs to be backup right now',
-         [
-           { text: "Not now", style: "cancel" },
-           { text: "Open settings", onPress: exportToFile },
-         ],
-       );
+    // asks for backup
+    const last = lastBackup ? new Date(lastBackup).getTime() : 0; // 0 = never backed up
+    const overdue = Number.isNaN(last) || Date.now() - last > backupEvery;
+    const askedRecently = Date.now() - (lastReminded ?? 0) < rewindEvery;
+    if (overdue && !askedRecently) {
+      setLastReminded(Date.now());
+      ctosAlert(
+        "Back up your data",
+        last
+          ? `Last backup was on ${dateFormat({ dateString: lastBackup, hasTime: true })}`
+          : "You have never made a backup",
+        [
+          { text: "Not now", style: "cancel" },
+          { text: "Back up now", onPress: exportToFile },
+        ],
+      );
+    }
     }, []);
 
   return (

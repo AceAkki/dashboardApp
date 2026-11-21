@@ -64,7 +64,8 @@ const toolsStyles = StyleSheet.create({
   snippetTag: { ...text.caption, color: Colors.primary, marginBottom: 4 },
   snippetActions: { flexDirection: "row", gap: 14 },
   vaultScroll: { paddingHorizontal: 16, paddingBottom: 16, gap: 12 },
-  scene: { flex: 1, paddingHorizontal: 16, paddingBottom: 16 },
+  vaultBody: { flex: 1, paddingHorizontal: 16, paddingBottom: 16, gap: 12 },
+  vaultPanel: { flex: 1 },
 });
 
 export default toolsStyles;

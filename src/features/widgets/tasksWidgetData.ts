@@ -9,7 +9,6 @@ import type { TaskActionData } from "@/features/tasks/taskTypes";
 // No React here, so the widget's click handler can use it while the app is closed.
 
 export const WIDGET_NAME = "TasksList";
-export const WIDGET_ROWS = 4;
 // the "UNDO" row of a task completed from the widget goes away on the next refresh after this long
 const UNDO_MS = 10 * 60 * 1000;
 
@@ -121,14 +120,13 @@ export function buildWidgetProps(
 
   const lastDone =
     state.lastDone && now - state.lastDone.at < UNDO_MS ? state.lastDone : null;
-  const room = WIDGET_ROWS - (lastDone ? 1 : 0);
 
   return {
     tab: state.tab,
     counts: { current: current.length, priority: priority.length },
     total: list.length,
     lastDone: lastDone ? { name: lastDone.name } : null,
-    rows: list.slice(0, room).map((t) => {
+    rows: list.map((t) => {
       const due = shortDue(t.remindTime, now);
       return {
         id: t.id,

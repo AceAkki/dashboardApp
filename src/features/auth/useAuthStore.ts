@@ -3,7 +3,8 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-import {defaultBootKey} from "@/global/bootMap"
+import {defaultBootKey} from "@/global/bootMap";
+import {DAY} from "@/global/backup";
 import { userKey } from "../../global/storageKeys";
 
 export type userType = {
@@ -14,6 +15,8 @@ export type userType = {
   themeType: "light" | "dark";
   location: { latitude: number; longitude: number };
   lastBackup:string;
+  backupEvery:number;
+  rewindEvery:number;
 };
 
 const initialState: userType = {
@@ -24,6 +27,8 @@ const initialState: userType = {
   themeType: "light",
   location: { latitude: 0, longitude: 0 },
   lastBackup: "",
+  backupEvery: 7 * DAY,
+  rewindEvery: DAY,
 };
 
 interface UserStore extends userType {
@@ -38,6 +43,7 @@ interface UserStore extends userType {
   updateBackground: (url: string) => void;
   logOutUser: () => void;
   updateLastBackup: (dateString:string) => void;
+  updateBackupEvery:(day:number) => void;
 }
 
 export const useUserStore = create<UserStore>()(
@@ -57,7 +63,8 @@ export const useUserStore = create<UserStore>()(
         })),
       updateBackground: (url) => set(() => ({ backgroundURL: url })),
       logOutUser: () => set(initialState),
-      updateLastBackup: (dateString)=> set(()=> ({lastBackup:dateString}))
+      updateLastBackup: (dateString)=> set(()=> ({lastBackup:dateString})),
+      updateBackupEvery:(number) => set(() => ({backupEvery:number * DAY}))
     }),
     {
       name: userKey,

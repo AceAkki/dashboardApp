@@ -5,6 +5,7 @@ import { usePomodoroStore } from "@/features/pomodoro/hooks/pomodoroStore";
 import type { PomodoroMode } from "@/features/pomodoro/hooks/pomodoroStore";
 import { useTaskStore } from "@/features/tasks/hooks/useTasksStore";
 import { taskKindOf } from "@/features/tasks/taskTypeUtils";
+import { Fallback } from "./widgetKit";
 import {
   isWidgetName,
   loadContext,
@@ -75,19 +76,32 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
   const name = props.widgetInfo.widgetName;
   if (!isWidgetName(name)) return;
 
+  // always draw something: a thrown error would leave Android's "Can't load widget" box on the home screen
+  const draw = async () => {
+    try {
+      props.renderWidget(renderByName(name, await loadContext()));
+    } catch {
+      props.renderWidget(<Fallback />);
+    }
+  };
+
   switch (props.widgetAction) {
     case "WIDGET_ADDED":
     case "WIDGET_UPDATE":
     case "WIDGET_RESIZED":
-      props.renderWidget(renderByName(name, await loadContext()));
+      await draw();
       break;
 
     case "WIDGET_CLICK":
-      await handleClick(
-        props.clickAction,
-        (props.clickActionData ?? {}) as Record<string, unknown>,
-      );
-      props.renderWidget(renderByName(name, await loadContext()));
+      try {
+        await handleClick(
+          props.clickAction,
+          (props.clickActionData ?? {}) as Record<string, unknown>,
+        );
+      } catch {
+        // the tap could not be applied: redraw with what is saved
+      }
+      await draw();
       // other widgets on the home screen show the same data: redraw them too
       await refreshWidgets(name);
       break;

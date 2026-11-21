@@ -20,6 +20,7 @@ import globalStyles from "@/style/globalStyles";
 import styles from "@/features/tools/toolsStyles";
 import { useShallow } from "zustand/shallow";
 import { APP_TAG } from "@/global/appInfo";
+import toolsStyles from "@/features/tools/toolsStyles";
 
 export default function SnippetVault() {
   const { snippets, isPopupOpen, toggleIsPopupOpen } = useToolsStore(
@@ -51,7 +52,7 @@ export default function SnippetVault() {
         </View>
       </View>
 
-      <View style={styles.vaultScroll}>
+      <View style={toolsStyles.vaultScroll}>
         <SearchField
           value={query}
           onChangeText={setQuery}
@@ -59,25 +60,21 @@ export default function SnippetVault() {
         />
       </View>
 
-      <ScrollView
-        contentContainerStyle={[styles.vaultScroll, styles.scene]}
-        keyboardShouldPersistTaps="handled"
-      >
+      <View style={styles.vaultBody}>
         {tags.length > 0 ? (
-          <ChipRow>
-            {[
-              { tag: null as string | null, count: snippets.length },
-              ...tags,
-            ].map((t) => (
-              <Chip
-                key={t.tag ?? "all"}
-                label={t.tag ? `#${t.tag}` : "ALL"}
-                count={t.count}
-                selected={t.tag === tag}
-                onPress={() => setPicked(t.tag)}
-              />
-            ))}
-          </ChipRow>
+          <View>
+            <ChipRow>
+              {[{ tag: null as string | null, count: snippets.length }, ...tags].map((t) => (
+                <Chip
+                  key={t.tag ?? "all"}
+                  label={t.tag ? `#${t.tag}` : "ALL"}
+                  count={t.count}
+                  selected={t.tag === tag}
+                  onPress={() => setPicked(t.tag)}
+                />
+              ))}
+            </ChipRow>
+          </View>
         ) : null}
 
         {filtering ? (
@@ -86,18 +83,24 @@ export default function SnippetVault() {
           </Text>
         ) : null}
 
-        <Panel style={styles.scene}>
-          {shown.map((s) => (
-            <Snippet sData={s} key={s.id} />
-          ))}
-          {snippets.length === 0 ? (
-            <EmptyState text="no snippets saved" />
-          ) : shown.length === 0 ? (
-            <EmptyState text="nothing matches" />
-          ) : null}
+        <Panel style={styles.vaultPanel}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{ paddingBottom: 72 }}
+          >
+            {shown.map((s) => (
+              <Snippet sData={s} key={s.id} />
+            ))}
+            {snippets.length === 0 ? (
+              <EmptyState text="no snippets saved" />
+            ) : shown.length === 0 ? (
+              <EmptyState text="nothing matches" />
+            ) : null}
+          </ScrollView>
           {isPopupOpen ? <SnippetForm /> : null}
         </Panel>
-      </ScrollView>
+      </View>
 
       <CutCornerButton
         icon="add"

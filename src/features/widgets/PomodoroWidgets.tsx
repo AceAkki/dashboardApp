@@ -4,6 +4,7 @@ import React from "react";
 import { FlexWidget, SvgWidget, TextWidget } from "react-native-android-widget";
 
 import type { PomoProps } from "./pomodoroWidgetData";
+import { Bar, Btn, Panel, Segments } from "./widgetKit";
 import { BOLD, C, REGULAR, hex } from "./widgetTheme";
 
 const toggleLabel = (s: PomoProps["state"]) =>
@@ -27,90 +28,48 @@ function ringSvg(size: number, stroke: number, fraction: number, color: string) 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${track}${arc}</svg>`;
 }
 
-function Toggle({ p, w, h = 36 }: { p: PomoProps; w?: number; h?: number }) {
+function Toggle({ p, w, h = 34 }: { p: PomoProps; w?: number; h?: number }) {
   return (
-    <FlexWidget
-      style={{
-        ...(w ? { width: w } : { flex: 1 }),
-        height: h,
-        backgroundColor: hex(p.color),
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+    <Btn
+      label={toggleLabel(p.state)}
+      color={p.color}
+      filled
+      width={w}
+      height={h}
       clickAction="POMO_TOGGLE"
-      accessibilityLabel={`${toggleLabel(p.state)} timer`}
-    >
-      <TextWidget
-        text={toggleLabel(p.state)}
-        style={{ fontSize: 11, color: C.textOnPrimary, fontFamily: BOLD, letterSpacing: 1 }}
-      />
-    </FlexWidget>
+      a11y={`${toggleLabel(p.state)} timer`}
+    />
   );
 }
 
-function Skip({ w = 52, h = 36 }: { w?: number; h?: number }) {
+function Skip({ w = 52, h = 34 }: { w?: number; h?: number }) {
   return (
-    <FlexWidget
-      style={{
-        width: w,
-        height: h,
-        marginLeft: 6,
-        borderWidth: 1,
-        borderColor: C.textSecondary,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-      clickAction="POMO_SKIP"
-      accessibilityLabel="Skip to the next phase"
-    >
-      <TextWidget text="SKIP" style={{ fontSize: 10, color: C.textSecondary, fontFamily: REGULAR }} />
+    <FlexWidget style={{ marginLeft: 6 }}>
+      <Btn label="SKIP" color={C.textSecondary} width={w} height={h} clickAction="POMO_SKIP" a11y="Skip to the next phase" />
     </FlexWidget>
   );
 }
 
 function Dots({ n, total, color }: { n: number; total: number; color: string }) {
-  return (
-    <FlexWidget style={{ flexDirection: "row" }}>
-      {Array.from({ length: total }, (_, i) => (
-        <FlexWidget
-          key={i}
-          style={{
-            width: 8,
-            height: 8,
-            marginLeft: i ? 4 : 0,
-            backgroundColor: i < n ? hex(color) : undefined,
-            borderWidth: 1,
-            borderColor: i < n ? hex(color) : C.border,
-          }}
-        />
-      ))}
-    </FlexWidget>
-  );
+  return <Segments filled={n} total={total} color={color} />;
 }
 
-function Bar({ fraction, color }: { fraction: number; color: string }) {
-  const filled = Math.max(1, Math.round(fraction * 100));
-  const rest = 100 - filled;
-  return (
-    <FlexWidget style={{ width: "match_parent", height: 4, flexDirection: "row", backgroundColor: C.border }}>
-      <FlexWidget style={{ flex: filled, height: 4, backgroundColor: hex(color) }} />
-      {rest > 0 ? <FlexWidget style={{ flex: rest, height: 4 }} /> : null}
-    </FlexWidget>
-  );
-}
-
+// the three modes as square segments: the current one is filled
 function ModeChips({ p }: { p: PomoProps }) {
   return (
-    <FlexWidget style={{ flexDirection: "row" }}>
-      {(["focus", "short", "long"] as const).map((m) => {
+    <FlexWidget style={{ flexDirection: "row", width: "match_parent" }}>
+      {(["focus", "short", "long"] as const).map((m, i) => {
         const on = m === p.mode;
         return (
           <FlexWidget
             key={m}
             style={{
-              paddingHorizontal: 8,
-              paddingVertical: 4,
-              marginRight: 6,
+              flex: 1, width: 0,
+              height: 22,
+              marginLeft: i ? 4 : 0,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: on ? hex(p.color) : C.surface,
               borderWidth: 1,
               borderColor: on ? hex(p.color) : C.border,
             }}
@@ -119,32 +78,12 @@ function ModeChips({ p }: { p: PomoProps }) {
             accessibilityLabel={`Switch to ${m}`}
           >
             <TextWidget
-              text={m.toUpperCase()}
-              style={{ fontSize: 9, color: on ? hex(p.color) : C.textSecondary, fontFamily: REGULAR }}
+              text={m === "focus" ? "FOCUS" : m === "short" ? "SHORT" : "LONG"}
+              style={{ fontSize: 9, color: on ? C.textOnPrimary : C.textSecondary, fontFamily: on ? BOLD : REGULAR }}
             />
           </FlexWidget>
         );
       })}
-    </FlexWidget>
-  );
-}
-
-// panel with the left accent bar used by every widget
-function Panel({ color, label, children }: { color: string; label: string; children: any }) {
-  return (
-    <FlexWidget
-      style={{
-        height: "match_parent",
-        width: "match_parent",
-        flexDirection: "row",
-        backgroundColor: C.surface,
-        borderWidth: 1,
-        borderColor: C.border,
-      }}
-      accessibilityLabel={label}
-    >
-      <FlexWidget style={{ width: 3, height: "match_parent", backgroundColor: hex(color) }} />
-      {children}
     </FlexWidget>
   );
 }
@@ -154,18 +93,19 @@ export function Pomodoro4x1(p: PomoProps) {
   return (
     <Panel color={p.color} label="Pomodoro widget">
       <FlexWidget
-        style={{ flex: 1, flexDirection: "row", alignItems: "center", paddingHorizontal: 10 }}
+        style={{ flex: 1, width: 0, height: "match_parent", flexDirection: "row", alignItems: "center", paddingHorizontal: 10 }}
       >
-        <FlexWidget style={{ flexDirection: "column", width: 92 }}>
+        <FlexWidget style={{ flexDirection: "column", width: 84 }}>
           <TextWidget text={p.modeLabel} style={{ fontSize: 9, color: hex(p.color), fontFamily: REGULAR, letterSpacing: 1 }} />
           <TextWidget
             text={p.headline}
             style={{ fontSize: p.state === "running" ? 14 : 18, color: C.textPrimary, fontFamily: BOLD }}
           />
         </FlexWidget>
-        <FlexWidget style={{ flex: 1, flexDirection: "column", marginHorizontal: 8 }}>
+        <FlexWidget style={{ flex: 1, width: 0, flexDirection: "column", marginHorizontal: 8 }}>
           <TextWidget
-            text={`SESSION ${Math.min(p.sessions + 1, p.sessionsTotal)}/${p.sessionsTotal}`}
+            maxLines={1}
+            text={`${Math.min(p.sessions + 1, p.sessionsTotal)}/${p.sessionsTotal} SESSIONS`}
             style={{ fontSize: 9, color: C.textSecondary, fontFamily: REGULAR, marginBottom: 5 }}
           />
           <Bar fraction={p.fraction} color={p.color} />
@@ -181,19 +121,19 @@ export function Pomodoro4x1(p: PomoProps) {
 export function Pomodoro4x2(p: PomoProps) {
   return (
     <Panel color={p.color} label="Pomodoro widget">
-      <FlexWidget style={{ flex: 1, flexDirection: "row", alignItems: "center", padding: 12 }}>
+      <FlexWidget style={{ flex: 1, width: 0, height: "match_parent", flexDirection: "row", alignItems: "center", padding: 12 }}>
         <SvgWidget svg={ringSvg(84, 8, p.fraction, p.color)} style={{ width: 84, height: 84 }} />
-        <FlexWidget style={{ flex: 1, flexDirection: "column", marginLeft: 14 }}>
+        <FlexWidget style={{ flex: 1, width: 0, flexDirection: "column", marginLeft: 14 }}>
           <FlexWidget style={{ width: "match_parent", flexDirection: "row", alignItems: "center" }}>
             <TextWidget text={`// ${p.modeLabel}`} style={{ fontSize: 10, color: hex(p.color), fontFamily: REGULAR, letterSpacing: 1 }} />
-            <FlexWidget style={{ flex: 1 }} />
+            <FlexWidget style={{ flex: 1, width: 0 }} />
             <Dots n={p.sessions} total={p.sessionsTotal} color={p.color} />
           </FlexWidget>
           <TextWidget
             text={p.headline}
             style={{ fontSize: p.state === "running" ? 20 : 26, color: C.textPrimary, fontFamily: BOLD, marginTop: 4 }}
           />
-          <FlexWidget style={{ marginTop: 6 }}>
+          <FlexWidget style={{ width: "match_parent", marginTop: 6 }}>
             <ModeChips p={p} />
           </FlexWidget>
           <FlexWidget style={{ width: "match_parent", flexDirection: "row", marginTop: 8 }}>
@@ -210,13 +150,13 @@ export function Pomodoro4x2(p: PomoProps) {
 export function Pomodoro2x2(p: PomoProps) {
   return (
     <Panel color={p.color} label="Pomodoro widget">
-      <FlexWidget style={{ flex: 1, flexDirection: "column", padding: 10 }}>
+      <FlexWidget style={{ flex: 1, width: 0, height: "match_parent", flexDirection: "column", padding: 10 }}>
         <FlexWidget style={{ width: "match_parent", flexDirection: "row", alignItems: "center" }}>
           <TextWidget text={`// ${p.mode === "focus" ? "FOCUS" : "BREAK"}`} style={{ fontSize: 10, color: hex(p.color), fontFamily: REGULAR, letterSpacing: 1 }} />
-          <FlexWidget style={{ flex: 1 }} />
+          <FlexWidget style={{ flex: 1, width: 0 }} />
           <Dots n={p.sessions} total={p.sessionsTotal} color={p.color} />
         </FlexWidget>
-        <FlexWidget style={{ flex: 1, width: "match_parent", alignItems: "center", justifyContent: "center" }}>
+        <FlexWidget style={{ flex: 1, height: 0, width: "match_parent", alignItems: "center", justifyContent: "center" }}>
           <TextWidget
             text={p.headline}
             style={{ fontSize: p.state === "running" ? 17 : 26, color: C.textPrimary, fontFamily: BOLD }}
