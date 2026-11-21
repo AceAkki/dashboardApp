@@ -88,7 +88,10 @@ const UserProfile = () => {
     updateUser,
     BootOption,
     updateBootOption,
-    updateLastBackup
+    updateLastBackup,
+    lastBackup,
+    backupEvery,
+    rewindEvery
   } = useUserStore(
     useShallow((st) => ({
       username: st.username,
@@ -98,7 +101,8 @@ const UserProfile = () => {
       updateUser: st.updateUser,
       BootOption: st.BootOption,
       updateBootOption: st.updateBootOption,
-      updateLastBackup:st.updateLastBackup
+      updateLastBackup:st.updateLastBackup,
+      lastBackup:st.lastBackup, backupEvery:st.backupEvery, rewindEvery:st.rewindEvery
     })),
   );
   const { gitStatData, fetchTime, expiresAt, gitInvalidate } = useGitStore(
@@ -464,6 +468,23 @@ const UserProfile = () => {
                   onPress={() => importBackup("file")} />
                 <Button variant="secondary" label="Paste"
                   onPress={() => importBackup("clipboard")} />
+              </ButtonRow>
+            </Block>
+
+            <Block title="Last_BackUp" hint="Backup Details">
+              <InfoRow
+                label="LAST_BACKUP_TIME"
+                value={lastBackup}
+              />
+              <InfoRow
+                label="BACKUP_EVERY"
+                value={backupEvery.toString()}
+              />
+             <ButtonRow>
+                <Button icon="time-outline" style={s.flex} label="Update Time"
+                  onPress={() => {
+                    // updateBackupEvery();
+                  }} />
               </ButtonRow>
             </Block>
 
