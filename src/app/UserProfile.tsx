@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useShallow } from "zustand/shallow";
 import {
+  Alert,
   Image,
   Platform,
   ScrollView,
@@ -37,7 +38,7 @@ import Status from "@/components/ctos/Status";
 import Corners from "@/components/ctos/Corners";
 
 // stores
-import { useUserStore } from "@/features/auth/useAuthStore";
+import { useUserStore, BackupType } from "@/features/auth/useAuthStore";
 import {
   useGitStore,
   type GitStore,
@@ -64,6 +65,8 @@ import { openExactAlarmSettings } from "@/global/exactAlarm";
 import { APP_TAG } from "@/global/appInfo";
 import { feedback } from "@/hooks/useFeedback";
 import { bootMap } from "@/global/bootMap";
+
+import BackUpPickerSheet from "@/components/ctos/BackupPickerSheet"
 
 // hooks
 import useNotifications from "@/hooks/useNotifications";
@@ -92,7 +95,10 @@ const UserProfile = () => {
     updateBootOption,
     updateLastBackup,
     lastBackup,
+    currentBackupType,
+    updateBackupType,
     backupEvery,
+    updateBackupEvery,
     rewindEvery
   } = useUserStore(
     useShallow((st) => ({
@@ -103,8 +109,13 @@ const UserProfile = () => {
       updateUser: st.updateUser,
       BootOption: st.BootOption,
       updateBootOption: st.updateBootOption,
+      lastBackup:st.lastBackup, 
       updateLastBackup:st.updateLastBackup,
-      lastBackup:st.lastBackup, backupEvery:st.backupEvery, rewindEvery:st.rewindEvery
+      currentBackupType:st.currentBackupType,
+      updateBackupType:st.updateBackupType,
+      backupEvery:st.backupEvery, 
+      updateBackupEvery:st.updateBackupEvery,
+      rewindEvery:st.rewindEvery
     })),
   );
   const { gitStatData, fetchTime, expiresAt, gitInvalidate } = useGitStore(
@@ -139,6 +150,7 @@ const UserProfile = () => {
   const [longitude, setLongitude] = useState(String(location.longitude));
   const [errors, setErrors] = useState<Errors>({});
   const [avatarFailed, setAvatarFailed] = useState(false);
+  const [isEditingBackup, setIsEditingBackup] = useState(false);
   const [remindDay, setRemindDay] = useState(0);
   const [remindHour, setRemindHour] = useState(0);
 
@@ -453,7 +465,7 @@ const UserProfile = () => {
         </Panel>
 
         {/* data */}
-        <Panel title="Data">
+        <Panel title="Data and Boot">
           <View style={{ gap: 8 }}>
             <Block
               title="BACKUP"
@@ -482,28 +494,28 @@ const UserProfile = () => {
               />
               <InfoRow
                 label="BACKUP_EVERY"
-                value={(backupEvery / DAY).toString()}
+                value={`${backupEvery} ${currentBackupType}`}
               />
-             <ButtonRow>
-                <Field
-                  label="BACKUP_EVERY"
-                  error={"BACKUP EVERY CAN't BE EMPTY"}
-                  placeholder="BACKUP TIME"
-                  value={newUserID}
-                  onChangeText={setNewUserID}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardType="numbers-and-punctuation"
-                />
-                <View style={PickerStyles.drums}>
-                  <Drum label="Hour" count={30} value={remindDay} onChange={setRemindDay} />
-                </View>
-                <Button icon="time-outline" style={s.flex} label="Update"
+            
+            </Block>
+
+            <Block title="Update Backup Duration" hint="Backup by either Hour or Day">
+
+               <ButtonRow>
+                <Button icon="hourglass-outline" style={s.flex} label="Hour"
                   onPress={() => {
-                    // updateBackupEvery();
+                    setIsEditingBackup(true);
+                    updateBackupType("Hour");   
+                  }} />
+                <Button icon="timer-outline" style={s.flex} label="Day"
+                  onPress={() => {
+                    setIsEditingBackup(true);
+                    updateBackupType("Day");   
                   }} />
               </ButtonRow>
+
             </Block>
+
 
             <Block title="BOOT_SCREEN">
               <ChipRow>
@@ -606,6 +618,15 @@ const UserProfile = () => {
           </View>
         </Panel>
       </ScrollView>
+      {
+        isEditingBackup && 
+        <BackUpPickerSheet  
+          onCancel={() => setIsEditingBackup(false)}
+          onSet={(h) => {
+            updateBackupEvery(h);
+            setIsEditingBackup(false);
+          }}/>
+      }
     </CtosScreen>
   );
 };

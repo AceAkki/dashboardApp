@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 import {defaultBootKey} from "@/global/bootMap";
-import {DAY} from "@/global/backup";
+import {HOUR, DAY} from "@/global/backup";
 import { userKey } from "../../global/storageKeys";
 
 export type userType = {
@@ -15,9 +15,18 @@ export type userType = {
   themeType: "light" | "dark";
   location: { latitude: number; longitude: number };
   lastBackup:string;
+  currentBackupType:backUpKEY;
   backupEvery:number;
   rewindEvery:number;
 };
+
+export const BackupType = {
+  Hour : HOUR,
+  Day : DAY
+}
+type backUpKEY = keyof typeof BackupType;
+const backupTypes = Object.keys(BackupType) as backUpKEY[];
+const defaultBackupType = backupTypes[1];
 
 const initialState: userType = {
   username: "",
@@ -27,8 +36,9 @@ const initialState: userType = {
   themeType: "light",
   location: { latitude: 0, longitude: 0 },
   lastBackup: "",
-  backupEvery: 7 * DAY,
-  rewindEvery: DAY,
+  currentBackupType: defaultBackupType,
+  backupEvery: 7 * BackupType[defaultBackupType],
+  rewindEvery: BackupType[defaultBackupType],
 };
 
 interface UserStore extends userType {
@@ -43,6 +53,7 @@ interface UserStore extends userType {
   updateBackground: (url: string) => void;
   logOutUser: () => void;
   updateLastBackup: (dateString:string) => void;
+  updateBackupType:(type:backUpKEY) => void,
   updateBackupEvery:(day:number) => void;
 }
 
@@ -64,6 +75,7 @@ export const useUserStore = create<UserStore>()(
       updateBackground: (url) => set(() => ({ backgroundURL: url })),
       logOutUser: () => set(initialState),
       updateLastBackup: (dateString)=> set(()=> ({lastBackup:dateString})),
+      updateBackupType: (type) => set(() => ({currentBackupType:type})),
       updateBackupEvery:(number) => set(() => ({backupEvery:number}))
     }),
     {

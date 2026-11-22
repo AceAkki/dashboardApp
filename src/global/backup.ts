@@ -32,7 +32,8 @@ const MAX_TASKS = 5000;
 const MAX_SNIPPETS = 2000;
 const MAX_SESSIONS = 1_000_000;
 const STANDUP_FIELDS: StandupField[] = ["yesterday", "today", "blocked"];
-export const DAY = 24 * 60 * 60 * 1000;
+export const HOUR = 60 * 60 * 1000;
+export const DAY = 24 * HOUR;
 
 type Standup = Record<StandupField, string>;
 
