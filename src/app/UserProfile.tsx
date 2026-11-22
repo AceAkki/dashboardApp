@@ -58,8 +58,6 @@ import { usePomodoroStore } from "@/features/pomodoro/hooks/pomodoroStore";
 import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
 import { ctosAlert, ctosPrompt } from "@/global/ctosAlert";
 import { DAY, exportToClipboard, exportToFile, importBackup } from "@/global/backup";
-import Drum, { DRUM_ITEM, } from "@/components/ctos/Drum";
-import{ styles as PickerStyles } from "@/components/ctos/TimePickerSheet";
 import { dateFormat } from "@/global/globalFunctions";
 import { openExactAlarmSettings } from "@/global/exactAlarm";
 import { APP_TAG } from "@/global/appInfo";
@@ -151,8 +149,6 @@ const UserProfile = () => {
   const [errors, setErrors] = useState<Errors>({});
   const [avatarFailed, setAvatarFailed] = useState(false);
   const [isEditingBackup, setIsEditingBackup] = useState(false);
-  const [remindDay, setRemindDay] = useState(0);
-  const [remindHour, setRemindHour] = useState(0);
 
   // every time editing starts, the fields show what is saved right now
   const startEdit = () => {
@@ -494,7 +490,7 @@ const UserProfile = () => {
               />
               <InfoRow
                 label="BACKUP_EVERY"
-                value={`${backupEvery} ${currentBackupType}`}
+                value={`${backupEvery / BackupType[currentBackupType]} ${currentBackupType}`}
               />
             
             </Block>
@@ -504,13 +500,13 @@ const UserProfile = () => {
                <ButtonRow>
                 <Button icon="hourglass-outline" style={s.flex} label="Hour"
                   onPress={() => {
-                    setIsEditingBackup(true);
                     updateBackupType("Hour");   
+                    setIsEditingBackup(true);
                   }} />
                 <Button icon="timer-outline" style={s.flex} label="Day"
                   onPress={() => {
-                    setIsEditingBackup(true);
                     updateBackupType("Day");   
+                    setIsEditingBackup(true);
                   }} />
               </ButtonRow>
 
@@ -623,7 +619,7 @@ const UserProfile = () => {
         <BackUpPickerSheet  
           onCancel={() => setIsEditingBackup(false)}
           onSet={(h) => {
-            updateBackupEvery(h);
+            updateBackupEvery(h * BackupType[currentBackupType]);
             setIsEditingBackup(false);
           }}/>
       }

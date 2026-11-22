@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
