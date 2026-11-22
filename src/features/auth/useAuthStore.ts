@@ -64,7 +64,7 @@ export const useUserStore = create<UserStore>()(
       updateBackground: (url) => set(() => ({ backgroundURL: url })),
       logOutUser: () => set(initialState),
       updateLastBackup: (dateString)=> set(()=> ({lastBackup:dateString})),
-      updateBackupEvery:(number) => set(() => ({backupEvery:number * DAY}))
+      updateBackupEvery:(number) => set(() => ({backupEvery:number}))
     }),
     {
       name: userKey,

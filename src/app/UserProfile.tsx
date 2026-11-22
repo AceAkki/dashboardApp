@@ -56,7 +56,9 @@ import { usePomodoroStore } from "@/features/pomodoro/hooks/pomodoroStore";
 // functions
 import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
 import { ctosAlert, ctosPrompt } from "@/global/ctosAlert";
-import { exportToClipboard, exportToFile, importBackup } from "@/global/backup";
+import { DAY, exportToClipboard, exportToFile, importBackup } from "@/global/backup";
+import Drum, { DRUM_ITEM, } from "@/components/ctos/Drum";
+import{ styles as PickerStyles } from "@/components/ctos/TimePickerSheet";
 import { dateFormat } from "@/global/globalFunctions";
 import { openExactAlarmSettings } from "@/global/exactAlarm";
 import { APP_TAG } from "@/global/appInfo";
@@ -137,6 +139,8 @@ const UserProfile = () => {
   const [longitude, setLongitude] = useState(String(location.longitude));
   const [errors, setErrors] = useState<Errors>({});
   const [avatarFailed, setAvatarFailed] = useState(false);
+  const [remindDay, setRemindDay] = useState(0);
+  const [remindHour, setRemindHour] = useState(0);
 
   // every time editing starts, the fields show what is saved right now
   const startEdit = () => {
@@ -474,14 +478,27 @@ const UserProfile = () => {
             <Block title="Last_BackUp" hint="Backup Details">
               <InfoRow
                 label="LAST_BACKUP_TIME"
-                value={lastBackup}
+                value={lastBackup ? lastBackup : "NO BACKUP"}
               />
               <InfoRow
                 label="BACKUP_EVERY"
-                value={backupEvery.toString()}
+                value={(backupEvery / DAY).toString()}
               />
              <ButtonRow>
-                <Button icon="time-outline" style={s.flex} label="Update Time"
+                <Field
+                  label="BACKUP_EVERY"
+                  error={"BACKUP EVERY CAN't BE EMPTY"}
+                  placeholder="BACKUP TIME"
+                  value={newUserID}
+                  onChangeText={setNewUserID}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardType="numbers-and-punctuation"
+                />
+                <View style={PickerStyles.drums}>
+                  <Drum label="Hour" count={30} value={remindDay} onChange={setRemindDay} />
+                </View>
+                <Button icon="time-outline" style={s.flex} label="Update"
                   onPress={() => {
                     // updateBackupEvery();
                   }} />

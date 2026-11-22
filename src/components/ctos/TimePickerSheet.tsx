@@ -92,7 +92,7 @@ export default function TimePickerSheet({ initial, onCancel, onSet }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   big: {
     ...text.caption,
     fontFamily: Typography.primary_bold,
