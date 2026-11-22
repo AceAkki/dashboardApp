@@ -2,7 +2,7 @@ import { ScrollView, Text, View } from "react-native";
 
 import Corners from "@/components/ctos/Corners";
 import Task from "./Task";
-import { ALL_TAB } from "../taskTypeUtils";
+import { ALL_TAB, isFinished } from "../taskTypeUtils";
 import { matchTasks } from "../taskTags";
 import type { TasksMainProps } from "../taskTypes";
 import tasksMainStyles from "./tasksMainStyles";
