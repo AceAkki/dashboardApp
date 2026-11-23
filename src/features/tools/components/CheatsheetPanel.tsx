@@ -53,15 +53,17 @@ export default function CheatsheetPanel({ sections, placeholder }: Props) {
   return (
     <Stack>
       <SearchField value={query} onChangeText={setQuery} placeholder={placeholder ?? "map · filter · async"} />
-      {shown.map((s) => (
-        <Stack key={s.title}>
-          <Sub>{s.title.toUpperCase()}</Sub>
-          {s.items.map((item, i) => (
-            <SnippetRow key={`${s.title}-${i}`} item={item} />
-          ))}
-        </Stack>
-      ))}
-      {shown.length === 0 ? <EmptyState text="nothing matches" /> : null}
+      <Stack>
+        {shown.map((s) => (
+          <Stack key={s.title}>
+            <Sub>{s.title.toUpperCase()}</Sub>
+            {s.items.map((item, i) => (
+              <SnippetRow key={`${s.title}-${i}`} item={item} />
+            ))}
+          </Stack>
+        ))}
+        {shown.length === 0 ? <EmptyState text="nothing matches" /> : null}
+      </Stack>
     </Stack>
   );
 }

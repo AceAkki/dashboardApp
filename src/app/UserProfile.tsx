@@ -492,7 +492,6 @@ const UserProfile = () => {
                 label="BACKUP_EVERY"
                 value={`${backupEvery / BackupType[currentBackupType]} ${currentBackupType}`}
               />
-            
             </Block>
 
             <Block title="Update Backup Duration" hint="Backup by either Hour or Day">
