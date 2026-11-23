@@ -7,6 +7,7 @@ import { Platform } from "react-native";
 import { registerWidgetTaskHandler } from "react-native-android-widget";
 
 import { widgetTaskHandler } from "./src/features/widgets/widgetTaskHandler";
+import "./src/global/snoozeTask";
 
 if (Platform.OS === "android") {
   registerWidgetTaskHandler(widgetTaskHandler);
