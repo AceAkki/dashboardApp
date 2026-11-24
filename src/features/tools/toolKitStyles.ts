@@ -53,7 +53,7 @@ const kit = StyleSheet.create({
   tileBlurb: { ...text.muted, fontSize: fontSize.xs, marginTop: 2 },
 
   // inside a panel
-  stack: { gap: 12 },
+  stack: { gap: 12, marginVertical:5 },
   sub: { ...text.caption, color: Colors.primary, marginTop: 4 },
 
   // text field

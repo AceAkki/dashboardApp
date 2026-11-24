@@ -18,10 +18,10 @@ export default function Tool() {
     );
   }
 
-  const { Component, bare } = tool;
+  const { Component, bare, fill } = tool;
   return (
-    <ToolScreen title={tool.title}>
-      {bare ? (
+    <ToolScreen title={tool.title} scroll={!fill}>
+      {bare  || fill ? (
         <Component />
       ) : (
         <Panel>

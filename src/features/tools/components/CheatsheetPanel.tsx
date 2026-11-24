@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView, useWindowDimensions } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { Typography } from "@/constants/Typography";
@@ -11,7 +11,13 @@ import { fontSize, insetBase, text } from "@/style/globalStyles";
 
 import { searchCheatsheet, type CheatItem, type CheatSection } from "../logic/cheatsheet";
 import SearchField from "@/components/ctos/SearchField";
+import Chip from "@/components/ctos/Chip";
+import ChipRow from "@/components/ctos/ChipRow";
+import CtosScreen from "@/components/ctos/CtosScreen";
+import Panel from "@/components/ctos/Panel"
+
 import { Stack, Sub } from "../toolKit";
+import toolsStyles from "../toolsStyles";
 
 // one snippet; tapping it copies it
 function SnippetRow({ item }: { item: CheatItem }) {
@@ -48,23 +54,53 @@ type Props = {
 // A searchable, tap-to-copy cheatsheet. Give it sections, it does the rest.
 export default function CheatsheetPanel({ sections, placeholder }: Props) {
   const [query, setQuery] = useState("");
-  const shown = searchCheatsheet(sections, query);
+  const [picked, setPicked] = useState<string | null>(null);
+  const section = sections.some((s) => s.title === picked) ? picked : null;
+  const shown = searchCheatsheet(section ? sections.filter((s) => s.title === section) : sections, query);
+  const {height} = useWindowDimensions();
 
   return (
-    <Stack>
-      <SearchField value={query} onChangeText={setQuery} placeholder={placeholder ?? "map · filter · async"} />
-      <Stack>
-        {shown.map((s) => (
-          <Stack key={s.title}>
-            <Sub>{s.title.toUpperCase()}</Sub>
-            {s.items.map((item, i) => (
-              <SnippetRow key={`${s.title}-${i}`} item={item} />
+    <CtosScreen>
+      <View style={toolsStyles.sheetScroll}>
+        <SearchField value={query} onChangeText={setQuery} placeholder={placeholder ?? "map · filter · async"} />
+      </View>
+      
+      <View style={toolsStyles.sheetBody}>
+        {sections.length > 1 ? (
+          <View>
+            <ChipRow layout="scroll">
+              <Chip label="ALL" selected={!section} onPress={() => setPicked(null)} />
+              {sections.map((s) => (
+                <Chip
+                  key={s.title}
+                  label={s.title.toUpperCase()}
+                  count={s.items.length}
+                  selected={s.title === section}
+                  onPress={() => setPicked(s.title)}
+                />
+              ))}
+            </ChipRow>
+          </View>
+        ) : null}
+        <Panel style={[toolsStyles.vaultPanel, {height:height}]}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{ paddingBottom: 72 }}
+          >
+            {shown.map((s) => (
+              <Stack key={s.title}>
+                <Sub>{s.title.toUpperCase()}</Sub>
+                {s.items.map((item, i) => (
+                  <SnippetRow key={`${s.title}-${i}`} item={item} />
+                ))}
+              </Stack>
             ))}
-          </Stack>
-        ))}
-        {shown.length === 0 ? <EmptyState text="nothing matches" /> : null}
-      </Stack>
-    </Stack>
+          </ScrollView>
+          {shown.length === 0 ? <EmptyState text="nothing matches" /> : null}
+        </Panel>
+      </View>
+    </CtosScreen>
   );
 }
 

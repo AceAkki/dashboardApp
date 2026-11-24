@@ -85,42 +85,53 @@ export function ToolGroup({
   );
 }
 
+
 // A full screen tool: back link, title, scrolling body.
 export function ToolScreen({
   title,
   children,
+  scroll
 }: {
   title: string;
   children: ReactNode;
+  scroll?: boolean
 }) {
   const router = useRouter();
   // const goBack = () => router.canGoBack() ? router.back() : router.replace("/Tools");
   const goBack = () => router.replace("/Tools");
 
+  const ToolScreenHeader = <View>
+        <CtosPressable onPress={goBack} style={kit.back} hitSlop={8} pressedStyle={{ opacity: 0.6 }}>
+          <Ionicons name="chevron-back" size={14} color={Colors.primary} />
+          <Text style={kit.backTxt}>TOOLS</Text>
+        </CtosPressable>
+            {/* Text style={globalStyles.sectionLabel}>{}</Text> */}
+            <View style={globalStyles.header}>
+              <Text style={globalStyles.sectionLabel}>{`${APP_TAG}Main`}</Text>
+              <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
+                <CtosText style={[globalStyles.textHeading, { marginTop: 6 }]}>
+                  {title}
+                </CtosText>
+              </View>            
+        </View>
+      </View>
+
   return (
     <CtosScreen>
-      <ScrollView
+      {scroll ? <ScrollView
         contentContainerStyle={kit.scroll}
         keyboardShouldPersistTaps="handled"
         automaticallyAdjustKeyboardInsets
       >
-        <View>
-          <CtosPressable onPress={goBack} style={kit.back} hitSlop={8} pressedStyle={{ opacity: 0.6 }}>
-            <Ionicons name="chevron-back" size={14} color={Colors.primary} />
-            <Text style={kit.backTxt}>TOOLS</Text>
-          </CtosPressable>
-          {/* Text style={globalStyles.sectionLabel}>{}</Text> */}
-          <View style={globalStyles.header}>
-            <Text style={globalStyles.sectionLabel}>{`${APP_TAG}Main`}</Text>
-            <View style={[globalStyles.cardHead, { marginTop: 6 }]}>
-              <CtosText style={[globalStyles.textHeading, { marginTop: 6 }]}>
-                {title}
-              </CtosText>
-            </View>
-          </View>
-        </View>
+        {ToolScreenHeader}
         {children}
       </ScrollView>
+      :
+      <View style={{ flex: 1, padding: 16, paddingBottom: 0 }}>
+        {ToolScreenHeader}
+        {children}
+      </View>
+      }
     </CtosScreen>
   );
 }

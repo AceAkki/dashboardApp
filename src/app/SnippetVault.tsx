@@ -17,7 +17,6 @@ import SnippetForm from "@/features/tools/components/SnippetForm";
 import { filterSnippets, tagCounts } from "@/features/tools/snippetTags";
 
 import globalStyles from "@/style/globalStyles";
-import styles from "@/features/tools/toolsStyles";
 import { useShallow } from "zustand/shallow";
 import { APP_TAG } from "@/global/appInfo";
 import toolsStyles from "@/features/tools/toolsStyles";
@@ -60,10 +59,10 @@ export default function SnippetVault() {
         />
       </View>
 
-      <View style={styles.vaultBody}>
+      <View style={toolsStyles.vaultBody}>
         {tags.length > 0 ? (
           <View>
-            <ChipRow>
+            <ChipRow layout="scroll">
               {[{ tag: null as string | null, count: snippets.length }, ...tags].map((t) => (
                 <Chip
                   key={t.tag ?? "all"}
@@ -83,7 +82,7 @@ export default function SnippetVault() {
           </Text>
         ) : null}
 
-        <Panel style={styles.vaultPanel}>
+        <Panel style={toolsStyles.vaultPanel}>
           <ScrollView
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
