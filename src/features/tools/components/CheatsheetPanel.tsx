@@ -60,7 +60,7 @@ export default function CheatsheetPanel({ sections, placeholder }: Props) {
   const {height} = useWindowDimensions();
 
   return (
-    <CtosScreen>
+    <View style={{flex:1}}>
       <View style={toolsStyles.sheetScroll}>
         <SearchField value={query} onChangeText={setQuery} placeholder={placeholder ?? "map · filter · async"} />
       </View>
@@ -100,7 +100,7 @@ export default function CheatsheetPanel({ sections, placeholder }: Props) {
           {shown.length === 0 ? <EmptyState text="nothing matches" /> : null}
         </Panel>
       </View>
-    </CtosScreen>
+    </View>
   );
 }
 

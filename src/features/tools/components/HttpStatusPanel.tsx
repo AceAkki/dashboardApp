@@ -9,6 +9,7 @@ import ChipRow from "@/components/ctos/ChipRow";
 import Hint from "@/components/ctos/Hint";
 import { Chip, Field, Stack } from "../toolKit";
 import { fontSize, insetBase, text } from "@/style/globalStyles";
+import toolsStyles from "../toolsStyles";
 
 export default function HttpStatusPanel() {
   const [query, setQuery] = useState("");
@@ -17,37 +18,41 @@ export default function HttpStatusPanel() {
   const found = searchStatus(query, classKey);
 
   return (
-    <>
-      <Panel title="SEARCH">
-        <Stack>
-          <Field label="CODE, NAME OR WORD" value={query} onChangeText={setQuery} placeholder="404 · timeout · redirect" />
-          <ChipRow>
-            <Chip label="ALL" active={classKey === null} onPress={() => setClassKey(null)} />
-            {STATUS_CLASSES.map((c) => (
-              <Chip key={c.key} label={c.key} active={classKey === c.key} onPress={() => setClassKey(c.key)} />
-            ))}
-          </ChipRow>
-        </Stack>
-      </Panel>
+    <View style={{flex:1}}>
+      <View style={toolsStyles.sheetScroll}>
+        <Panel title="SEARCH">
+          <Stack>
+            <Field label="CODE, NAME OR WORD" value={query} onChangeText={setQuery} placeholder="404 · timeout · redirect" />
+            <ChipRow>
+              <Chip label="ALL" active={classKey === null} onPress={() => setClassKey(null)} />
+              {STATUS_CLASSES.map((c) => (
+                <Chip key={c.key} label={c.key} active={classKey === c.key} onPress={() => setClassKey(c.key)} />
+              ))}
+            </ChipRow>
+          </Stack>
+        </Panel>
+      </View>
 
-      <Panel title={`CODES · ${found.length}`}>
-        <Stack>
-          {found.map((s) => {
-            const cls = classOf(s.code);
-            return (
-              <View key={s.code} style={[styles.row, { borderLeftColor: cls.color }]}>
-                <Text style={[styles.code, { color: cls.color }]}>{s.code}</Text>
-                <View style={styles.body}>
-                  <Text style={styles.name}>{s.name}</Text>
-                  <Text style={styles.text}>{s.text}</Text>
+      <View style={toolsStyles.sheetBody}>
+        <Panel title={`CODES · ${found.length}`} style={toolsStyles.vaultPanel}>
+          <Stack>
+            {found.map((s) => {
+              const cls = classOf(s.code);
+              return (
+                <View key={s.code} style={[styles.row, { borderLeftColor: cls.color }]}>
+                  <Text style={[styles.code, { color: cls.color }]}>{s.code}</Text>
+                  <View style={styles.body}>
+                    <Text style={styles.name}>{s.name}</Text>
+                    <Text style={styles.text}>{s.text}</Text>
+                  </View>
                 </View>
-              </View>
-            );
-          })}
-          {found.length === 0 ? <Hint>NOTHING MATCHES</Hint> : null}
-        </Stack>
-      </Panel>
-    </>
+              );
+            })}
+            {found.length === 0 ? <Hint>NOTHING MATCHES</Hint> : null}
+          </Stack>
+        </Panel>
+      </View>
+    </View>
   );
 }
 
