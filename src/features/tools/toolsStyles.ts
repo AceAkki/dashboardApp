@@ -68,7 +68,7 @@ const toolsStyles = StyleSheet.create({
   vaultPanel: { flex: 1 },
 
   // cheatsheet
-  sheetScroll: {paddingBottom: 16, gap: 12 },
+  sheetScroll: {paddingVertical: 16, gap: 12 },
   sheetBody: { flex: 1, paddingHorizontal: 0, paddingBottom: 16, gap: 12 },
 });
 

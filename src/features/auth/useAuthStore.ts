@@ -77,6 +77,7 @@ export const useUserStore = create<UserStore>()(
       updateLastBackup: (dateString)=> set(()=> ({lastBackup:dateString})),
       updateBackupType: (type) => set(() => ({currentBackupType:type})),
       updateBackupEvery:(number) => set(() => ({backupEvery:number}))
+      // autobackup update
     }),
     {
       name: userKey,
