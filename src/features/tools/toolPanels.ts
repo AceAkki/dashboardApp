@@ -55,7 +55,7 @@ export const TOOL_PANELS: ToolPanelEntry[] = [
   { id: "regex", title: "REGEX TESTER", blurb: "Live matches, highlighted", icon: "code-slash-outline", group: "Developer", Component: RegexTesterPanel, bare: true },
   { id: "diff", title: "DIFF CHECKER", blurb: "Compare two texts", icon: "git-compare-outline", group: "Developer", Component: DiffCheckerPanel, bare: true },
   { id: "encrypt", title: "ENCRYPT / DECRYPT", blurb: "AES-256, on the device", icon: "lock-closed-outline", group: "Security", Component: EncryptionPanel, bare: true },
-  { id: "http", title: "HTTP STATUS CODES", blurb: "Every code explained", icon: "swap-vertical-outline", group: "Reference", Component: HttpStatusPanel, bare: true },
+  { id: "http", title: "HTTP STATUS CODES", blurb: "Every code explained", icon: "swap-vertical-outline", group: "Reference", Component: HttpStatusPanel, bare: true,  fill: true  },
   { id: "git", title: "GIT CHEATSHEET", blurb: "Tap a command to copy", icon: "git-branch-outline", group: "Reference", Component: GitCheatsheetPanel, bare: true,  fill: true  },
   { id: "js", title: "JS CHEATSHEET", blurb: "Tap a snippet to copy", icon: "logo-javascript", group: "Reference", Component: JsCheatsheetPanel, bare: true,  fill: true  },
   { id: "python", title: "PYTHON CHEATSHEET", blurb: "Tap a snippet to copy", icon: "logo-python", group: "Reference", Component: PythonCheatsheetPanel, bare: true,  fill: true  },

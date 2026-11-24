@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 
 import Panel from "@/components/ctos/Panel";
 import { Colors } from "@/constants/Colors";
@@ -35,6 +35,11 @@ export default function HttpStatusPanel() {
 
       <View style={toolsStyles.sheetBody}>
         <Panel title={`CODES · ${found.length}`} style={toolsStyles.vaultPanel}>
+            <ScrollView
+                      showsVerticalScrollIndicator={false}
+                      keyboardShouldPersistTaps="handled"
+                      contentContainerStyle={{ paddingBottom: 72 }}
+                    >
           <Stack>
             {found.map((s) => {
               const cls = classOf(s.code);
@@ -50,6 +55,7 @@ export default function HttpStatusPanel() {
             })}
             {found.length === 0 ? <Hint>NOTHING MATCHES</Hint> : null}
           </Stack>
+          </ScrollView>
         </Panel>
       </View>
     </View>
