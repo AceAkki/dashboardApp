@@ -89,6 +89,7 @@ export default function CheatsheetPanel({ sections, placeholder }: Props) {
             contentContainerStyle={{ paddingBottom: 72 }}
           >
             {shown.map((s) => (
+              
               <Stack key={s.title}>
                 <Sub>{s.title.toUpperCase()}</Sub>
                 {s.items.map((item, i) => (
