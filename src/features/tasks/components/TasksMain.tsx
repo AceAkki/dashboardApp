@@ -2,7 +2,7 @@ import { ScrollView, Text, View } from "react-native";
 
 import Corners from "@/components/ctos/Corners";
 import Task from "./Task";
-import { ALL_TAB, isFinished } from "../taskTypeUtils";
+import { ALL_TAB, DEFAULT_KIND, isFinished, taskKindOf } from "../taskTypeUtils";
 import { matchTasks } from "../taskTags";
 import type { TasksMainProps } from "../taskTypes";
 import tasksMainStyles from "./tasksMainStyles";
@@ -21,6 +21,27 @@ const TasksMain = ({ taskData, Type, tag = null, query = "" }: TasksMainProps) =
   // the tab, the tag chip and the search all apply together
   const filterTasks = matchTasks(inTab, tag, query);
   const filtering = !!tag || !!query.trim();
+
+  // sorted filter tasks so done tasks always appear at end
+  filterTasks.sort((a, b) => {
+    const aIsFinished = isFinished(taskKindOf(a.type));
+    const bIsFinished = isFinished(taskKindOf(b.type));
+    const aIsDefault = taskKindOf(a.type) === DEFAULT_KIND;
+    const bIsDefault = taskKindOf(b.type) === DEFAULT_KIND;
+
+    // this pushes all finished to last
+    if (aIsFinished !== bIsFinished) {
+      return aIsFinished ? 1 : -1;
+    } 
+
+    // puts default at last of that list
+    if (aIsDefault !== bIsDefault) {
+      return aIsDefault ? 1 : -1;
+    } 
+    else {
+      return 0
+    }
+  });
 
   return (
     <View style={tasksMainStyles.tasksMainWrap}>
