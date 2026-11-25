@@ -124,6 +124,7 @@ export function runCommand(
       return { ok: true, message: `OPENING ${target.toUpperCase()}` };
     }
 
+    // init added for ease of use
     case "init": {
       const targetApp = rest.join("").trim().toLowerCase();
       if (!targetApp) return { ok: false, message: "USAGE: init <app name>" };
