@@ -42,7 +42,7 @@ note <text> \n\n
 snip <title> |&| <code> \n\n
 pomo start|pause|reset \n\n
 go ${routesGo.join(dividerTxt)} \n\n
-start ${appsIDs.join(dividerTxt)}`;
+init ${appsIDs.join(dividerTxt)}`;
 
 const makeId = () =>
   `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
@@ -124,9 +124,9 @@ export function runCommand(
       return { ok: true, message: `OPENING ${target.toUpperCase()}` };
     }
 
-    case "start": {
+    case "init": {
       const targetApp = rest.join("").trim().toLowerCase();
-      if (!targetApp) return { ok: false, message: "USAGE: start <app name>" };
+      if (!targetApp) return { ok: false, message: "USAGE: init <app name>" };
       let selectedApp = useToolsStore
         .getState()
         .apps?.find((app) => app.id === targetApp);
