@@ -306,22 +306,6 @@ const cancelled = (e: unknown) =>
   e instanceof Error && /cancel/i.test(e.message);
 
 export async function exportToFile() {
-  // const savedfolderURI = "content://com.android.externalstorage.documents/tree/primary%3ADownload%2FtGrid/";
-
-  //   try {
-  //     const newDir = new Directory(savedfolderURI);
-  //     const file = newDir.createFile(
-  //     `test-${Date.now()}.json`,
-  //     "application/json",
-  //     );
-  //     file.write(JSON.stringify({test:"testing 12"}, null, 2));
-  //     ctosAlert("Test", `saved as ${file.name}.`);
-  //     return
-  //   } catch (e) {
-  //       if (!cancelled(e)) fail("Couldn't save the backup", e);
-  //       return
-  //   }
-
   try {
     const b = buildBackup();
     // the system folder picker: on Android it includes Google Drive
