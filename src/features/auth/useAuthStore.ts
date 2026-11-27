@@ -55,6 +55,7 @@ interface UserStore extends userType {
   updateBackground: (url: string) => void;
   logOutUser: () => void;
   updateLastBackup: (dateString:string) => void;
+  setBackupFolder: (path:string) => void;
   updateBackupType:(type:backUpKEY) => void,
   updateBackupEvery:(day:number) => void;
 }
@@ -77,6 +78,7 @@ export const useUserStore = create<UserStore>()(
       updateBackground: (url) => set(() => ({ backgroundURL: url })),
       logOutUser: () => set(initialState),
       updateLastBackup: (dateString)=> set(()=> ({lastBackup:dateString})),
+      setBackupFolder: (path)=> set(()=> ({backupFolder:path})),
       updateBackupType: (type) => set(() => ({currentBackupType:type})),
       updateBackupEvery:(number) => set(() => ({backupEvery:number}))
       // autobackup update
