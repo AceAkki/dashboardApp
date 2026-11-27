@@ -37,6 +37,7 @@ const initialState: userType = {
   themeType: "light",
   location: { latitude: 0, longitude: 0 },
   lastBackup: "",
+  backupFolder: null,
   currentBackupType: defaultBackupType,
   backupEvery: 7 * BackupType[defaultBackupType],
   rewindEvery: BackupType[defaultBackupType],
