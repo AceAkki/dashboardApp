@@ -57,7 +57,7 @@ import { usePomodoroStore } from "@/features/pomodoro/hooks/pomodoroStore";
 // functions
 import { getCoords, isGitId, parseCoord } from "@/features/auth/profileFields";
 import { ctosAlert, ctosPrompt } from "@/global/ctosAlert";
-import { DAY, exportToClipboard, exportToFile, importBackup } from "@/global/backup";
+import { DAY, exportToClipboard, exportToFile, importBackup, chooseBackupFolder } from "@/global/backup";
 import { dateFormat } from "@/global/globalFunctions";
 import { openExactAlarmSettings } from "@/global/exactAlarm";
 import { APP_TAG } from "@/global/appInfo";
@@ -97,7 +97,8 @@ const UserProfile = () => {
     updateBackupType,
     backupEvery,
     updateBackupEvery,
-    rewindEvery
+    rewindEvery,
+    setAutoBackup
   } = useUserStore(
     useShallow((st) => ({
       username: st.username,
@@ -113,7 +114,8 @@ const UserProfile = () => {
       updateBackupType:st.updateBackupType,
       backupEvery:st.backupEvery, 
       updateBackupEvery:st.updateBackupEvery,
-      rewindEvery:st.rewindEvery
+      rewindEvery:st.rewindEvery,
+      setAutoBackup:st.setAutoBackup
     })),
   );
   const { gitStatData, fetchTime, expiresAt, gitInvalidate } = useGitStore(
@@ -507,6 +509,22 @@ const UserProfile = () => {
                     updateBackupType("Day");   
                     setIsEditingBackup(true);
                   }} />
+              </ButtonRow>
+
+            </Block>
+
+            <Block title="Setup AutoBackup" hint="Auto backup data as per the backup duration">
+
+               <ButtonRow>
+                <Button icon="cloud-upload-outline" style={s.flex} label="Backup Folder"
+                  onPress={() => {
+                  chooseBackupFolder();
+                  }} />
+                <Button icon="sync-outline" style={s.flex} label="Backup Folder"
+                  onPress={() => {
+                  setAutoBackup();
+                  }} />
+               
               </ButtonRow>
 
             </Block>

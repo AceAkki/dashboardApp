@@ -15,6 +15,7 @@ export type userType = {
   themeType: "light" | "dark";
   location: { latitude: number; longitude: number };
   lastBackup:string;
+  autoBackup:boolean;
   backupFolder:string | null;
   currentBackupType:backUpKEY;
   backupEvery:number;
@@ -37,6 +38,7 @@ const initialState: userType = {
   themeType: "light",
   location: { latitude: 0, longitude: 0 },
   lastBackup: "",
+  autoBackup: false,
   backupFolder: null,
   currentBackupType: defaultBackupType,
   backupEvery: 7 * BackupType[defaultBackupType],
@@ -56,6 +58,7 @@ interface UserStore extends userType {
   logOutUser: () => void;
   updateLastBackup: (dateString:string) => void;
   setBackupFolder: (path:string) => void;
+  setAutoBackup: () => void;
   updateBackupType:(type:backUpKEY) => void,
   updateBackupEvery:(day:number) => void;
 }
@@ -79,6 +82,7 @@ export const useUserStore = create<UserStore>()(
       logOutUser: () => set(initialState),
       updateLastBackup: (dateString)=> set(()=> ({lastBackup:dateString})),
       setBackupFolder: (path)=> set(()=> ({backupFolder:path})),
+      setAutoBackup: () => set((prev) => ({autoBackup: !prev})),
       updateBackupType: (type) => set(() => ({currentBackupType:type})),
       updateBackupEvery:(number) => set(() => ({backupEvery:number}))
     }),

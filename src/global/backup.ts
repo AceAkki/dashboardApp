@@ -305,6 +305,16 @@ const fail = (title: string, e: unknown) => {
 const cancelled = (e: unknown) =>
   e instanceof Error && /cancel/i.test(e.message);
 
+export async function chooseBackupFolder() {
+  try {
+    const folder = await Directory.pickDirectoryAsync();
+    useUserStore.getState().setBackupFolder(folder.uri);
+    feedback.success("BACKUP FOLDER SET");
+  } catch (e) {
+     if (!cancelled(e)) fail("Couldn't set the backup folder", e);
+  }
+}
+
 export async function exportToFile() {
   try {
     const b = buildBackup();
