@@ -306,18 +306,20 @@ const cancelled = (e: unknown) =>
   e instanceof Error && /cancel/i.test(e.message);
 
 export async function exportToFile() {
-  let savedfolderURI = "content://com.android.externalstorage.documents/tree/primary%3ADownload%2FtGrid/";
+  const savedfolderURI = "content://com.android.externalstorage.documents/tree/primary%3ADownload%2FtGrid/";
 
     try {
       const newDir = new Directory(savedfolderURI);
       const file = newDir.createFile(
-      `test-${new Date().toISOString().slice(0, 10)}.json`,
+      `test-${Date.now()}.json`,
       "application/json",
       );
       file.write(JSON.stringify({test:"testing 12"}, null, 2));
-      ctosAlert("Backup saved", `saved as ${file.name} at ${savedfolderURI}.`);
+      ctosAlert("Test", `saved as ${file.name}.`);
+      return
     } catch (e) {
         if (!cancelled(e)) fail("Couldn't save the backup", e);
+        return
     }
 
   try {

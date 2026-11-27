@@ -15,6 +15,7 @@ export type userType = {
   themeType: "light" | "dark";
   location: { latitude: number; longitude: number };
   lastBackup:string;
+  backupFolder:string | null;
   currentBackupType:backUpKEY;
   backupEvery:number;
   rewindEvery:number;
