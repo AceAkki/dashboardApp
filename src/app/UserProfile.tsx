@@ -90,6 +90,8 @@ const UserProfile = () => {
     logOutUser,
     updateUser,
     BootOption,
+    bootedUser,
+    setBootedUser,
     updateBootOption,
     updateLastBackup,
     lastBackup,
@@ -109,6 +111,8 @@ const UserProfile = () => {
       updateUser: st.updateUser,
       BootOption: st.BootOption,
       updateBootOption: st.updateBootOption,
+      bootedUser:st.bootedUser, 
+      setBootedUser:st.setBootedUser,
       lastBackup:st.lastBackup, 
       updateLastBackup:st.updateLastBackup,
       currentBackupType:st.currentBackupType,
@@ -465,7 +469,7 @@ const UserProfile = () => {
         </Panel>
 
         {/* data */}
-        <Panel title="Data and Boot" right={
+        <Panel title="Data & Backup" right={
             <Status tone={autoBackup ? "ok" : "err"}>
               {autoBackup ? "ENABLED" : "DISABLED"}
             </Status>
@@ -521,21 +525,30 @@ const UserProfile = () => {
 
             <Block title="Setup AutoBackup" hint="Auto backup data as per the backup duration">
 
-               <ButtonRow>
-                <Button icon="cloud-upload-outline" style={s.flex} label="Backup Folder"
+              <ButtonRow layout="row">
+                <Button icon="cloud-upload-outline" style={s.flex} label="Choose Backup Folder"
                   onPress={() => {
                   chooseBackupFolder();
                   }} />
-                <Button icon="sync-outline" style={s.flex} label="Backup Folder"
-                  onPress={() => {
-                  setAutoBackup();
-                  }} />
+                <Button variant="secondary" icon="sync-outline" style={s.flex} label={autoBackup ? "Disable ": `Enable`}
+                  onPress={setAutoBackup} />
                
               </ButtonRow>
 
             </Block>
+          </View>
+        </Panel>
 
-
+        {/* Boot */}
+        <Panel
+          title="Boot"
+          right={
+            <Status tone={bootedUser ? "ok" : "err"}>
+              {bootedUser ? "ENABLE" : "DISABLE"}
+            </Status>
+          }
+        >
+          <View style={{ gap: 6 }}>
             <Block title="BOOT_SCREEN">
               <ChipRow>
                 {Object.keys(bootMap).map((key) => (
@@ -561,6 +574,11 @@ const UserProfile = () => {
                 )}
               </ButtonRow>
             </Block>
+          </View>
+
+          <View style={{ marginTop: spacing.md }}>
+            <Button variant="secondary" icon="power-outline" label="Turn OFF Boot"
+              onPress={setBootedUser} />
           </View>
         </Panel>
 

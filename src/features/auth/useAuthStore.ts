@@ -11,6 +11,7 @@ export type userType = {
   username: string;
   userID: string;
   backgroundURL: string;
+  bootedUser:boolean;
   BootOption: string;
   themeType: "light" | "dark";
   location: { latitude: number; longitude: number };
@@ -39,6 +40,7 @@ const initialState: userType = {
   username: "",
   userID: "",
   backgroundURL: "",
+  bootedUser:false,
   BootOption:defaultBootKey,
   themeType: "light",
   location: { latitude: 0, longitude: 0 },
@@ -60,6 +62,7 @@ interface UserStore extends userType {
     longitude: number,
     userID: string,
   ) => void;
+  setBootedUser:()=> void;
   updateBootOption: (option:string) => void;
   updateThemeType: () => void;
   updateBackground: (url: string) => void;
@@ -70,8 +73,8 @@ interface UserStore extends userType {
   updateBackupEvery:(day:number) => void;
   setLastReminded:(num:number) => void;
 
-  setAutoBackupFolder: (path:string) => void;
   setAutoBackup: () => void;
+  setAutoBackupFolder: (path:string) => void;
 }
 
 export const useUserStore = create<UserStore>()(
@@ -84,6 +87,7 @@ export const useUserStore = create<UserStore>()(
           location: { latitude, longitude },
           userID: userID,
         })),
+      setBootedUser: () => set((state) => ({bootedUser: !state.bootedUser})),
       updateBootOption: (option) => set(()=> ({BootOption:option})),
       updateThemeType: () =>
         set((state) => ({
@@ -97,7 +101,7 @@ export const useUserStore = create<UserStore>()(
       updateBackupEvery:(number) => set(() => ({backupEvery:number})),
       setLastReminded:(num) => set(() => ({lastReminded:num})),
       
-      setAutoBackup: () => set((prev) => ({autoBackup: !prev})),
+      setAutoBackup: () => set((state) => ({autoBackup: !state.autoBackup})),
       setAutoBackupFolder: (path)=> set(()=> ({autoBackupFolder:path}))
     }),
     {

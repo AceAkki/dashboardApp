@@ -18,11 +18,12 @@ import {bootMap, type BootMapKey} from "@/global/bootMap"
 import useWidgetSync from "@/features/widgets/useWidgetSync";
 
 export default function RootLayout() {
-  const {username, isLoggedIn, BootOption } = useUserStore(
+  const {username, isLoggedIn, BootOption, isBootEnable} = useUserStore(
     useShallow((s) => ({
       username:s.username,
       isLoggedIn :  s.username.length > 0,
-      BootOption: s.BootOption
+      BootOption: s.BootOption,
+      isBootEnable:s.bootedUser, 
     })));
   const BootScreen = bootMap[BootOption as BootMapKey];
 
@@ -51,7 +52,7 @@ export default function RootLayout() {
 
   if (!ready) return null;
   // boot screen
-  if (!booted) return <BootScreen onDone={() => setBooted(true)} username={username} />;
+  if (!booted && isBootEnable) return <BootScreen onDone={() => setBooted(true)} username={username} />;
 
   return (
     <>
