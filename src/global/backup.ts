@@ -334,29 +334,24 @@ export function saveBackupTo(folderURI:string) {
 }
 
 export function autoBackupIfDue() {
-  let isAutoBackup = useUserStore.getState().autoBackup;
-  let backupFolderURI = useUserStore.getState().autoBackupFolder;
-
-  let lastBackup = useUserStore.getState().lastBackup;
-  let backupEvery = useUserStore.getState().backupEvery;
-  if (isAutoBackup || isBackupDue({lastBackup, backupEvery}) ) return;
+  const {autoBackup, autoBackupFolder, lastBackup, backupEvery } = useUserStore.getState();
+  // leave if auto is not on, or autoBackupFolder is null or  backup is not due.
+  if (!autoBackup || !autoBackupFolder || !isBackupDue({lastBackup, backupEvery}) ) return;
+  
   try {
-    if(!backupFolderURI) return
-    saveBackupTo(backupFolderURI)
+    saveBackupTo(autoBackupFolder)
     feedback.success("BACKUP SAVED");
   } catch (e) {
-      ctosAlert("Auto Backup could't be saved", `Choose new directory to save.`, [
-        { text: "Choose Dir", style: "default" },
+      ctosAlert("Auto Backup couldn't be saved", `Choose new directory to save.`, [
         {
           text: "Choose Dir",
           onPress: () => {
             chooseBackupFolder();
           },
-        }
+        },
+        { text: "Dismiss", style: "cancel" },
       ],)
   }
-
-
 }
 
 export async function exportToFile() {
