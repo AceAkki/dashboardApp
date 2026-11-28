@@ -308,11 +308,55 @@ const cancelled = (e: unknown) =>
 export async function chooseBackupFolder() {
   try {
     const folder = await Directory.pickDirectoryAsync();
-    useUserStore.getState().setBackupFolder(folder.uri);
+    useUserStore.getState().setAutoBackupFolder(folder.uri);
     feedback.success("BACKUP FOLDER SET");
   } catch (e) {
      if (!cancelled(e)) fail("Couldn't set the backup folder", e);
   }
+}
+
+export function isBackupDue({lastBackup, backupEvery}:{lastBackup: string, backupEvery: number}):boolean {
+  const last = lastBackup ? new Date(lastBackup).getTime() : 0; // 0 = never backed up
+  return Number.isNaN(last) || Date.now() - last > backupEvery;
+}
+
+export function saveBackupTo(folderURI:string) {
+  const backup = buildBackup();
+  const folder = new Directory(folderURI);
+  const fileName = `terminaldeck-backup-${backup.exportedAt.slice(0, 19).replaceAll(":", "-")}.json`;
+  const file = folder.createFile(
+      fileName,
+      "application/json",
+  );
+  file.write(JSON.stringify(backup, null, 2));
+  useUserStore.getState().updateLastBackup(backup.exportedAt);
+  return file.name;
+}
+
+export function autoBackupIfDue() {
+  let isAutoBackup = useUserStore.getState().autoBackup;
+  let backupFolderURI = useUserStore.getState().autoBackupFolder;
+
+  let lastBackup = useUserStore.getState().lastBackup;
+  let backupEvery = useUserStore.getState().backupEvery;
+  if (isAutoBackup || isBackupDue({lastBackup, backupEvery}) ) return;
+  try {
+    if(!backupFolderURI) return
+    saveBackupTo(backupFolderURI)
+    feedback.success("BACKUP SAVED");
+  } catch (e) {
+      ctosAlert("Auto Backup could't be saved", `Choose new directory to save.`, [
+        { text: "Choose Dir", style: "default" },
+        {
+          text: "Choose Dir",
+          onPress: () => {
+            chooseBackupFolder();
+          },
+        }
+      ],)
+  }
+
+
 }
 
 export async function exportToFile() {

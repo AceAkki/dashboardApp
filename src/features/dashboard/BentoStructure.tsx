@@ -24,7 +24,7 @@ import CtosText from "@/components/CtosText";
 import CtosItem from "@/components/CtosItem";
 import { ctosAlert } from "@/global/ctosAlert";
 
-import { exportToFile } from "@/global/backup";
+import { exportToFile, isBackupDue } from "@/global/backup";
 
 import TerminalPanel from "@/features/tools/components/TerminalPanel";
 import FavLinks from "@/features/favLinks/FavLinks";
@@ -41,15 +41,21 @@ import bentoStyles from "./bentoStyles";
 const BentoStructure = () => {
   const router = useRouter();
   const online = useOnlineStatus();
-  const { username, location, lastBackup, backupEvery, rewindEvery } = useUserStore(
-    useShallow((s) => ({ username: s.username, location: s.location, lastBackup:s.lastBackup, backupEvery:s.backupEvery, rewindEvery:s.rewindEvery })),
+  const { username, location, autoBackup, lastBackup, backupEvery, lastReminded, setLastReminded, rewindEvery } = useUserStore(
+    useShallow((s) => ({ 
+      username: s.username, 
+      location: s.location, 
+      autoBackup: s.autoBackup,
+      lastBackup:s.lastBackup, 
+      backupEvery:s.backupEvery, 
+      lastReminded:s.lastReminded,
+      setLastReminded:s.setLastReminded,
+      rewindEvery:s.rewindEvery })),
   );
   const { setApps } = useToolsStore(
     useShallow((s) => ({ setApps: s.setApps })),
   );
   const { requestPermission } = useNotifications();
-
-  const [lastReminded, setLastReminded] = useState<number>(0);
 
   // ask for notification permission once, as the main screen opens
   // if it was allowed, explain the Android "Alarms & reminders" setting (once, ever)
@@ -78,14 +84,14 @@ const BentoStructure = () => {
     })();
 
     // asks for backup
-    const last = lastBackup ? new Date(lastBackup).getTime() : 0; // 0 = never backed up
-    const overdue = Number.isNaN(last) || Date.now() - last > backupEvery;
-    const askedRecently = Date.now() - (lastReminded ?? 0) < rewindEvery;
-    if (overdue && !askedRecently) {
+    // const last = lastBackup ? new Date(lastBackup).getTime() : 0; // 0 = never backed up
+    // const overdue = Number.isNaN(last) || Date.now() - last > backupEvery;
+    const askedRecently = Date.now() - lastReminded < rewindEvery;
+    if (isBackupDue({ lastBackup, backupEvery }) && !askedRecently) {
       setLastReminded(Date.now());
       ctosAlert(
         "Back up your data",
-        last
+        lastBackup
           ? `Last backup was on ${dateFormat({ dateString: lastBackup, hasTime: true })}`
           : "You have never made a backup",
         [
