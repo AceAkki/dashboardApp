@@ -530,6 +530,7 @@ const UserProfile = () => {
                   onPress={() => {
                   chooseBackupFolder();
                   }} />
+                  {/* WOrk on this */}
                 <Button variant="secondary" icon="sync-outline" style={s.flex} label={autoBackup ? "Disable ": `Enable`}
                   onPress={setAutoBackup} />
                
