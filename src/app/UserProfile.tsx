@@ -98,6 +98,7 @@ const UserProfile = () => {
     backupEvery,
     updateBackupEvery,
     rewindEvery,
+    autoBackup,
     setAutoBackup
   } = useUserStore(
     useShallow((st) => ({
@@ -115,6 +116,7 @@ const UserProfile = () => {
       backupEvery:st.backupEvery, 
       updateBackupEvery:st.updateBackupEvery,
       rewindEvery:st.rewindEvery,
+      autoBackup:st.autoBackup,
       setAutoBackup:st.setAutoBackup
     })),
   );
@@ -463,7 +465,11 @@ const UserProfile = () => {
         </Panel>
 
         {/* data */}
-        <Panel title="Data and Boot">
+        <Panel title="Data and Boot" right={
+            <Status tone={autoBackup ? "ok" : "err"}>
+              {autoBackup ? "ENABLED" : "DISABLED"}
+            </Status>
+          }>
           <View style={{ gap: 8 }}>
             <Block
               title="BACKUP"
