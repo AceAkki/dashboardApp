@@ -487,7 +487,7 @@ const UserProfile = () => {
 
             <Block title="Last_BackUp" hint="Backup Details">
               <InfoRow
-                label="LAST_BACKUP_TIME"
+                label="LAST_BACKUP"
                 value={lastBackup ?  dateFormat({ dateString: lastBackup, hasTime: true }) : "NO BACKUP"}
               />
               <InfoRow
